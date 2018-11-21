@@ -77,7 +77,7 @@ export const fetchFileFromServer = (username, repository, filepath, branch='mast
 });
 
 export const get = (_uri) => new Promise((resolve, reject) => {
-  const uri = uriBase + _uri;
+  const uri = 'https://cors-anywhere.herokuapp.com/' + uriBase + _uri;
   fetch(uri, { mode: 'cors' }).then(response => {
     resolve(response.text())
   }).catch(reject);
