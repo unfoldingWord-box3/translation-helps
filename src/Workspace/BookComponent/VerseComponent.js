@@ -28,9 +28,9 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
   }) : <span />;
   const notes = translationNotesVerseData ?
     translationNotesVerseData.map((note, index) =>
-    <span key={index}>
-      <em>{note['gl_quote']}</em>: {note['occurrence_note']}
-    </span>
+    <p key={index}>
+      <strong>{note['gl_quote']}</strong>: {note['occurrence_note']}
+    </p>
   ) : "";
   return (
     <ExpansionPanel>
@@ -44,9 +44,9 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
         </Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <Typography>
+        <div>
           {notes}
-        </Typography>
+        </div>
       </ExpansionPanelDetails>
     </ExpansionPanel>
   );
