@@ -3,8 +3,13 @@ import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import { withStyles } from '@material-ui/core/styles';
 import {
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Typography,
 } from '@material-ui/core';
 import {
+  ExpandMore,
 } from '@material-ui/icons';
 
 import VerseComponent from './VerseComponent';
@@ -21,13 +26,24 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
   const intro = translationNotesChapterData['intro'][0]['occurrence_note'];
   return (
     <div>
-      <h1>Chapter {chapterKey}</h1>
-      <div>
-        <ReactMarkdown
-          source={intro}
-          escapeHtml={false}
-        />
-      </div>
+      <ExpansionPanel>
+        <ExpansionPanelSummary
+          expandIcon={
+            <ExpandMore />
+          }>
+          <Typography className={classes.heading}>
+            Chapter {chapterKey}
+          </Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <Typography>
+            <ReactMarkdown
+              source={intro}
+              escapeHtml={false}
+            />
+          </Typography>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
       {verses}
     </div>
   );

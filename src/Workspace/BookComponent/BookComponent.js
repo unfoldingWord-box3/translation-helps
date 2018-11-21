@@ -14,14 +14,12 @@ import ChapterComponent from './ChapterComponent';
 export const BookComponent = ({classes, bookData, translationNotesData}) => {
   const chapters = Object.keys(bookData.chapters).map(chapterKey =>
     <Grid key={chapterKey} item xs={12} sm={6} md={4} lg={3}>
-      <Paper className={classes.paper}>
-        <ChapterComponent
-          key={chapterKey}
-          chapterKey={chapterKey}
-          chapterData={bookData.chapters[chapterKey]}
-          translationNotesChapterData={translationNotesData[chapterKey]}
-        />
-      </Paper>
+      <ChapterComponent
+        key={chapterKey}
+        chapterKey={chapterKey}
+        chapterData={bookData.chapters[chapterKey]}
+        translationNotesChapterData={translationNotesData[chapterKey]}
+      />
     </Grid>
   );
   const intro = translationNotesData['front']['intro'][0]['occurrence_note'];

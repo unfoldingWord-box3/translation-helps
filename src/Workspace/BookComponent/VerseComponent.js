@@ -2,8 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Typography,
 } from '@material-ui/core';
 import {
+  ExpandMore,
 } from '@material-ui/icons';
 
 import VerseObjectComponent from './VerseObjectComponent';
@@ -28,13 +33,22 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
     </div>
   ) : "";
   return (
-    <div>
-      <sup>{verseKey}</sup>
-      {verseObjects}
-      <div>
-        {notes}
-      </div>
-    </div>
+    <ExpansionPanel>
+      <ExpansionPanelSummary
+        expandIcon={
+          <ExpandMore />
+        }>
+        <Typography className={classes.heading}>
+          <sup>{verseKey}</sup>
+          {verseObjects}
+        </Typography>
+      </ExpansionPanelSummary>
+      <ExpansionPanelDetails>
+        <Typography>
+          {notes}
+        </Typography>
+      </ExpansionPanelDetails>
+    </ExpansionPanel>
   );
 };
 
