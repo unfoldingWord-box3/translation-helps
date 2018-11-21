@@ -37,7 +37,7 @@ const ApplicationBar = ({
     >
       <div className={classes.drawerHeader}>
         <Typography variant='subheading'>
-          Coins
+          Books
         </Typography>
         <IconButton onClick={handleDrawerClose}>
           <ChevronLeft />
