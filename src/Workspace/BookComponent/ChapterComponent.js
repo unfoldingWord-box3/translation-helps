@@ -35,10 +35,12 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
         </h2>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <ReactMarkdown
-          source={intro}
-          escapeHtml={false}
-        />
+        <Typography>
+          <ReactMarkdown
+            source={intro}
+            escapeHtml={false}
+          />
+        </Typography>
       </ExpansionPanelDetails>
     </ExpansionPanel>
   );

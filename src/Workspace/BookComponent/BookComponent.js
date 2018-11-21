@@ -42,10 +42,12 @@ export const BookComponent = ({classes, bookData, translationNotesData}) => {
               />
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <ReactMarkdown
-                source={intro.split('\n').splice(1).join('\n')}
-                escapeHtml={false}
-              />
+              <Typography>
+                <ReactMarkdown
+                  source={intro.split('\n').splice(1).join('\n')}
+                  escapeHtml={false}
+                />
+              </Typography>
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </Grid>
