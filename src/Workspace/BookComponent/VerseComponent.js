@@ -25,12 +25,12 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
         verseObject={verseObject}
       />
     );
-  }) : <div />;
+  }) : <span />;
   const notes = translationNotesVerseData ?
     translationNotesVerseData.map((note, index) =>
-    <div key={index}>
+    <span key={index}>
       <em>{note['gl_quote']}</em>: {note['occurrence_note']}
-    </div>
+    </span>
   ) : "";
   return (
     <ExpansionPanel>

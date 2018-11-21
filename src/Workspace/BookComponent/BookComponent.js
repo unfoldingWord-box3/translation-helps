@@ -3,10 +3,14 @@ import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Paper,
   Grid,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Typography,
 } from '@material-ui/core';
 import {
+  ExpandMore,
 } from '@material-ui/icons';
 
 import ChapterComponent from './ChapterComponent';
@@ -27,12 +31,23 @@ export const BookComponent = ({classes, bookData, translationNotesData}) => {
     <div className={classes.root}>
       <Grid container spacing={24}>
         <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Paper className={classes.paper}>
-            <ReactMarkdown
-              source={intro}
-              escapeHtml={false}
-            />
-          </Paper>
+          <ExpansionPanel key={Math.random()}>
+            <ExpansionPanelSummary
+              expandIcon={
+                <ExpandMore />
+              }>
+              <ReactMarkdown
+                source={intro.split('\n')[0]}
+                escapeHtml={false}
+              />
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <ReactMarkdown
+                source={intro.split('\n').splice(1).join('\n')}
+                escapeHtml={false}
+              />
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
         </Grid>
         {chapters}
       </Grid>

@@ -24,29 +24,26 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
     />
   );
   const intro = translationNotesChapterData['intro'][0]['occurrence_note'];
-  return (
-    <div>
-      <ExpansionPanel>
-        <ExpansionPanelSummary
-          expandIcon={
-            <ExpandMore />
-          }>
-          <Typography className={classes.heading}>
-            Chapter {chapterKey}
-          </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Typography>
-            <ReactMarkdown
-              source={intro}
-              escapeHtml={false}
-            />
-          </Typography>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      {verses}
-    </div>
+  const introPanel = (
+    <ExpansionPanel key={Math.random()}>
+      <ExpansionPanelSummary
+        expandIcon={
+          <ExpandMore />
+        }>
+        <h2>
+          Chapter {chapterKey}
+        </h2>
+      </ExpansionPanelSummary>
+      <ExpansionPanelDetails>
+        <ReactMarkdown
+          source={intro}
+          escapeHtml={false}
+        />
+      </ExpansionPanelDetails>
+    </ExpansionPanel>
   );
+  const panels = [introPanel].concat(verses);
+  return panels;
 };
 
 ChapterComponent.propTypes = {
