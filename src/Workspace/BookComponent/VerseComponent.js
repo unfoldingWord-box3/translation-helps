@@ -5,7 +5,6 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
-  Typography,
 } from '@material-ui/core';
 import {
   ExpandMore,
@@ -40,10 +39,10 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
         expandIcon={
           <ExpandMore />
         }>
-        <Typography className={classes.verse}>
+        <span className={classes.verse}>
           <sup>{verseKey}</sup>
           {verseObjects}
-        </Typography>
+        </span>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <div>

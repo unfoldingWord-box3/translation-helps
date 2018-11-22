@@ -5,12 +5,11 @@ export const styles = theme => ({
     padding: theme.spacing.unit * 2,
   },
   column: {
-    maxWidth: '50em',
+    maxWidth: '40em',
     marginLeft: 'auto',
     marginRight: 'auto',
   },
   verse: {
-    textAlign: 'justify',
   },
 });
 

@@ -6,7 +6,6 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
-  Typography,
 } from '@material-ui/core';
 import {
   ExpandMore,
@@ -37,12 +36,12 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
         </h2>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <Typography>
+        <div>
           <ReactMarkdown
             source={intro}
             escapeHtml={false}
           />
-        </Typography>
+        </div>
       </ExpansionPanelDetails>
     </ExpansionPanel>
   );

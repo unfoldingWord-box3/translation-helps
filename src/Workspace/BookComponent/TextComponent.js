@@ -8,7 +8,7 @@ import {
 
 export const TextComponent = ({classes, verseObject}) => {
   const isWord = verseObject.type === 'word';
-  const isText = verseObject.type === 'text';
+  // const isText = verseObject.type === 'text';
   return (
     <span>{isWord ? ' ': ''}{verseObject.text}</span>
   );
