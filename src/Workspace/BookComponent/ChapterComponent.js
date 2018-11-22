@@ -12,6 +12,8 @@ import {
   ExpandMore,
 } from '@material-ui/icons';
 
+import styles from './styles';
+
 import VerseComponent from './VerseComponent';
 
 export const ChapterComponent = ({classes, chapterKey, chapterData, translationNotesChapterData}) => {
@@ -25,7 +27,7 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
   );
   const intro = translationNotesChapterData['intro'][0]['occurrence_note'];
   const introPanel = (
-    <ExpansionPanel key={Math.random()}>
+    <ExpansionPanel className={classes.column} key={Math.random()}>
       <ExpansionPanelSummary
         expandIcon={
           <ExpandMore />
@@ -45,6 +47,7 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
     </ExpansionPanel>
   );
   const panels = [introPanel].concat(verses);
+
   return panels;
 };
 
@@ -54,11 +57,5 @@ ChapterComponent.propTypes = {
   chapterData: PropTypes.object.isRequired,
   translationNotesChapterData: PropTypes.object,
 };
-
-const styles = theme => ({
-  root: {
-    width: '100%',
-  },
-});
 
 export default withStyles(styles)(ChapterComponent);

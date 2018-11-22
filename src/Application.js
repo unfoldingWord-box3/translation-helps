@@ -44,7 +44,8 @@ const styles = theme => ({
     width: '100%',
   },
   main: {
-    padding: '5em 1em 1em 1em',
+    width: '100%',
+    padding: '5.5em 1em 1em 1em',
     minWidth: '20em',
     fontSize: '0.9em',
     lineHeight: '1.75em',

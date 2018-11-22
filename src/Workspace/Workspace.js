@@ -24,7 +24,7 @@ export const Workspace = ({
     <div />
   );
   return (
-    <div>
+    <div className={classes.root}>
       {bookComponent}
     </div>
   );
@@ -38,6 +38,7 @@ Workspace.propTypes = {
 
 const styles = theme => ({
   root: {
+    width: '100%',
   },
 });
 

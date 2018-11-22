@@ -11,6 +11,8 @@ import {
   ExpandMore,
 } from '@material-ui/icons';
 
+import styles from './styles';
+
 import VerseObjectComponent from './VerseObjectComponent';
 
 export const VerseComponent = ({classes, verseKey, verseData, translationNotesVerseData}) => {
@@ -33,12 +35,12 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
     </p>
   ) : "";
   return (
-    <ExpansionPanel>
+    <ExpansionPanel className={classes.column}>
       <ExpansionPanelSummary
         expandIcon={
           <ExpandMore />
         }>
-        <Typography className={classes.heading}>
+        <Typography className={classes.verse}>
           <sup>{verseKey}</sup>
           {verseObjects}
         </Typography>
@@ -58,11 +60,5 @@ VerseComponent.propTypes = {
   verseData: PropTypes.object.isRequired,
   translationNotesVerseData: PropTypes.array,
 };
-
-const styles = theme => ({
-  root: {
-    width: '100%',
-  },
-});
 
 export default withStyles(styles)(VerseComponent);
