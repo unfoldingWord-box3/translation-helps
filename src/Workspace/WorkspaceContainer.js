@@ -26,7 +26,9 @@ class WorkspaceContainer extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    this.fetchResources(nextProps);
+    if (nextProps.reference.book !== this.props.reference.book) {
+      this.fetchResources(nextProps);
+    }
   };
 
   componentDidMount() {
