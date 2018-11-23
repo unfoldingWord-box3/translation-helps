@@ -16,6 +16,7 @@ import {
 } from '@material-ui/icons';
 
 import styles from './ApplicationBarStyles';
+import * as ApplicationHelpers from '../ApplicationHelpers';
 
 import BibleManager from './BibleManager';
 
@@ -55,6 +56,12 @@ const ApplicationBar = ({
     </Drawer>
   );
 
+  let bookName = '';
+  if (manifests['ult'] && manifests['ult'].projects) {
+    const project = ApplicationHelpers.projectByBookId(manifests['ult'].projects, reference.book);
+    bookName = project.title;
+  }
+
   return (
     <div>
       <AppBar
@@ -76,7 +83,7 @@ const ApplicationBar = ({
             {projectName} -<span>&nbsp;</span>
           </Typography>
           <Typography variant="subheading" color="inherit" className={classes.coin} noWrap>
-            Titus
+            {bookName}
           </Typography>
         </Toolbar>
       </AppBar>
