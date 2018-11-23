@@ -17,11 +17,12 @@ import {
 
 import styles from './ApplicationBarStyles';
 
-// import BooksManager from '../BooksManager';
+import BibleManager from './BibleManager';
 
 const ApplicationBar = ({
   classes,
   projectName,
+  manifests,
   open,
   handleDrawerOpen,
   handleDrawerClose,
@@ -44,7 +45,7 @@ const ApplicationBar = ({
         </IconButton>
       </div>
       <Divider />
-      {}
+      <BibleManager manifests={manifests} />
     </Drawer>
   );
 
@@ -81,6 +82,7 @@ const ApplicationBar = ({
 ApplicationBar.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
+  manifests: PropTypes.object.isRequired,
   projectName: PropTypes.string.isRequired,
   handleDrawerOpen: PropTypes.func.isRequired,
   handleDrawerClose: PropTypes.func.isRequired,

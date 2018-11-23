@@ -1,8 +1,37 @@
 import path from 'path';
 import YAML from 'yaml';
+import {each} from 'async';
 import usfmjs from 'usfm-js';
 
 const uriBase = "https://git.door43.org/";
+
+export const resourceRepositories = (languageId) => {
+  return {
+    ult: languageId + '_ult',
+    tn: languageId + '-tn',
+  };
+};
+
+export const fetchResourceManifests = (username, languageId) => new Promise((resolve, reject) => {
+  let manifests = {};
+  const _resourceRepositories = resourceRepositories(languageId);
+  const resourceIds = Object.keys(_resourceRepositories);
+  each(
+    resourceIds,
+    (resourceId, done) => {
+      const repository = _resourceRepositories[resourceId];
+      fetchManifest(username, repository)
+      .then(manifest => {
+        manifests[resourceId] = manifest;
+        done();
+      }).catch(reject);
+    },
+    (error) => {
+      if (error) reject(error);
+      resolve(manifests);
+    }
+  );
+});
 
 export const fetchBook = (username, languageId, bookId) => new Promise((resolve, reject) => {
   const repository = languageId + '_ult';

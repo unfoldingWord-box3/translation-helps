@@ -30,7 +30,7 @@ export const BookComponent = ({classes, bookMetadata, selected}) =>
     </ListItemIcon>
     <ListItemText
       className={classes.listItemText}
-      primary={bookMetadata.name}
+      primary={bookMetadata.title}
     />
   </ListItem>
 

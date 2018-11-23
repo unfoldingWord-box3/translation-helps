@@ -7,13 +7,14 @@ import './Application.css';
 import ApplicationBar from './ApplicationBar';
 import Workspace from './Workspace';
 
-export const Application = ({classes, username, languageId, reference}) =>
+export const Application = ({classes, username, languageId, reference, manifests}) =>
   <div className={classes.root}>
     <div className={classes.appFrame}>
       <ApplicationBar
         username={username}
         languageId={languageId}
         reference={reference}
+        manifests={manifests}
       />
       <main className={classes.main}>
         <Workspace
