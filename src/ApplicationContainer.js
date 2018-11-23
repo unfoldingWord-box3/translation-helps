@@ -17,13 +17,19 @@ class ApplicationContainer extends React.Component {
     }
   };
 
+  setReference(reference) {
+    this.setState({
+      reference: reference,
+    });
+  };
+
   componentDidMount() {
     const {username, languageId} = this.state;
     ApplicationHelpers.fetchResourceManifests(username, languageId)
     .then(manifests => {
       this.setState({
         manifests: manifests,
-      })
+      });
     });
   };
 
@@ -34,6 +40,7 @@ class ApplicationContainer extends React.Component {
         username={username}
         languageId={languageId}
         reference={reference}
+        setReference={this.setReference.bind(this)}
         manifests={manifests}
       />
     );

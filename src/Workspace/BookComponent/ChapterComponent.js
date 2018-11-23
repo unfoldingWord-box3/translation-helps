@@ -24,7 +24,8 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
       translationNotesVerseData={translationNotesChapterData[verseKey]}
     />
   );
-  const intro = translationNotesChapterData['intro'][0]['occurrence_note'];
+  const intro = (translationNotesChapterData['intro'] && translationNotesChapterData['intro'][0]) ?
+    translationNotesChapterData['intro'][0]['occurrence_note'] : '';
   const introPanel = (
     <ExpansionPanel className={classes.column} key={Math.random()}>
       <ExpansionPanelSummary

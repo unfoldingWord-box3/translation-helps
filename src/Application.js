@@ -7,19 +7,21 @@ import './Application.css';
 import ApplicationBar from './ApplicationBar';
 import Workspace from './Workspace';
 
-export const Application = ({classes, username, languageId, reference, manifests}) =>
+export const Application = ({classes, username, languageId, reference, manifests, setReference}) =>
   <div className={classes.root}>
     <div className={classes.appFrame}>
       <ApplicationBar
         username={username}
         languageId={languageId}
-        reference={reference}
         manifests={manifests}
+        reference={reference}
+        setReference={setReference}
       />
       <main className={classes.main}>
         <Workspace
           username={username}
           languageId={languageId}
+          manifests={manifests}
           reference={reference}
         />
       </main>
@@ -31,6 +33,7 @@ Application.propTypes = {
   username: PropTypes.string.isRequired,
   languageId: PropTypes.string.isRequired,
   reference: PropTypes.object.isRequired,
+  setReference: PropTypes.func.isRequired,
 };
 
 const styles = theme => ({

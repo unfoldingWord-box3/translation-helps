@@ -23,6 +23,8 @@ const ApplicationBar = ({
   classes,
   projectName,
   manifests,
+  reference,
+  setReference,
   open,
   handleDrawerOpen,
   handleDrawerClose,
@@ -45,7 +47,11 @@ const ApplicationBar = ({
         </IconButton>
       </div>
       <Divider />
-      <BibleManager manifests={manifests} />
+      <BibleManager
+        manifests={manifests}
+        reference={reference}
+        setReference={setReference}
+      />
     </Drawer>
   );
 
@@ -83,6 +89,8 @@ ApplicationBar.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   manifests: PropTypes.object.isRequired,
+  reference: PropTypes.object.isRequired,
+  setReference: PropTypes.func.isRequired,
   projectName: PropTypes.string.isRequired,
   handleDrawerOpen: PropTypes.func.isRequired,
   handleDrawerClose: PropTypes.func.isRequired,

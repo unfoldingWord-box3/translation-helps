@@ -11,8 +11,8 @@ class WorkspaceContainer extends React.Component {
     translationNotesData: null,
   };
 
-  componentDidMount() {
-    const {username, languageId, reference} = this.props;
+  fetchResources(props) {
+    const {username, languageId, reference} = props;
     ApplicationHelpers.fetchBook(username, languageId, reference.book)
     .then(bookData => {
       ApplicationHelpers.translationNotes(username, languageId, reference.book)
@@ -23,6 +23,14 @@ class WorkspaceContainer extends React.Component {
         })
       });
     });
+  };
+
+  componentWillReceiveProps(nextProps) {
+    this.fetchResources(nextProps);
+  };
+
+  componentDidMount() {
+    this.fetchResources(this.props);
   };
 
   render() {
@@ -42,6 +50,7 @@ WorkspaceContainer.propTypes = {
   username: PropTypes.string.isRequired,
   languageId: PropTypes.string.isRequired,
   reference: PropTypes.object.isRequired,
+  manifests: PropTypes.object.isRequired,
 };
 
 export default WorkspaceContainer;

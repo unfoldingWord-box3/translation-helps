@@ -11,19 +11,25 @@ import {
   NoteOutlined,
 } from '@material-ui/icons';
 
-export const BookComponent = ({classes, bookMetadata, selected}) =>
+export const BookComponent = ({classes, bookMetadata, reference, setReference}) =>
   <ListItem
     button
-    selected={selected}
     className={classes.bookListItem}
     style={{
-      paddingLeft: '1em',
+      paddingLeft: '2em',
       paddingRight: '0.7em',
+    }}
+    onClick={() => {
+      setReference({
+        book: bookMetadata.identifier,
+        chapter: 1,
+        verse: 1,
+      });
     }}
   >
     <ListItemIcon className={classes.listItemIcon}>
       {
-        selected ?
+        (reference.book === bookMetadata.identifier) ?
         <Note fontSize="small" /> :
         <NoteOutlined fontSize="small" />
       }
@@ -37,7 +43,8 @@ export const BookComponent = ({classes, bookMetadata, selected}) =>
 BookComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   bookMetadata: PropTypes.object.isRequired,
-  selected: PropTypes.bool,
+  reference: PropTypes.object.isRequired,
+  setReference: PropTypes.func.isRequired,
 }
 
 const styles = theme => ({

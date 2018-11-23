@@ -15,13 +15,15 @@ import {
 
 import BookComponent from './BookComponent';
 
-export const Directory = ({classes, testamentId, selected, books}) => {
+export const TestamentComponent = ({classes, testamentId, books, reference, setReference}) => {
+  const selected = books.map(book => book.identifier).includes(reference.book);
   const bookComponents = books ?
     books.map((bookMetadata) =>
       <BookComponent
-        key={bookMetadata.id}
+        key={bookMetadata.identifier}
         bookMetadata={bookMetadata}
-        selected={false}
+        reference={reference}
+        setReference={setReference}
       />
     ) : [];
 
@@ -31,7 +33,7 @@ export const Directory = ({classes, testamentId, selected, books}) => {
         button
         className={classes.fileList}
         style={{
-          paddingLeft: '0em',
+          paddingLeft: '1em',
           paddingRight: '0.5em',
         }}
       >
@@ -56,11 +58,12 @@ export const Directory = ({classes, testamentId, selected, books}) => {
   );
 }
 
-Directory.propTypes = {
+TestamentComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   testamentId: PropTypes.string.isRequired,
   books: PropTypes.array.isRequired,
-  selected: PropTypes.bool,
+  reference: PropTypes.object.isRequired,
+  setReference: PropTypes.func.isRequired,
 }
 const styles = theme => ({
   list: {
@@ -75,4 +78,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(Directory);
+export default withStyles(styles)(TestamentComponent);

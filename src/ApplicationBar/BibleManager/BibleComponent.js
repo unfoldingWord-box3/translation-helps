@@ -8,7 +8,7 @@ import {
 
 import TestamentComponent from './TestamentComponent';
 
-export const BibleComponent = ({classes, manifests}) => {
+export const BibleComponent = ({classes, manifests, reference, setReference}) => {
   let bible = {};
   const ult = manifests['ult'];
   if (ult) {
@@ -32,7 +32,8 @@ export const BibleComponent = ({classes, manifests}) => {
                 key={testamentId}
                 testamentId={testamentId}
                 books={bible[testamentId]}
-                selected={true}
+                reference={reference}
+                setReference={setReference}
               />
             )
           }
@@ -50,6 +51,8 @@ export const BibleComponent = ({classes, manifests}) => {
 BibleComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   manifests: PropTypes.object.isRequired,
+  reference: PropTypes.object.isRequired,
+  setReference: PropTypes.func.isRequired,
 };
 
 const styles = theme => ({
