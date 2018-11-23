@@ -16,7 +16,12 @@ import styles from './styles';
 import VerseComponent from './VerseComponent';
 
 export const ChapterComponent = ({classes, chapterKey, chapterData, translationNotesChapterData}) => {
-  const verses = Object.keys(chapterData).map(verseKey =>
+  const verses = Object.keys(chapterData)
+  .filter(verseKey => {
+    const text = chapterData[verseKey].verseObjects.map(o => o.text).join('');
+    return /\S+/g.test(text);
+  })
+  .map(verseKey =>
     <VerseComponent
       key={verseKey}
       verseKey={verseKey}
