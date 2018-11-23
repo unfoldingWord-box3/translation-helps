@@ -1,44 +1,43 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+# unfoldingWord translationHelps Viewer
+[https://unfoldingword.bible/content/]
 
-In the project directory, you can run:
+## Purpose
+All resources are currently integrated into the unfoldingWord Scripture drafting tool, translationStudio to aid in the translation process. Resources are also being integrated into the unfoldingWord Scripture checking tool, translationCore to aid in the checking process.
 
-### `npm start`
+Outside of using tS, tC or downloading PDF files of the resources, there is a need to consume these resources in a similar Just in Time method that displays relevant information in an efficient manner.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Use cases
+- Drafting using tools other than tS including Autographa and even basic pen and paper.
+- Community checking printed copies of translations where tC is not practical.
+- Bible study and reference when drafting and checking are not taking place.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## Resource Integration
+ Resources are categorized by two categories. This is not an exclusive list of unfoldingWord resources.
 
-### `npm test`
+### Scope
+ Most of these resources are in progress. The New Testament resources in English are complete enough to use.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Scripture
+- ULT - unfoldingWord Literal Text
+- UST - unfoldingWord Simplified Text
+- UGNT - unfoldingWord Greek New Testament
 
-### `npm run build`
+### translationHelps
+- tN - translationNotes
+- tA - translationAcademy
+- tQ - translationQuestions
+- UGL - unfoldingWord Greek Lexicon
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Technical Overview
+All resources are managed in Git repositories on (DCS)[https://git.door43.org]. Each repository is organized in a Resource Container Spec (RC). Each RC has a manifest that contains metadata about included resource projects. Each project has metadata including information such as the book id and relative paths to included project files. By fetching the project file it can then be parsed by file type. Each resource project's data can then be integrated based on the relevant alignments and tags that link the resources together.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Relationships
+The relationships between the resources can be used to display relevant information where appropriate.
+- ULT - (primary text organized by reference)
+  - tN (tagged to UGNT and ULT by reference and quote)
+    - tA (links in tN)
+  - UGNT (aligned in ULT)
+    - tW (tagged in UGNT)
+  - tQ (tagged by reference)
+  - UST - (secondary text organized by reference)
