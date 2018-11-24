@@ -32,7 +32,7 @@ export const styles = theme => ({
     ...theme.mixins.toolbar,
   },
   toolbar: {
-    width: '100%',
+    margin: 'auto',
   },
 });
 
