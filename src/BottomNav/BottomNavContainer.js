@@ -18,6 +18,13 @@ class BottomNavContainer extends React.Component {
     value: null,
   };
 
+  componentWillReceiveProps(nextProps) {
+    const value = (nextProps.reference.book) ? null : 1;
+    this.setState({
+      value: value,
+    });
+  };
+
   handleChange = (event, value) => {
     this.props.setReference({});
     this.setState({

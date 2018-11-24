@@ -29,6 +29,7 @@ export const Application = ({classes, username, languageId, reference, manifests
       </main>
       <nav className={classes.bottomNav}>
         <BottomNav
+          reference={reference}
           setReference={setReference}
         />
       </nav>
