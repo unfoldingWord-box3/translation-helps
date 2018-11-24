@@ -16,7 +16,7 @@ import {
 import BookComponent from './BookComponent';
 
 export const TestamentComponent = ({classes, testamentId, books, reference, setReference}) => {
-  const selected = books.map(book => book.identifier).includes(reference.book);
+  const selected = testamentId === 'New Testament';
   const bookComponents = books ?
     books.map((bookMetadata) =>
       <BookComponent

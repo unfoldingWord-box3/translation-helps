@@ -34,9 +34,6 @@ export const styles = theme => ({
   toolbar: {
     width: '100%',
   },
-  filepath: {
-    // marginLeft: '0.1em',
-  },
 });
 
 export default styles;

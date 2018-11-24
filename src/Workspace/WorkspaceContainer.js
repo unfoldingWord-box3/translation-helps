@@ -13,16 +13,23 @@ class WorkspaceContainer extends React.Component {
 
   fetchResources(props) {
     const {username, languageId, reference} = props;
-    ApplicationHelpers.fetchBook(username, languageId, reference.book)
-    .then(bookData => {
-      ApplicationHelpers.translationNotes(username, languageId, reference.book)
-      .then(translationNotes => {
-        this.setState({
-          bookData: bookData,
-          translationNotesData: translationNotes,
-        })
+    if (reference.book) {
+      ApplicationHelpers.fetchBook(username, languageId, reference.book)
+      .then(bookData => {
+        ApplicationHelpers.translationNotes(username, languageId, reference.book)
+        .then(translationNotes => {
+          this.setState({
+            bookData: bookData,
+            translationNotesData: translationNotes,
+          });
+        });
       });
-    });
+    } else {
+      this.setState({
+        bookData: null,
+        translationNotesData: null,
+      });
+    }
   };
 
   componentWillReceiveProps(nextProps) {
@@ -52,6 +59,7 @@ WorkspaceContainer.propTypes = {
   username: PropTypes.string.isRequired,
   languageId: PropTypes.string.isRequired,
   reference: PropTypes.object.isRequired,
+  setReference: PropTypes.func.isRequired,
   manifests: PropTypes.object.isRequired,
 };
 

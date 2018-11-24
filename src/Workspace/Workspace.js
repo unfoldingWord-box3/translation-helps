@@ -7,12 +7,17 @@ import {
 } from '@material-ui/icons';
 
 import BookComponent from './BookComponent';
-// import TranslationNotes from './TranslationNotes';
+import BibleManager from './BibleManager';
 
 export const Workspace = ({
   classes,
   bookData,
   translationNotesData,
+  username,
+  languageId,
+  manifests,
+  reference,
+  setReference,
 }) => {
   const bookComponent = (
     bookData && translationNotesData ?
@@ -21,7 +26,13 @@ export const Workspace = ({
       translationNotesData={translationNotesData}
     />
     :
-    <div />
+    <BibleManager
+      username={username}
+      languageId={languageId}
+      manifests={manifests}
+      reference={reference}
+      setReference={setReference}
+    />
   );
   return (
     <div className={classes.root}>
@@ -32,8 +43,13 @@ export const Workspace = ({
 
 Workspace.propTypes = {
   classes: PropTypes.object.isRequired,
-  bookData: PropTypes.object,
+  username: PropTypes.string.isRequired,
+  languageId: PropTypes.string.isRequired,
+  reference: PropTypes.object.isRequired,
+  setReference: PropTypes.func.isRequired,
+  manifests: PropTypes.object,
   translationNotesData: PropTypes.object,
+  bookData: PropTypes.object,
 };
 
 const styles = theme => ({

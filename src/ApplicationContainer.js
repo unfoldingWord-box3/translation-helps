@@ -10,11 +10,7 @@ class ApplicationContainer extends React.Component {
     username: 'unfoldingWord',
     languageId: 'en',
     manifests: {},
-    reference: {
-      book: 'tit',
-      chapter: '1',
-      verse: '1'
-    }
+    reference: {},
   };
 
   setReference(reference) {

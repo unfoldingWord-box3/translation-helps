@@ -3,22 +3,15 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {
-  Drawer,
   AppBar,
   Toolbar,
   Typography,
-  Divider,
-  IconButton
 } from '@material-ui/core';
 import {
-  Menu,
-  ChevronLeft
 } from '@material-ui/icons';
 
 import styles from './ApplicationBarStyles';
 import * as ApplicationHelpers from '../ApplicationHelpers';
-
-import BibleManager from './BibleManager';
 
 const ApplicationBar = ({
   classes,
@@ -30,37 +23,13 @@ const ApplicationBar = ({
   handleDrawerOpen,
   handleDrawerClose,
 }) => {
-  const drawer = (
-    <Drawer
-      variant="persistent"
-      anchor="left"
-      open={open}
-      classes={{
-        paper: classes.drawerPaper,
-      }}
-    >
-      <div className={classes.drawerHeader}>
-        <Typography variant='subheading'>
-          Books
-        </Typography>
-        <IconButton onClick={handleDrawerClose}>
-          <ChevronLeft />
-        </IconButton>
-      </div>
-      <Divider />
-      <BibleManager
-        manifests={manifests}
-        reference={reference}
-        setReference={setReference}
-      />
-    </Drawer>
-  );
 
   let bookName = '';
-  if (manifests['ult'] && manifests['ult'].projects) {
+  if (manifests['ult'] && manifests['ult'].projects && reference.book) {
     const project = ApplicationHelpers.projectByBookId(manifests['ult'].projects, reference.book);
     bookName = project.title;
   }
+  const bookNameComponent = bookName ? <span>&nbsp;-&nbsp;{bookName}</span> : <span />;
 
   return (
     <div>
@@ -71,23 +40,14 @@ const ApplicationBar = ({
         })}
       >
         <Toolbar className={classes.toolbar} disableGutters={!open}>
-          <IconButton
-            color="inherit"
-            aria-label="Open drawer"
-            onClick={handleDrawerOpen}
-            className={classNames(classes.menuButton, open && classes.hide)}
-          >
-            <Menu />
-          </IconButton>
           <Typography variant="title" color="inherit" noWrap>
-            {projectName} -<span>&nbsp;</span>
+            {projectName}
           </Typography>
           <Typography variant="subheading" color="inherit" className={classes.coin} noWrap>
-            {bookName}
+            {bookNameComponent}
           </Typography>
         </Toolbar>
       </AppBar>
-      {drawer}
     </div>
   );
 }

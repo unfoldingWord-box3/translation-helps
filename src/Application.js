@@ -6,6 +6,7 @@ import './Application.css';
 
 import ApplicationBar from './ApplicationBar';
 import Workspace from './Workspace';
+import BottomNav from './BottomNav';
 
 export const Application = ({classes, username, languageId, reference, manifests, setReference}) =>
   <div className={classes.root}>
@@ -23,8 +24,14 @@ export const Application = ({classes, username, languageId, reference, manifests
           languageId={languageId}
           manifests={manifests}
           reference={reference}
+          setReference={setReference}
         />
       </main>
+      <nav className={classes.bottomNav}>
+        <BottomNav
+          setReference={setReference}
+        />
+      </nav>
     </div>
   </div>
 
@@ -34,6 +41,7 @@ Application.propTypes = {
   languageId: PropTypes.string.isRequired,
   reference: PropTypes.object.isRequired,
   setReference: PropTypes.func.isRequired,
+  manifests: PropTypes.object,
 };
 
 const styles = theme => ({
@@ -49,10 +57,16 @@ const styles = theme => ({
   },
   main: {
     width: '100%',
-    padding: '5.5em 1em 1em 1em',
+    padding: '5.5em 1em 5.5em 1em',
     minWidth: '20em',
     fontSize: '0.9em',
     lineHeight: '1.75em',
+  },
+  bottomNav: {
+    width: '100%',
+    position: 'fixed',
+    bottom: 0,
+    zIndex: 10,
   }
 });
 
