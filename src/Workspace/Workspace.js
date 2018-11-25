@@ -8,6 +8,7 @@ import {
 
 import BookComponent from './BookComponent';
 import BibleManager from './BibleManager';
+import ChapterManager from './ChapterManager';
 
 export const Workspace = ({
   classes,
@@ -19,24 +20,33 @@ export const Workspace = ({
   reference,
   setReference,
 }) => {
-  const bookComponent = (
-    bookData && translationNotesData ?
-    <BookComponent
-      bookData={bookData}
-      translationNotesData={translationNotesData}
-    />
-    :
+  const bibleManager = (
     <BibleManager
-      username={username}
-      languageId={languageId}
       manifests={manifests}
       reference={reference}
       setReference={setReference}
     />
   );
+  const chapterManager = (
+    <ChapterManager
+      bookData={bookData}
+      reference={reference}
+      setReference={setReference}
+    />
+  );
+  const bookComponent = (
+    <BookComponent
+      reference={reference}
+      bookData={bookData}
+      translationNotesData={translationNotesData}
+    />
+  );
+  let component = (!reference.book) ? bibleManager : chapterManager;
+  component = (bookData && translationNotesData && reference.chapter) ? bookComponent : component;
+
   return (
     <div className={classes.root}>
-      {bookComponent}
+      {component}
     </div>
   );
 }

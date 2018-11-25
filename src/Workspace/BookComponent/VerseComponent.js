@@ -2,16 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
 } from '@material-ui/core';
 import {
-  ExpandMore,
 } from '@material-ui/icons';
 
 import styles from './styles';
 
+import ExpansionComponent from './ExpansionComponent';
 import VerseObjectComponent from './VerseObjectComponent';
 
 export const VerseComponent = ({classes, verseKey, verseData, translationNotesVerseData}) => {
@@ -33,23 +30,18 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
       <strong>{note['gl_quote']}</strong>: {note['occurrence_note']}
     </p>
   ) : "";
+  
   return (
-    <ExpansionPanel className={classes.column}>
-      <ExpansionPanelSummary
-        expandIcon={
-          <ExpandMore />
-        }>
+    <ExpansionComponent
+      key={'verse'+verseKey}
+      summary={
         <span className={classes.verse}>
           <sup>{verseKey}</sup>
           {verseObjects}
         </span>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <div>
-          {notes}
-        </div>
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+      }
+      details={notes}
+    />
   );
 };
 

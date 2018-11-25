@@ -3,16 +3,13 @@ import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
 } from '@material-ui/core';
 import {
-  ExpandMore,
 } from '@material-ui/icons';
 
 import styles from './styles';
 
+import ExpansionComponent from './ExpansionComponent';
 import VerseComponent from './VerseComponent';
 
 export const ChapterComponent = ({classes, chapterKey, chapterData, translationNotesChapterData}) => {
@@ -32,24 +29,11 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
   const intro = (translationNotesChapterData['intro'] && translationNotesChapterData['intro'][0]) ?
     translationNotesChapterData['intro'][0]['occurrence_note'] : '';
   const introPanel = (
-    <ExpansionPanel className={classes.column} key={Math.random()}>
-      <ExpansionPanelSummary
-        expandIcon={
-          <ExpandMore />
-        }>
-        <h2>
-          Chapter {chapterKey}
-        </h2>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <div>
-          <ReactMarkdown
-            source={intro}
-            escapeHtml={false}
-          />
-        </div>
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+    <ExpansionComponent
+      key={'chapter'+chapterKey}
+      summary={<h2>Chapter {chapterKey}</h2>}
+      details={<ReactMarkdown source={intro} escapeHtml={false} />}
+    />
   );
   const panels = [introPanel].concat(verses);
 

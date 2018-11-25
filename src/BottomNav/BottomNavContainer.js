@@ -14,33 +14,30 @@ import {
 } from '@material-ui/icons';
 
 class BottomNavContainer extends React.Component {
-  state = {
-    value: null,
-  };
-
-  componentWillReceiveProps(nextProps) {
-    const value = (nextProps.reference.book) ? null : 1;
-    this.setState({
-      value: value,
-    });
-  };
-
   handleChange = (event, value) => {
-    this.props.setReference({});
-    this.setState({
-      value: value,
-    });
-  };
-
-  handleClose = () => {
-    this.setState({
-      value: null,
-    });
+    let newReference = this.props.reference;
+    switch (value) {
+      case 1:
+        newReference = {};
+        break;
+      case 2:
+        newReference = {book: this.props.reference.book};
+        break;
+      default:
+        break;
+    };
+    this.props.setReference(newReference);
   };
 
   render() {
-    const { classes, username, languageId, manifests, reference, setReference } = this.props;
-    const { value } = this.state;
+    const { classes, reference } = this.props;
+
+    let value = null;
+    if (!reference.book) {
+      value = 1;
+    } else if (!reference.chapter) {
+      value = 2;
+    }
 
     return (
       <Paper className={classes.root}>
@@ -70,8 +67,6 @@ class BottomNavContainer extends React.Component {
 
 BottomNavContainer.propTypes = {
   classes: PropTypes.object.isRequired,
-  username: PropTypes.string.isRequired,
-  languageId: PropTypes.string.isRequired,
   reference: PropTypes.object.isRequired,
   setReference: PropTypes.func.isRequired,
 };

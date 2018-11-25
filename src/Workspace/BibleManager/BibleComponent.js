@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   Paper,
   List,
-  ListItem,
 } from '@material-ui/core';
 
 import TestamentComponent from './TestamentComponent';

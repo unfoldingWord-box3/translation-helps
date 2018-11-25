@@ -29,7 +29,7 @@ const ApplicationBar = ({
     const project = ApplicationHelpers.projectByBookId(manifests['ult'].projects, reference.book);
     bookName = project.title;
   }
-  const bookNameComponent = bookName ? <span>&nbsp;-&nbsp;{bookName}</span> : <span />;
+  const referenceComponent = (bookName ? <span>&nbsp;-&nbsp;{bookName} {reference.chapter}</span> : <span />);
 
   return (
     <div>
@@ -40,11 +40,11 @@ const ApplicationBar = ({
         })}
       >
         <Toolbar className={classes.toolbar} disableGutters={!open}>
-          <Typography variant="title" color="inherit" noWrap>
+          <Typography variant="subheading" color="inherit" noWrap>
             {projectName}
           </Typography>
-          <Typography variant="subheading" color="inherit" className={classes.coin} noWrap>
-            {bookNameComponent}
+          <Typography variant="title" color="inherit" className={classes.coin} noWrap>
+            {referenceComponent}
           </Typography>
         </Toolbar>
       </AppBar>

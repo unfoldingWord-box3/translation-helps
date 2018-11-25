@@ -13,46 +13,44 @@ import {
 
 import styles from './styles';
 
+import ExpansionComponent from './ExpansionComponent';
 import ChapterComponent from './ChapterComponent';
 
-export const BookComponent = ({classes, bookData, translationNotesData}) => {
-  const chapters = Object.keys(bookData.chapters).map(chapterKey =>
+export const BookComponent = ({classes, reference, bookData, translationNotesData}) => {
+  const {book, chapter, verse} = reference;
+  const chapterComponent = (
     <ChapterComponent
-      key={chapterKey}
-      chapterKey={chapterKey}
-      chapterData={bookData.chapters[chapterKey]}
-      translationNotesChapterData={translationNotesData[chapterKey]}
+      chapterKey={reference.chapter}
+      chapterData={bookData.chapters[chapter]}
+      translationNotesChapterData={translationNotesData[chapter]}
     />
   );
   const intro = translationNotesData['front']['intro'][0]['occurrence_note'];
   return (
     <div className={classes.root}>
-      <ExpansionPanel className={classes.column} key={Math.random()}>
-        <ExpansionPanelSummary
-          expandIcon={
-            <ExpandMore />
-          }>
+      <ExpansionComponent
+        key={reference.book+'intro'}
+        summary={
           <ReactMarkdown
             source={intro.split('\n')[0]}
             escapeHtml={false}
           />
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <div>
-            <ReactMarkdown
-              source={intro.split('\n').splice(1).join('\n')}
-              escapeHtml={false}
-            />
-          </div>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      {chapters}
+        }
+        details={
+          <ReactMarkdown
+            source={intro.split('\n').splice(1).join('\n')}
+            escapeHtml={false}
+          />
+        }
+      />
+      {chapterComponent}
     </div>
   );
 };
 
 BookComponent.propTypes = {
   classes: PropTypes.object.isRequired,
+  reference: PropTypes.object.isRequired,
   bookData: PropTypes.object.isRequired,
   translationNotesData: PropTypes.object,
 };

@@ -7,14 +7,14 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import {
-  Book,
-  BookOutlined,
+  Bookmark,
+  BookmarkOutlined,
 } from '@material-ui/icons';
 
-export const BookComponent = ({classes, bookMetadata, reference, setReference}) =>
+export const ChapterComponent = ({classes, chapter, verses, reference, setReference}) =>
   <ListItem
     button
-    selected={reference.book === bookMetadata.identifier}
+    selected={reference.chapter === chapter}
     className={classes.bookListItem}
     style={{
       paddingLeft: '2em',
@@ -22,28 +22,31 @@ export const BookComponent = ({classes, bookMetadata, reference, setReference}) 
     }}
     onClick={() => {
       setReference({
-        book: bookMetadata.identifier,
+        book: reference.book,
+        chapter: chapter,
       });
     }}
   >
     <ListItemIcon className={classes.listItemIcon}>
       {
-        (reference.book === bookMetadata.identifier) ?
-        <Book fontSize="small" /> :
-        <BookOutlined fontSize="small" />
+        (reference.chapter === chapter) ?
+        <BookmarkOutlined fontSize="small" /> :
+        <Bookmark fontSize="small" />
       }
     </ListItemIcon>
     <ListItemText
       className={classes.listItemText}
-      primary={bookMetadata.title}
+      primary={'Chapter ' + chapter}
+      secondary={'Verses ' + verses}
     />
   </ListItem>
 
-BookComponent.propTypes = {
+ChapterComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  bookMetadata: PropTypes.object.isRequired,
   reference: PropTypes.object.isRequired,
   setReference: PropTypes.func.isRequired,
+  chapter: PropTypes.number.isRequired,
+  verses: PropTypes.array.isRequired,
 }
 
 const styles = theme => ({
@@ -57,4 +60,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(BookComponent);
+export default withStyles(styles)(ChapterComponent);
