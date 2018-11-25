@@ -11,21 +11,23 @@ import BottomNav from './BottomNav';
 export const Application = ({classes, username, languageId, reference, manifests, setReference}) =>
   <div className={classes.root}>
     <div className={classes.appFrame}>
-      <ApplicationBar
-        username={username}
-        languageId={languageId}
-        manifests={manifests}
-        reference={reference}
-        setReference={setReference}
-      />
       <main className={classes.main}>
-        <Workspace
+        <ApplicationBar
           username={username}
           languageId={languageId}
           manifests={manifests}
           reference={reference}
           setReference={setReference}
         />
+        <div className={classes.workspace}>
+          <Workspace
+            username={username}
+            languageId={languageId}
+            manifests={manifests}
+            reference={reference}
+            setReference={setReference}
+          />
+        </div>
       </main>
       <nav className={classes.bottomNav}>
         <BottomNav
@@ -57,10 +59,12 @@ const styles = theme => ({
   },
   main: {
     width: '100%',
-    padding: '5.5em 1em 5.5em 1em',
     minWidth: '20em',
     fontSize: '0.9em',
     lineHeight: '1.75em',
+  },
+  workspace: {
+    padding: '1em 1em 5.5em 1em',
   },
   bottomNav: {
     width: '100%',

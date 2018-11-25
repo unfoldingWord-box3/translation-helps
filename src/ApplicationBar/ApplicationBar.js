@@ -1,16 +1,14 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import Headroom from 'react-headroom';
 import {
-  AppBar,
   Toolbar,
   Typography,
 } from '@material-ui/core';
 import {
 } from '@material-ui/icons';
 
-import styles from './ApplicationBarStyles';
 import * as ApplicationHelpers from '../ApplicationHelpers';
 
 const ApplicationBar = ({
@@ -18,10 +16,6 @@ const ApplicationBar = ({
   projectName,
   manifests,
   reference,
-  setReference,
-  open,
-  handleDrawerOpen,
-  handleDrawerClose,
 }) => {
 
   let bookName = '';
@@ -32,23 +26,18 @@ const ApplicationBar = ({
   const referenceComponent = (bookName ? <span>&nbsp;-&nbsp;{bookName} {reference.chapter}</span> : <span />);
 
   return (
-    <div>
-      <AppBar
-        className={classNames(classes.appBar, {
-          [classes.appBarShift]: open,
-          [classes[`appBarShift-left`]]: open,
-        })}
-      >
-        <Toolbar className={classes.toolbar} disableGutters={!open}>
+    <Headroom>
+      <div className={classes.paper}>
+        <div className={classes.toolbar}>
           <Typography variant="subheading" color="inherit" noWrap>
             {projectName}
           </Typography>
           <Typography variant="title" color="inherit" className={classes.coin} noWrap>
             {referenceComponent}
           </Typography>
-        </Toolbar>
-      </AppBar>
-    </div>
+        </div>
+      </div>
+    </Headroom>
   );
 }
 
@@ -57,10 +46,23 @@ ApplicationBar.propTypes = {
   theme: PropTypes.object.isRequired,
   manifests: PropTypes.object.isRequired,
   reference: PropTypes.object.isRequired,
-  setReference: PropTypes.func.isRequired,
   projectName: PropTypes.string.isRequired,
-  handleDrawerOpen: PropTypes.func.isRequired,
-  handleDrawerClose: PropTypes.func.isRequired,
 };
+
+const styles = theme => ({
+  paper: {
+    color: '#fff',
+    backgroundColor: '#3f51b5',
+    textAlign: 'center',
+    boxShadow: '0px 1px 5px 0px rgba(0, 0, 0, 0.2),' +
+               '0px 2px 2px 0px rgba(0, 0, 0, 0.14),' +
+               '0px 3px 1px -2px rgba(0, 0, 0, 0.12)',
+  },
+  toolbar: {
+    margin: 'auto',
+    display: 'inline-flex',
+    padding: '1em 0',
+  },
+});
 
 export default withStyles(styles, { withTheme: true })(ApplicationBar);
