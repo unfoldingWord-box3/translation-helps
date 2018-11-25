@@ -51,7 +51,6 @@ const styles = theme => ({
   },
   appFrame: {
     zIndex: 1,
-    overflow: 'hidden',
     position: 'relative',
     display: 'flex',
     width: '100%',
