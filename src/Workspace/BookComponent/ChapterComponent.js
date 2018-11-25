@@ -42,7 +42,7 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
 
 ChapterComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  chapterKey: PropTypes.string.isRequired,
+  chapterKey: PropTypes.number.isRequired,
   chapterData: PropTypes.object.isRequired,
   translationNotesChapterData: PropTypes.object,
 };

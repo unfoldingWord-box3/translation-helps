@@ -29,8 +29,8 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
     <p key={index}>
       <strong>{note['gl_quote']}</strong>: {note['occurrence_note']}
     </p>
-  ) : "";
-  
+  ) : [];
+
   return (
     <ExpansionComponent
       key={'verse'+verseKey}
@@ -40,7 +40,7 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
           {verseObjects}
         </span>
       }
-      details={notes}
+      details={<div>{notes}</div>}
     />
   );
 };
@@ -52,4 +52,4 @@ VerseComponent.propTypes = {
   translationNotesVerseData: PropTypes.array,
 };
 
-export default withStyles(styles)(VerseComponent);
+export default withStyles(styles, { withTheme: true })(VerseComponent);

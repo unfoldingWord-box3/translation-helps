@@ -79,4 +79,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(TestamentComponent);
+export default withStyles(styles, { withTheme: true })(TestamentComponent);

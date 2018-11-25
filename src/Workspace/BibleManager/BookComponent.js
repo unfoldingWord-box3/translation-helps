@@ -57,4 +57,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(BookComponent);
+export default withStyles(styles, { withTheme: true })(BookComponent);

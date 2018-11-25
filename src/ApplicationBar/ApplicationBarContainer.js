@@ -8,7 +8,7 @@ class ApplicationBarContainer extends React.Component {
   };
 
   render() {
-    const {props, state} = this;
+    const {props} = this;
     return (
       <ApplicationBar
         {...props}

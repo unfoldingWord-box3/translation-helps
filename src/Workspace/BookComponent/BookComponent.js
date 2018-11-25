@@ -3,12 +3,8 @@ import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
 } from '@material-ui/core';
 import {
-  ExpandMore,
 } from '@material-ui/icons';
 
 import styles from './styles';
@@ -17,7 +13,7 @@ import ExpansionComponent from './ExpansionComponent';
 import ChapterComponent from './ChapterComponent';
 
 export const BookComponent = ({classes, reference, bookData, translationNotesData}) => {
-  const {book, chapter, verse} = reference;
+  const {chapter} = reference;
   const chapterComponent = (
     <ChapterComponent
       chapterKey={reference.chapter}
@@ -29,7 +25,7 @@ export const BookComponent = ({classes, reference, bookData, translationNotesDat
   return (
     <div className={classes.root}>
       <ExpansionComponent
-        key={reference.book+'intro'}
+        key={''+reference.book+'intro'}
         summary={
           <ReactMarkdown
             source={intro.split('\n')[0]}

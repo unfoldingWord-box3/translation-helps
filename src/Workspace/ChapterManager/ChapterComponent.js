@@ -46,7 +46,7 @@ ChapterComponent.propTypes = {
   reference: PropTypes.object.isRequired,
   setReference: PropTypes.func.isRequired,
   chapter: PropTypes.number.isRequired,
-  verses: PropTypes.array.isRequired,
+  verses: PropTypes.number.isRequired,
 }
 
 const styles = theme => ({

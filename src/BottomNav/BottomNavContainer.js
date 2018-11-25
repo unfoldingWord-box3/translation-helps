@@ -71,10 +71,10 @@ BottomNavContainer.propTypes = {
   setReference: PropTypes.func.isRequired,
 };
 
-const styles = {
+const styles = theme => ({
   root: {
     width: '100%',
   },
-};
+});
 
-export default withStyles(styles)(BottomNavContainer);
+export default withStyles(styles, { withTheme: true })(BottomNavContainer);

@@ -29,7 +29,6 @@ export const Workspace = ({
   );
   const chapterManager = (
     <ChapterManager
-      bookData={bookData}
       reference={reference}
       setReference={setReference}
     />

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import './Application.css';
 
@@ -8,7 +9,14 @@ import ApplicationBar from './ApplicationBar';
 import Workspace from './Workspace';
 import BottomNav from './BottomNav';
 
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
+});
+
 export const Application = ({classes, username, languageId, reference, manifests, setReference}) =>
+<MuiThemeProvider theme={theme}>
   <div className={classes.root}>
     <div className={classes.appFrame}>
       <main className={classes.main}>
@@ -37,6 +45,7 @@ export const Application = ({classes, username, languageId, reference, manifests
       </nav>
     </div>
   </div>
+</MuiThemeProvider>;
 
 Application.propTypes = {
   classes: PropTypes.object.isRequired,

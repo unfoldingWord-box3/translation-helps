@@ -14,6 +14,7 @@ class ApplicationContainer extends React.Component {
   };
 
   setReference(reference) {
+    window.scrollTo(0,0);
     this.setState({
       reference: reference,
     });

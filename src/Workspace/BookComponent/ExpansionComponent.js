@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactMarkdown from 'react-markdown';
-import ScrollableAnchor from 'react-scrollable-anchor'
 import { withStyles } from '@material-ui/core/styles';
 import {
   ExpansionPanel,
@@ -17,18 +15,11 @@ import styles from './styles';
 export const ExpansionComponent = ({classes, key, summary, details}) => {
   return (
     <ExpansionPanel className={classes.column} key={key}>
-      <ExpansionPanelSummary
-        expandIcon={
-          <ExpandMore />
-        }>
-        <ScrollableAnchor id={key}>
-          {summary}
-        </ScrollableAnchor>
+      <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+        {summary}
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <div>
-          {details}
-        </div>
+        <div>{details}</div>
       </ExpansionPanelDetails>
     </ExpansionPanel>
   );
@@ -37,8 +28,8 @@ export const ExpansionComponent = ({classes, key, summary, details}) => {
 ExpansionComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   key: PropTypes.string.isRequired,
-  heading: PropTypes.string.isRequired,
-  details: PropTypes.string.isRequired,
+  summary: PropTypes.object.isRequired,
+  details: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ExpansionComponent);

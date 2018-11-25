@@ -14,6 +14,7 @@ export const ChaptersComponent = ({classes, bookData, reference, setReference}) 
   const chapters = chaptersAndVerses.chaptersInBook(reference.book)
   .map((verses, index) =>
     <ChapterComponent
+      key={index}
       chapter={index+1}
       verses={verses}
       reference={reference}
@@ -38,7 +39,6 @@ export const ChaptersComponent = ({classes, bookData, reference, setReference}) 
 
 ChaptersComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  bookData: PropTypes.object.isRequired,
   reference: PropTypes.object.isRequired,
   setReference: PropTypes.func.isRequired,
 };
