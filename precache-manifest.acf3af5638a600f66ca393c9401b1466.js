@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/translation-helps/static/js/runtime~main.a601a24f.js"
   },
   {
-    "revision": "ebb3b284fb2fb97f8c9ad698edf85c5d",
+    "revision": "5ccf33d85df430c303fd1887b9523663",
     "url": "/translation-helps/index.html"
   }
 ];
