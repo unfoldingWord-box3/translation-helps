@@ -8,7 +8,7 @@ import {
 import {
 } from '@material-ui/icons';
 
-import * as ApplicationHelpers from '../ApplicationHelpers';
+import * as WorkspaceHelpers from '../Workspace/WorkspaceHelpers';
 
 const ApplicationBar = ({
   classes,
@@ -19,7 +19,7 @@ const ApplicationBar = ({
 
   let bookName = '';
   if (manifests['ult'] && manifests['ult'].projects && reference.book) {
-    const project = ApplicationHelpers.projectByBookId(manifests['ult'].projects, reference.book);
+    const project = WorkspaceHelpers.projectByBookId(manifests['ult'].projects, reference.book);
     bookName = project.title;
   }
   const referenceComponent = (bookName ? <span>&nbsp;-&nbsp;{bookName} {reference.chapter}</span> : <span />);

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Workspace from './Workspace';
 
-import * as ApplicationHelpers from '../ApplicationHelpers';
+import * as WorkspaceHelpers from './WorkspaceHelpers';
 
 class WorkspaceContainer extends React.Component {
   state = {
@@ -12,11 +12,11 @@ class WorkspaceContainer extends React.Component {
   };
 
   fetchResources(props) {
-    const {username, languageId, reference} = props;
+    const {username, languageId, reference, manifests} = props;
     if (reference.book) {
-      ApplicationHelpers.fetchBook(username, languageId, reference.book)
+      WorkspaceHelpers.fetchBook(username, languageId, reference.book, manifests.ult)
       .then(bookData => {
-        ApplicationHelpers.translationNotes(username, languageId, reference.book)
+        WorkspaceHelpers.translationNotes(username, languageId, reference.book, manifests.tn)
         .then(translationNotes => {
           this.setState({
             bookData: bookData,
