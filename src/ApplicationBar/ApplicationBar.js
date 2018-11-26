@@ -28,7 +28,7 @@ const ApplicationBar = ({
     <Headroom>
       <div className={classes.paper}>
         <div className={classes.toolbar}>
-          <Typography variant="subheading" color="inherit" noWrap>
+          <Typography className={classes.projectName} variant="subheading" color="inherit" noWrap>
             {projectName}
           </Typography>
           <Typography variant="title" color="inherit" className={classes.coin} noWrap>
@@ -61,6 +61,9 @@ const styles = theme => ({
     margin: 'auto',
     display: 'inline-flex',
     padding: '1em 0',
+  },
+  projectName: {
+    paddingTop: '0.1em',
   },
 });
 
