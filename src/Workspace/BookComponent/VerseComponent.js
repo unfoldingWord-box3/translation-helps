@@ -21,6 +21,7 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
       <VerseObjectComponent
         key={index}
         verseObject={verseObject}
+        greekWords={[]}
       />
     );
   }) : <span />;

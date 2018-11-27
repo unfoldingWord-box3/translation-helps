@@ -1,0 +1,88 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import {
+  Typography,
+  Popover,
+} from '@material-ui/core';
+
+import TextComponent from './TextComponent';
+
+class GreekWordsContainer extends React.Component {
+  state = {
+    anchorEl: null,
+  };
+
+  handlePopoverOpen = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handlePopoverClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  render() {
+    const { classes, children, greekWords } = this.props;
+    const { anchorEl } = this.state;
+    const open = Boolean(anchorEl);
+
+    return (
+      <span>
+        <span
+          aria-owns={open ? 'mouse-over-popover' : undefined}
+          aria-haspopup="true"
+          onMouseEnter={this.handlePopoverOpen}
+          onMouseLeave={this.handlePopoverClose}
+        >
+          {
+            children.map((verseObject, index) =>
+              <TextComponent key={index} verseObject={verseObject}/>
+            )
+          }
+        </span>
+        <Popover
+          id="mouse-over-popover"
+          className={classes.popover}
+          classes={{
+            paper: classes.paper,
+          }}
+          open={open}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          onClose={this.handlePopoverClose}
+          disableRestoreFocus
+        >
+          <Typography className={classes.typography}>
+            {
+              greekWords.map(word => word.content).join(' ')
+            }
+          </Typography>
+        </Popover>
+      </span>
+    );
+  }
+}
+
+GreekWordsContainer.propTypes = {
+  classes: PropTypes.object.isRequired,
+  children: PropTypes.array.isRequired,
+  greekWords: PropTypes.array,
+};
+
+const styles = theme => ({
+  popover: {
+    pointerEvents: 'none',
+  },
+  paper: {
+    padding: theme.spacing.unit,
+  },
+});
+
+export default withStyles(styles, { withTheme: true })(GreekWordsContainer);

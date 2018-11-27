@@ -9,15 +9,22 @@ import {
 import MilestoneComponent from './MilestoneComponent';
 import TextComponent from './TextComponent';
 
-export const VerseObjectComponent = ({classes, verseObject}) => {
+export const VerseObjectComponent = ({classes, verseObject, greekWords}) => {
   const component = verseObject.type === 'milestone' ?
-    <MilestoneComponent verseObject={verseObject} /> : <TextComponent verseObject={verseObject} />;
+    <MilestoneComponent
+      verseObject={verseObject}
+      greekWords={greekWords}
+    /> :
+    <TextComponent
+      verseObject={verseObject}
+    />;
   return component;
 };
 
 VerseObjectComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   verseObject: PropTypes.object.isRequired,
+  greekWords: PropTypes.array,
 };
 
 const styles = theme => ({
