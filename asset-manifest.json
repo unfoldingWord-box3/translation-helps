@@ -1,13 +1,13 @@
 {
-  "main.css": "/translation-helps/static/css/main.bf4ccf4c.chunk.css",
-  "main.js": "/translation-helps/static/js/main.90710875.chunk.js",
-  "main.js.map": "/translation-helps/static/js/main.90710875.chunk.js.map",
-  "static/js/1.48dcc029.chunk.js": "/translation-helps/static/js/1.48dcc029.chunk.js",
-  "static/js/1.48dcc029.chunk.js.map": "/translation-helps/static/js/1.48dcc029.chunk.js.map",
+  "main.css": "/translation-helps/static/css/main.d1c2e5fb.chunk.css",
+  "main.js": "/translation-helps/static/js/main.ab0a10dc.chunk.js",
+  "main.js.map": "/translation-helps/static/js/main.ab0a10dc.chunk.js.map",
+  "static/js/1.c7aa141c.chunk.js": "/translation-helps/static/js/1.c7aa141c.chunk.js",
+  "static/js/1.c7aa141c.chunk.js.map": "/translation-helps/static/js/1.c7aa141c.chunk.js.map",
   "runtime~main.js": "/translation-helps/static/js/runtime~main.a601a24f.js",
   "runtime~main.js.map": "/translation-helps/static/js/runtime~main.a601a24f.js.map",
-  "static/css/main.bf4ccf4c.chunk.css.map": "/translation-helps/static/css/main.bf4ccf4c.chunk.css.map",
+  "static/css/main.d1c2e5fb.chunk.css.map": "/translation-helps/static/css/main.d1c2e5fb.chunk.css.map",
   "index.html": "/translation-helps/index.html",
-  "precache-manifest.cbe722c83510ea25d58f77c0a6a6ba26.js": "/translation-helps/precache-manifest.cbe722c83510ea25d58f77c0a6a6ba26.js",
+  "precache-manifest.4c5160f0b15e495cf1e8f65b256d1514.js": "/translation-helps/precache-manifest.4c5160f0b15e495cf1e8f65b256d1514.js",
   "service-worker.js": "/translation-helps/service-worker.js"
 }
