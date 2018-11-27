@@ -11,7 +11,6 @@ import GreekWordsContainer from './GreekWordsContainer';
 
 export const MilestoneComponent = ({classes, verseObject, greekWords}) => {
   greekWords.push(verseObject);
-  debugger
   const container = (verseObject.children[0].type === 'milestone') ?
     verseObject.children.map((child, index) =>
       <VerseObjectComponent

@@ -33,6 +33,7 @@ class GreekWordsContainer extends React.Component {
           aria-haspopup="true"
           onMouseEnter={this.handlePopoverOpen}
           onMouseLeave={this.handlePopoverClose}
+          className={(open ? classes.open : classes.closed)}
         >
           {
             children.map((verseObject, index) =>
@@ -77,6 +78,11 @@ GreekWordsContainer.propTypes = {
 };
 
 const styles = theme => ({
+  open: {
+    backgroundColor: 'lightgoldenrodyellow',
+  },
+  closed: {
+  },
   popover: {
     pointerEvents: 'none',
   },
