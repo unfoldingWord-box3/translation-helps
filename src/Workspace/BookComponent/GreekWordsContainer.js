@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Typography,
   Popover,
 } from '@material-ui/core';
 
 import TextComponent from './TextComponent';
+import GreekWord from './GreekWord/index.js';
 
 class GreekWordsContainer extends React.Component {
   state = {
@@ -25,7 +25,6 @@ class GreekWordsContainer extends React.Component {
     const { classes, children, greekWords } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
-
     return (
       <span>
         <span
@@ -60,11 +59,11 @@ class GreekWordsContainer extends React.Component {
           onClose={this.handlePopoverClose}
           disableRestoreFocus
         >
-          <Typography className={classes.typography}>
-            {
-              greekWords.map(word => word.content).join(' ')
-            }
-          </Typography>
+        {
+          greekWords.map(verseObject =>
+            <GreekWord verseObject={verseObject} />
+          )
+        }
         </Popover>
       </span>
     );
