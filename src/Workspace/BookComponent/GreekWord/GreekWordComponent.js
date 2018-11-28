@@ -11,23 +11,25 @@ export const GreekWordComponent = ({classes, verseObject, senses}) => {
 
   return (
     <div>
-      <Typography><strong>{verseObject.content}</strong></Typography>
-      <Typography><em>lemma:</em> {verseObject.lemma}</Typography>
-      <Typography><em>strong:</em> {verseObject.strong}</Typography>
+      <Typography>
+        <span><strong>{verseObject.content}</strong> -</span>
+        <span> <em>lemma:</em> {verseObject.lemma}</span>
+        <span> <em>strong:</em> {verseObject.strong}</span>
+      </Typography>
       {
         senses.map((sense, index) =>
-          <div key={index}>
+          <Typography key={index}>
             {
               sense.gloss ?
-              <Typography><em>Gloss:</em> {sense.gloss}</Typography>
+              <span><em>Gloss:</em> {sense.gloss}</span>
               : ''
             }
             {
               sense.definition ?
-              <Typography><em>Definition:</em> {sense.definition}</Typography>
+              <span> <em>Definition:</em> {sense.definition}</span>
               : ''
             }
-          </div>
+          </Typography>
         )
       }
     </div>
