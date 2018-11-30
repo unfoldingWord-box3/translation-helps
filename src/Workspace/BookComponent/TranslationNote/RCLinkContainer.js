@@ -100,17 +100,17 @@ RCLinkContainer.propTypes = {
 
 const styles = theme => ({
   paper: {
-    padding: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
     paddingLeft: theme.spacing.unit * 2,
     paddingRight: theme.spacing.unit * 2,
     position: 'fixed',
     marginLeft: 'auto',
     marginRight: 'auto',
     maxWidth: '39em',
-    top: theme.spacing.unit,
-    bottom: theme.spacing.unit,
-    left: theme.spacing.unit,
-    right: theme.spacing.unit,
+    top: theme.spacing.unit * 2,
+    bottom: theme.spacing.unit * 2,
+    left: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2,
     overflow: 'scroll',
   },
 });
