@@ -60,8 +60,8 @@ class GreekWordsContainer extends React.Component {
           disableRestoreFocus
         >
         {
-          greekWords.map(verseObject =>
-            <GreekWord verseObject={verseObject} />
+          greekWords.map((verseObject, index) =>
+            <GreekWord key={index} verseObject={verseObject} />
           )
         }
         </Popover>

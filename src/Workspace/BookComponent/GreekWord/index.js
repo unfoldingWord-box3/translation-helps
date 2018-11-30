@@ -1,2 +1,2 @@
-import GreekWordContainer from './GreekWordContainer'
-export default GreekWordContainer
+import GreekWordContainer from './GreekWordContainer';
+export default GreekWordContainer;

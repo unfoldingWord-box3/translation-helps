@@ -12,8 +12,13 @@
     "react-dom": "^16.6.3",
     "react-headroom": "^2.2.2",
     "react-markdown": "^4.0.3",
+    "react-process-string": "^1.2.0",
     "react-scripts": "2.1.1",
     "react-scrollable-anchor": "^0.6.1",
+    "remark": "^10.0.1",
+    "remark-linkify-regex": "^1.0.0",
+    "remark-parse": "^6.0.3",
+    "remark-react": "^5.0.0",
     "request-promise": "^4.2.2",
     "usfm-js": "^1.0.11",
     "yaml": "^1.0.2"

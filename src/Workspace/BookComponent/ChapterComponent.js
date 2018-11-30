@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactMarkdown from 'react-markdown';
 import { withStyles } from '@material-ui/core/styles';
 import {
 } from '@material-ui/core';
@@ -9,6 +8,7 @@ import {
 
 import styles from './styles';
 
+import TextComponentWithRCLinks from './TranslationNote/TextComponentWithRCLinks';
 import ExpansionComponent from './ExpansionComponent';
 import VerseComponent from './VerseComponent';
 
@@ -32,7 +32,7 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
     <ExpansionComponent
       key={'chapter'+chapterKey}
       summary={<h2>Chapter {chapterKey}</h2>}
-      details={<ReactMarkdown source={intro} escapeHtml={false} />}
+      details={<TextComponentWithRCLinks text={intro} />}
     />
   );
   const panels = [introPanel].concat(verses);

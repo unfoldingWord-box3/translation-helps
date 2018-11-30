@@ -11,6 +11,7 @@ import styles from './styles';
 
 import ExpansionComponent from './ExpansionComponent';
 import ChapterComponent from './ChapterComponent';
+import TextComponentWithRCLinks from './TranslationNote/TextComponentWithRCLinks';
 
 export const BookComponent = ({classes, reference, bookData, translationNotesData}) => {
   const {chapter} = reference;
@@ -22,6 +23,8 @@ export const BookComponent = ({classes, reference, bookData, translationNotesDat
     />
   );
   const intro = translationNotesData['front']['intro'][0]['occurrence_note'];
+  const introDetails = intro.split('\n').splice(1).join('\n');
+  const detailsParsedLinks = <TextComponentWithRCLinks text={introDetails} />;
   return (
     <div className={classes.root}>
       <ExpansionComponent
@@ -32,12 +35,7 @@ export const BookComponent = ({classes, reference, bookData, translationNotesDat
             escapeHtml={false}
           />
         }
-        details={
-          <ReactMarkdown
-            source={intro.split('\n').splice(1).join('\n')}
-            escapeHtml={false}
-          />
-        }
+        details={detailsParsedLinks}
       />
       {chapterComponent}
     </div>

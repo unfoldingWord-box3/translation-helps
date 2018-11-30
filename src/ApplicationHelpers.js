@@ -7,11 +7,14 @@ const uriBase = "https://git.door43.org/";
 // Purpose: application wide
 // Scope: limited to resource manifests and information
 
+export const username = 'unfoldingword';
 export const resourceRepositories = (languageId) => {
   return {
     ult: languageId + '_ult',
     tn: languageId + '-tn',
     ugl: languageId + '_ugl',
+    ta: languageId + '-ta',
+    tw: languageId + '-tw',
   };
 };
 
