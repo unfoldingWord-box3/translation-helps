@@ -77,8 +77,6 @@ const styles = theme => ({
   main: {
     width: '100%',
     minWidth: '20em',
-    fontSize: '0.9em',
-    lineHeight: '1.75em',
   },
   workspace: {
     padding: '1em 1em 5.5em 1em',
