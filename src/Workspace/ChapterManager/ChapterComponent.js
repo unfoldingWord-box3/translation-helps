@@ -30,8 +30,8 @@ export const ChapterComponent = ({classes, chapter, verses, reference, setRefere
     <ListItemIcon className={classes.listItemIcon}>
       {
         (reference.chapter === chapter) ?
-        <BookmarkOutlined /> :
-        <Bookmark />
+        <Bookmark /> :
+        <BookmarkOutlined />
       }
     </ListItemIcon>
     <ListItemText
