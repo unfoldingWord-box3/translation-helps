@@ -37,7 +37,7 @@ export const ChapterComponent = ({classes, chapter, verses, reference, setRefere
     <ListItemText
       className={classes.listItemText}
       primary={'Chapter ' + chapter}
-      secondary={'Verses ' + verses}
+      secondary={verses + ' Verses' }
     />
   </ListItem>
 

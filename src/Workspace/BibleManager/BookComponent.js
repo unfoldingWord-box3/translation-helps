@@ -11,33 +11,41 @@ import {
   BookOutlined,
 } from '@material-ui/icons';
 
-export const BookComponent = ({classes, bookMetadata, reference, setReference}) =>
-  <ListItem
-    button
-    selected={reference.book === bookMetadata.identifier}
-    className={classes.bookListItem}
-    style={{
-      paddingLeft: '2em',
-      paddingRight: '0.7em',
-    }}
-    onClick={() => {
-      setReference({
-        book: bookMetadata.identifier,
-      });
-    }}
-  >
-    <ListItemIcon className={classes.listItemIcon}>
-      {
-        (reference.book === bookMetadata.identifier) ?
-        <Book fontSize="small" /> :
-        <BookOutlined fontSize="small" />
-      }
-    </ListItemIcon>
-    <ListItemText
-      className={classes.listItemText}
-      primary={bookMetadata.title}
-    />
-  </ListItem>
+import * as chaptersAndVerses from '../../chaptersAndVerses';
+
+export const BookComponent = ({classes, bookMetadata, reference, setReference}) => {
+  const bookId = bookMetadata.identifier;
+  const chapterCount = chaptersAndVerses.chaptersInBook(bookId).length;
+  return (
+    <ListItem
+      button
+      selected={reference.book === bookMetadata.identifier}
+      className={classes.bookListItem}
+      style={{
+        paddingLeft: '2em',
+        paddingRight: '0.7em',
+      }}
+      onClick={() => {
+        setReference({
+          book: bookId,
+        });
+      }}
+    >
+      <ListItemIcon className={classes.listItemIcon}>
+        {
+          (reference.book === bookMetadata.identifier) ?
+          <Book fontSize="small" /> :
+          <BookOutlined fontSize="small" />
+        }
+      </ListItemIcon>
+      <ListItemText
+        className={classes.listItemText}
+        primary={bookMetadata.title}
+        secondary={chapterCount + ' Chapters' }
+      />
+    </ListItem>
+  );
+}
 
 BookComponent.propTypes = {
   classes: PropTypes.object.isRequired,
