@@ -1,8 +1,10 @@
 import data from './chaptersAndVerses.json';
 
 export const chaptersInBook = bookId => {
+try {
   const chapters = bookData(bookId).chapters;
   return chapters;
+} catch {debugger}
 }
 
 export const versesInChapter = (bookId, chapter) => {

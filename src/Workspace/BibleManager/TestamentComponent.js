@@ -41,16 +41,18 @@ export const TestamentComponent = ({classes, testamentId, books, reference, setR
         <ListItemIcon className={classes.listItemIcon}>
           {
             selected ?
-            <Bookmarks fontSize="small" /> :
-            <BookmarksOutlined fontSize="small" />
+            <Bookmarks /> :
+            <BookmarksOutlined />
           }
         </ListItemIcon>
         <ListItemText
           inset
           className={classes.listItemText}
-          primary={testamentId} />
+          primary={testamentId}
+          secondary={books.length + ' Books'}
+        />
       </ListItem>
-      <Collapse in={selected} timeout="auto" unmountOnExit>
+      <Collapse in={true} timeout="auto" unmountOnExit>
         <List dense className={classes.list}>
           {bookComponents}
         </List>
