@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   Modal,
   Paper,
+  Chip,
 } from '@material-ui/core';
 
 import TextComponentWithRCLinks from './TextComponentWithRCLinks';
@@ -74,9 +75,7 @@ class RCLinkContainer extends React.Component {
     const {classes, href} = this.props;
     return (
       <span>
-        <a href={"#"+path} onClick={this.handleOpen}>
-          {title || path}
-        </a>
+        <Chip label={title || path} className={classes.chip} onClick={this.handleOpen} />
         <Modal
           aria-labelledby={path}
           aria-describedby={href}
@@ -112,6 +111,8 @@ const styles = theme => ({
     left: theme.spacing.unit * 2,
     right: theme.spacing.unit * 2,
     overflow: 'scroll',
+  },
+  chip: {
   },
 });
 

@@ -27,7 +27,9 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
     />
   );
   const intro = (translationNotesChapterData['intro'] && translationNotesChapterData['intro'][0]) ?
-    translationNotesChapterData['intro'][0]['occurrence_note'] : '';
+    translationNotesChapterData['intro'][0]['occurrence_note']
+    .replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '')
+    : '';
   const introPanel = (
     <ExpansionComponent
       key={'chapter'+chapterKey}

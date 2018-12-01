@@ -15,10 +15,9 @@ export const TextComponentWithRCLinks = ({classes, text}) => {
       a: RCLinkContainer,
     }
   };
-  const _text = text.replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '');
   const component = remark()
   .use(remark2react, options)
-  .processSync(_text).contents;
+  .processSync(text).contents;
   return component;
 };
 

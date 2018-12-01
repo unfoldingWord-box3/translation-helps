@@ -23,7 +23,8 @@ export const BookComponent = ({classes, reference, bookData, translationNotesDat
     />
   );
   const intro = translationNotesData['front']['intro'][0]['occurrence_note'];
-  const introDetails = intro.split('\n').splice(1).join('\n');
+  const introDetails = intro.split('\n').splice(1).join('\n')
+    .replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '');
   const detailsParsedLinks = <TextComponentWithRCLinks text={introDetails} />;
   return (
     <div className={classes.root}>

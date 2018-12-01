@@ -11,7 +11,8 @@ import {
 import TextComponentWithRCLinks from './TextComponentWithRCLinks';
 
 export const TranslationNoteComponent = ({classes, note}) => {
-  const noteComponent = <TextComponentWithRCLinks text={note.occurrence_note} />;
+  const occurrence_note = note.occurrence_note.replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '');
+  const noteComponent = <TextComponentWithRCLinks text={occurrence_note} />;
   return (
     <div className={classes.root}>
       <Divider />
