@@ -113,6 +113,7 @@ const styles = theme => ({
     overflow: 'scroll',
   },
   chip: {
+    height: 'unset',
   },
 });
 
