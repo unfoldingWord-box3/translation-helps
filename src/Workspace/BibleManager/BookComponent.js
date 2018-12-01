@@ -22,7 +22,7 @@ export const BookComponent = ({classes, bookMetadata, reference, setReference}) 
       selected={reference.book === bookMetadata.identifier}
       className={classes.bookListItem}
       style={{
-        paddingLeft: '2em',
+        paddingLeft: '2.2em',
         paddingRight: '0.7em',
       }}
       onClick={() => {
