@@ -34,8 +34,8 @@ export const BookComponent = ({classes, bookMetadata, reference, setReference}) 
       <ListItemIcon className={classes.listItemIcon}>
         {
           (reference.book === bookMetadata.identifier) ?
-          <Book fontSize="small" /> :
-          <BookOutlined fontSize="small" />
+          <Book /> :
+          <BookOutlined />
         }
       </ListItemIcon>
       <ListItemText
