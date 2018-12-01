@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import {
   Bookmark,
-  BookmarkOutlined,
+  BookmarkBorder,
 } from '@material-ui/icons';
 
 export const ChapterComponent = ({classes, chapter, verses, reference, setReference}) =>
@@ -31,7 +31,7 @@ export const ChapterComponent = ({classes, chapter, verses, reference, setRefere
       {
         (reference.chapter === chapter) ?
         <Bookmark /> :
-        <BookmarkOutlined />
+        <BookmarkBorder />
       }
     </ListItemIcon>
     <ListItemText
