@@ -6,7 +6,7 @@ import {
   List,
 } from '@material-ui/core';
 
-import TestamentComponent from './TestamentComponent';
+import TestamentContainer from './TestamentContainer';
 
 export const BibleComponent = ({classes, manifests, reference, setReference}) => {
   let bible = {};
@@ -28,7 +28,7 @@ export const BibleComponent = ({classes, manifests, reference, setReference}) =>
         <div className={classes.bibleList}>
           {
             Object.keys(bible).map(testamentId =>
-              <TestamentComponent
+              <TestamentContainer
                 key={testamentId}
                 testamentId={testamentId}
                 books={bible[testamentId]}

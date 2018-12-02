@@ -15,8 +15,7 @@ import {
 
 import BookComponent from './BookComponent';
 
-export const TestamentComponent = ({classes, testamentId, books, reference, setReference}) => {
-  const selected = testamentId === 'New Testament';
+export const TestamentComponent = ({classes, testamentId, books, reference, setReference, open, toggle}) => {
   const bookComponents = books ?
     books.map((bookMetadata) =>
       <BookComponent
@@ -31,16 +30,17 @@ export const TestamentComponent = ({classes, testamentId, books, reference, setR
     <div>
       <ListItem
         button
-        selected={selected}
+        selected={open}
         className={classes.fileList}
         style={{
           paddingLeft: '1em',
           paddingRight: '0.5em',
         }}
+        onClick={toggle}
       >
         <ListItemIcon className={classes.listItemIcon}>
           {
-            selected ?
+            open ?
             <Bookmarks /> :
             <BookmarksOutlined />
           }
@@ -52,7 +52,7 @@ export const TestamentComponent = ({classes, testamentId, books, reference, setR
           secondary={books.length + ' Books'}
         />
       </ListItem>
-      <Collapse in={true} timeout="auto" unmountOnExit>
+      <Collapse in={open} timeout="auto" unmountOnExit>
         <List dense className={classes.list}>
           {bookComponents}
         </List>
