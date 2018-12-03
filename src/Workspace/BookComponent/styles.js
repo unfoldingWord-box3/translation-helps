@@ -11,6 +11,9 @@ export const styles = theme => ({
   },
   verse: {
   },
+  fullWidth: {
+    maxWidth: '100%'
+  }
 });
 
 export default styles;

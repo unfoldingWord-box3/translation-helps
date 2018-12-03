@@ -28,7 +28,6 @@ class TestamentContainer extends React.Component {
 };
 
 TestamentContainer.propTypes = {
-  open: PropTypes.bool.isRequired,
 };
 
 export default TestamentContainer;

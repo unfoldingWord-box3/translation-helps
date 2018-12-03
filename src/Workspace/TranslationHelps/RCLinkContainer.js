@@ -2,12 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Modal,
-  Paper,
   Chip,
 } from '@material-ui/core';
 
-import TextComponentWithRCLinks from './TextComponentWithRCLinks';
 import * as helpers from './helpers';
 
 class RCLinkContainer extends React.Component {
@@ -44,6 +41,7 @@ class RCLinkContainer extends React.Component {
   };
 
   componentDidMount() {
+    this.mounted = true;
     const {languageId, resourceId, path} = this.state;
     if (languageId && resourceId && path) {
       helpers.fetchTitle(languageId, resourceId, path)
@@ -55,15 +53,20 @@ class RCLinkContainer extends React.Component {
     }
   };
 
+  componentWillUnmount(){
+    this.mounted = false;
+  };
+
   handleOpen = () => {
-    const {languageId, resourceId, path} = this.state;
+    const {languageId, resourceId, path, title} = this.state;
     helpers.fetchArticle(languageId, resourceId, path)
     .then(article => {
-      this.setState({
-        article: article,
-        open: true,
-      });
-    })
+      const tab = {
+        title: title || path,
+        text: article,
+      };
+      this.props.addTab(tab);
+    });
   };
 
   handleClose = () => {
@@ -71,22 +74,15 @@ class RCLinkContainer extends React.Component {
   };
 
   render() {
-    const {title, path, open, article} = this.state;
-    const {classes, href} = this.props;
+    const {title, path} = this.state;
+    const {classes} = this.props;
+
     return (
-      <span>
-        <Chip label={title || path} className={classes.chip} onClick={this.handleOpen} />
-        <Modal
-          aria-labelledby={path}
-          aria-describedby={href}
-          open={open}
-          onClose={this.handleClose}
-        >
-          <Paper className={classes.paper}>
-            <TextComponentWithRCLinks text={article} />
-          </Paper>
-        </Modal>
-      </span>
+      <Chip
+        label={title || path}
+        className={classes.chip}
+        onClick={this.handleOpen}
+      />
     );
   }
 };
@@ -94,24 +90,11 @@ class RCLinkContainer extends React.Component {
 RCLinkContainer.propTypes = {
   classes: PropTypes.object.isRequired,
   url: PropTypes.string.isRequired,
+  addTab: PropTypes.func.isRequired,
 };
 
 
 const styles = theme => ({
-  paper: {
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
-    position: 'fixed',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    maxWidth: '39em',
-    top: theme.spacing.unit * 2,
-    bottom: theme.spacing.unit * 2,
-    left: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2,
-    overflow: 'scroll',
-  },
   chip: {
     height: 'unset',
   },

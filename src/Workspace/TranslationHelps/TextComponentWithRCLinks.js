@@ -9,10 +9,11 @@ import {
 
 import RCLinkContainer from './RCLinkContainer';
 
-export const TextComponentWithRCLinks = ({classes, text}) => {
+export const TextComponentWithRCLinks = ({classes, text, addTab}) => {
   const options = {
     remarkReactComponents: {
-      a: RCLinkContainer,
+      a: (props) => <RCLinkContainer {...props} addTab={addTab} />,
+      div: (props) => <div {...props} style={{width: '100%'}}/>,
     }
   };
   const component = remark()
@@ -22,8 +23,8 @@ export const TextComponentWithRCLinks = ({classes, text}) => {
 };
 
 TextComponentWithRCLinks.propTypes = {
-  classes: PropTypes.object.isRequired,
   text: PropTypes.string.isRequired,
+  addTab: PropTypes.func.isRequired,
 };
 
 export default TextComponentWithRCLinks;

@@ -8,9 +8,10 @@ import {
 
 import styles from './styles';
 
-import TextComponentWithRCLinks from './TranslationNote/TextComponentWithRCLinks';
+import TranslationHelps from '../TranslationHelps';
 import ExpansionComponent from './ExpansionComponent';
 import VerseComponent from './VerseComponent';
+import TextComponentWithRCLinks from '../TranslationHelps/TextComponentWithRCLinks';
 
 export const ChapterComponent = ({classes, chapterKey, chapterData, translationNotesChapterData}) => {
   const verses = Object.keys(chapterData)
@@ -30,11 +31,15 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
     translationNotesChapterData['intro'][0]['occurrence_note']
     .replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '')
     : '';
+  const tabs = [{
+    title: 'Chapter Notes',
+    text: intro,
+  }];
   const introPanel = (
     <ExpansionComponent
       key={'chapter'+chapterKey}
       summary={<h2>Chapter {chapterKey}</h2>}
-      details={<TextComponentWithRCLinks text={intro} />}
+      details={<TranslationHelps tabs={tabs} />}
     />
   );
   const panels = [introPanel].concat(verses);

@@ -10,7 +10,7 @@ import styles from './styles';
 
 import ExpansionComponent from './ExpansionComponent';
 import VerseObjectComponent from './VerseObjectComponent';
-import TranslationNote from './TranslationNote';
+import TranslationHelps from '../TranslationHelps';
 
 export const VerseComponent = ({classes, verseKey, verseData, translationNotesVerseData}) => {
   const verseObjects =
@@ -26,10 +26,12 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
       />
     );
   }) : <span />;
-  const notes = translationNotesVerseData ?
-    translationNotesVerseData.map((note, index) =>
-      <TranslationNote key={index} note={note} />
-    ) : [];
+  const notes = translationNotesVerseData || [];
+  const tabs = [{
+    title: 'Verse Notes',
+    notes: notes,
+  }];
+  const details = notes ? <TranslationHelps tabs={tabs} /> : [];
 
   return (
     <ExpansionComponent
@@ -40,7 +42,7 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
           {verseObjects}
         </span>
       }
-      details={<div>{notes}</div>}
+      details={details}
     />
   );
 };

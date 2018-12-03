@@ -1,5 +1,5 @@
-import * as TranslationAcademyHelpers from '../TranslationAcademy/helpers';
-import * as TranslationWordsHelpers from '../TranslationWords/helpers';
+import * as TranslationAcademyHelpers from './TranslationAcademy/helpers';
+import * as TranslationWordsHelpers from './TranslationWords/helpers';
 
 export const fetchTitle = (languageId, resourceId, linkPath) => new Promise((resolve, reject) => {
   switch (resourceId) {
