@@ -16,7 +16,12 @@ export const fetchTitle = (languageId, linkPath) => new Promise((resolve, reject
 });
 
 export const fetchArticle = (languageId, linkPath) => new Promise((resolve, reject) => {
-  const uriPath = linkPath.split('/').splice(1).join('/') + '.md';
+  const uriPath = linkPath.split('/').splice(1).join('/') + '.md'; // remove "/dict/"
   ApplicationHelpers.fetchFileFromServer(username, repository(languageId), uriPath)
-  .then(resolve).catch(reject);
+  .then(article => {
+    const prefix = linkPath.split('/').splice(0,2).join('/');
+    article = article.split('../').join(`http://${languageId}/tw/${prefix}/`)
+      .split('.md').join('').split('rc://').join('http://');
+    resolve(article);
+  }).catch(reject);
 });
