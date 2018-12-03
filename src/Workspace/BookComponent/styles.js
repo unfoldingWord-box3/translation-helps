@@ -12,7 +12,7 @@ export const styles = theme => ({
   verse: {
   },
   fullWidth: {
-    maxWidth: '100%'
+    width: '100%'
   }
 });
 
