@@ -49,11 +49,14 @@ class TranslationHelpsContainer extends React.Component {
         );
       }
       tabLabels.push(<Tab label={tab.title} />);
-      tabContents.push(<div className={classes.width}>{content}</div>);
+      tabContents.push(
+        <div className={(index === tabIndex) ? classes.width : classes.hidden }>
+          {content}
+        </div>);
     });
     return (
       <div className={classes.root}>
-        <AppBar className={classes.width} position="sticky" color="default">
+        <AppBar className={classes.appBar} position="sticky" color="default">
           <Tabs
             className={classes.width}
             value={tabIndex}
@@ -91,6 +94,13 @@ const styles = theme => ({
   },
   width: {
     width: '100%',
+  },
+  appBar: {
+    width: '100%',
+    zIndex: '10',
+  },
+  hidden: {
+    height: '0px',
   }
 });
 

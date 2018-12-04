@@ -10,7 +10,7 @@ export const fetchTitle = (languageId, resourceId, linkPath) => new Promise((res
       TranslationWordsHelpers.fetchTitle(languageId, linkPath).then(resolve);
       break;
     default:
-      reject('resourceId not configured: ' + resourceId);
+      reject(`resourceId not configured: ${languageId} - ${resourceId} - ${linkPath}`);
       break;
   };
 });
@@ -24,7 +24,7 @@ export const fetchArticle = (languageId, resourceId, linkPath) => new Promise((r
       TranslationWordsHelpers.fetchArticle(languageId, linkPath).then(resolve);
       break;
     default:
-      reject('resourceId not configured: ' + resourceId);
+      reject(`resourceId not configured: ${languageId} - ${resourceId} - ${linkPath}`);
       break;
   };
 });
