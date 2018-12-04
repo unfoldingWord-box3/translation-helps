@@ -26,12 +26,12 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
       />
     );
   }) : <span />;
-  const notes = translationNotesVerseData || [];
+  const notes = translationNotesVerseData;
   const tabs = [{
     title: 'Verse Notes',
     notes: notes,
   }];
-  const details = notes ? <TranslationHelps tabs={tabs} /> : [];
+  const details = notes ? <TranslationHelps tabs={tabs} /> : null;
 
   return (
     <ExpansionComponent
