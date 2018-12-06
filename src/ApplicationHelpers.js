@@ -3,7 +3,7 @@ import YAML from 'yaml';
 import {each} from 'async';
 import request from 'request-promise';
 
-const uriBase = "https://git.door43.org/";
+const uriBase = "https://d3r5pm83aa8hdu.cloudfront.net/";
 
 // Purpose: application wide
 // Scope: limited to resource manifests and information
