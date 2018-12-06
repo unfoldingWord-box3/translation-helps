@@ -12,7 +12,7 @@ export const GreekWordComponent = ({classes, verseObject, senses}) => {
   return (
     <div>
       <Typography>
-        <span><strong>{verseObject.content}</strong> -</span>
+        <span><strong>{verseObject.text || verseObject.content}</strong> -</span>
         <span> <em>lemma:</em> {verseObject.lemma}</span>
         <span> <em>strong:</em> {verseObject.strong}</span>
       </Typography>

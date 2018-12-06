@@ -16,6 +16,8 @@ class GreekWordsContainer extends React.Component {
       this.setState({
         senses: senses,
       });
+    }).catch(error => {
+      console.log(error);
     });
   };
 

@@ -13,6 +13,7 @@ import ChapterManager from './ChapterManager';
 export const Workspace = ({
   classes,
   bookData,
+  ugntData,
   translationNotesData,
   username,
   languageId,
@@ -35,8 +36,10 @@ export const Workspace = ({
   );
   const bookComponent = (
     <BookComponent
+      languageId={languageId}
       reference={reference}
       bookData={bookData}
+      ugntData={ugntData}
       translationNotesData={translationNotesData}
     />
   );
@@ -57,8 +60,9 @@ Workspace.propTypes = {
   reference: PropTypes.object.isRequired,
   setReference: PropTypes.func.isRequired,
   manifests: PropTypes.object,
-  translationNotesData: PropTypes.object,
+  ugntData: PropTypes.object,
   bookData: PropTypes.object,
+  translationNotesData: PropTypes.object,
 };
 
 const styles = theme => ({

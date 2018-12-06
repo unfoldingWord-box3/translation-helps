@@ -6,10 +6,15 @@ import {
   AppBar,
   Tabs,
   Tab,
+  Divider,
+  Badge,
 } from '@material-ui/core';
 
 import TextComponentWithRCLinks from './TextComponentWithRCLinks';
 import TranslationNotes from './TranslationNotes';
+import GreekWord from '../BookComponent/GreekWord';
+
+import * as ugntHelpers from './UGNT/helpers';
 
 class TranslationHelpsContainer extends React.Component {
   state = {
@@ -35,20 +40,47 @@ class TranslationHelpsContainer extends React.Component {
   };
 
   render() {
-    const { classes, theme } = this.props;
+    const { classes, languageId } = this.props;
     const {tabs, tabIndex} = this.state;
     let tabLabels = [];
     let tabContents = [];
+    let badgeCount = 0;
     tabs.forEach((tab, index) => {
       let content;
       if (tab.text) {
+        badgeCount = 0;
         content = <TextComponentWithRCLinks text={tab.text} addTab={this.addTab.bind(this)} />;
       } else if (tab.notes) {
+        badgeCount = tab.notes.length;
         content = tab.notes.map((note, index) =>
           <TranslationNotes key={index} note={note} addTab={this.addTab.bind(this)} />
         );
+      } else if (tab.ugnt) {
+        const wordObjects = ugntHelpers.taggedWords(tab.ugnt);
+        badgeCount = wordObjects.length;
+        content = wordObjects.map((wordObject, index) => {
+          const link = wordObject.link.replace('rc://*/', `http://${languageId}/`);
+          const greekWords = wordObject.greekWords.map((verseObject, index) =>
+            <GreekWord key={index} verseObject={verseObject} />
+          );
+          const text = `${link}`;
+          return (
+            <div key={index}>
+              <Divider />
+              <TextComponentWithRCLinks text={text} addTab={this.addTab.bind(this)} />
+              {greekWords}
+            </div>
+          );
+        });
       }
-      tabLabels.push(<Tab label={tab.title} />);
+      const badge = (
+        <Badge className={classes.padding} color="primary" badgeContent={badgeCount}>
+          {tab.title}
+        </Badge>
+      );
+      tabLabels.push(
+        <Tab label={ (badgeCount > 0) ? badge : tab.title } />
+      );
       tabContents.push(
         <div className={(index === tabIndex) ? classes.width : classes.hidden }>
           {content}
@@ -85,6 +117,7 @@ TranslationHelpsContainer.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   tabs: PropTypes.array.isRequired,
+  languageId: PropTypes.string.isRequired,
 };
 
 const styles = theme => ({
@@ -101,7 +134,10 @@ const styles = theme => ({
   },
   hidden: {
     height: '0px',
-  }
+  },
+  padding: {
+    padding: `0 ${theme.spacing.unit * 2}px`,
+  },
 });
 
 export default withStyles(styles, { withTheme: true })(TranslationHelpsContainer);

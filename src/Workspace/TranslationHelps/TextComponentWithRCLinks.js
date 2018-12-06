@@ -9,17 +9,30 @@ import {
 
 import RCLinkContainer from './RCLinkContainer';
 
-export const TextComponentWithRCLinks = ({classes, text, addTab}) => {
-  const options = {
-    remarkReactComponents: {
-      a: (props) => <RCLinkContainer {...props} addTab={addTab} />,
-      div: (props) => <div {...props} style={{width: '100%'}}/>,
-    }
+class TextComponentWithRCLinks extends React.Component {
+  state = {
+    component: null,
   };
-  const component = remark()
-  .use(remark2react, options)
-  .processSync(text).contents;
-  return component;
+
+  componentDidMount() {
+    const {text, addTab} = this.props;
+    const options = {
+      remarkReactComponents: {
+        a: (props) => <RCLinkContainer {...props} addTab={addTab} />,
+        div: (props) => <div {...props} style={{width: '100%'}}/>,
+      }
+    };
+    const component = remark()
+    .use(remark2react, options)
+    .processSync(text).contents;
+    this.setState({
+      component,
+    });
+  };
+
+  render() {
+    return this.state.component;
+  };
 };
 
 TextComponentWithRCLinks.propTypes = {

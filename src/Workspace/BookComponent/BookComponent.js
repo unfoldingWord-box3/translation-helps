@@ -13,12 +13,21 @@ import ExpansionComponent from './ExpansionComponent';
 import ChapterComponent from './ChapterComponent';
 import TranslationHelps from '../TranslationHelps';
 
-export const BookComponent = ({classes, reference, bookData, translationNotesData}) => {
+export const BookComponent = ({
+  classes,
+  languageId,
+  reference,
+  bookData,
+  ugntData,
+  translationNotesData
+}) => {
   const {chapter} = reference;
   const chapterComponent = (
     <ChapterComponent
+      languageId={languageId}
       chapterKey={reference.chapter}
-      chapterData={bookData.chapters[chapter]}
+      bookChapterData={bookData.chapters[chapter]}
+      ugntChapterData={ugntData ? ugntData.chapters[chapter] : null}
       translationNotesChapterData={translationNotesData[chapter]}
     />
   );
@@ -51,6 +60,7 @@ BookComponent.propTypes = {
   reference: PropTypes.object.isRequired,
   bookData: PropTypes.object.isRequired,
   translationNotesData: PropTypes.object,
+  languageId: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(BookComponent);

@@ -9,6 +9,7 @@ class WorkspaceContainer extends React.Component {
   state = {
     bookData: null,
     translationNotesData: null,
+    ugntData: null,
   };
 
   fetchResources(props) {
@@ -17,10 +18,21 @@ class WorkspaceContainer extends React.Component {
       WorkspaceHelpers.fetchBook(username, languageId, reference.book, manifests.ult)
       .then(bookData => {
         WorkspaceHelpers.translationNotes(username, languageId, reference.book, manifests.tn)
-        .then(translationNotes => {
-          this.setState({
-            bookData: bookData,
-            translationNotesData: translationNotes,
+        .then(translationNotesData => {
+          WorkspaceHelpers.fetchUGNTBook(username, languageId, reference.book, manifests.ugnt)
+          .then(ugntData => {
+            this.setState({
+              bookData,
+              translationNotesData,
+              ugntData,
+            });
+          }).catch(error => {
+            debugger
+            this.setState({
+              bookData,
+              translationNotesData,
+              ugntData: null,
+            });
           });
         });
       });
@@ -28,6 +40,7 @@ class WorkspaceContainer extends React.Component {
       this.setState({
         bookData: null,
         translationNotesData: null,
+        ugntData: null,
       });
     }
   };
@@ -44,12 +57,13 @@ class WorkspaceContainer extends React.Component {
 
   render() {
     const props = this.props;
-    const {bookData, translationNotesData} = this.state;
+    const {bookData, translationNotesData, ugntData} = this.state;
     return (
       <Workspace
         {...props}
         bookData={bookData}
         translationNotesData={translationNotesData}
+        ugntData={ugntData}
       />
     );
   };

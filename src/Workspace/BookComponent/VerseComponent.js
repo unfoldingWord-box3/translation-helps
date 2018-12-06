@@ -12,10 +12,17 @@ import ExpansionComponent from './ExpansionComponent';
 import VerseObjectComponent from './VerseObjectComponent';
 import TranslationHelps from '../TranslationHelps';
 
-export const VerseComponent = ({classes, verseKey, verseData, translationNotesVerseData}) => {
+export const VerseComponent = ({
+  classes,
+  languageId,
+  verseKey,
+  bookVerseData,
+  ugntVerseData,
+  translationNotesVerseData
+}) => {
   const verseObjects =
-  verseData.verseObjects ?
-  verseData.verseObjects.map((verseObject, index) => {
+  bookVerseData.verseObjects ?
+  bookVerseData.verseObjects.map((verseObject, index) => {
     // const lastVerseObject = (index > 0) ? verseData.verseObjects[index - 1] : null;
     // const nextVerseObject = (index < verseData.verseObjects.length - 1) ? verseData.verseObjects[index + 1] : null;
     return (
@@ -26,12 +33,24 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
       />
     );
   }) : <span />;
-  const notes = translationNotesVerseData;
-  const tabs = [{
-    title: 'Verse Notes',
-    notes: notes,
-  }];
-  const details = notes ? <TranslationHelps tabs={tabs} /> : null;
+
+  let tabs = [];
+  if (translationNotesVerseData) {
+    const notesTab = {
+      title: 'Notes',
+      notes: translationNotesVerseData,
+    };
+    tabs.push(notesTab)
+  };
+  if (ugntVerseData) {
+    const wordsTab = {
+      title: 'Words',
+      ugnt: ugntVerseData.verseObjects,
+    };
+    tabs.push(wordsTab);
+  }
+
+  const details = (tabs.length > 0) ? <TranslationHelps languageId={languageId} tabs={tabs} /> : null;
 
   return (
     <ExpansionComponent
@@ -50,8 +69,10 @@ export const VerseComponent = ({classes, verseKey, verseData, translationNotesVe
 VerseComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   verseKey: PropTypes.string.isRequired,
-  verseData: PropTypes.object.isRequired,
+  bookVerseData: PropTypes.object.isRequired,
+  ugntVerseData: PropTypes.object.isRequired,
   translationNotesVerseData: PropTypes.array,
+  languageId: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(VerseComponent);

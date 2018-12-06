@@ -41,7 +41,6 @@ class RCLinkContainer extends React.Component {
   };
 
   componentDidMount() {
-    this.mounted = true;
     const {languageId, resourceId, path} = this.state;
     if (languageId && resourceId && path) {
       helpers.fetchTitle(languageId, resourceId, path)
@@ -51,10 +50,6 @@ class RCLinkContainer extends React.Component {
         });
       });
     }
-  };
-
-  componentWillUnmount(){
-    this.mounted = false;
   };
 
   handleOpen = () => {

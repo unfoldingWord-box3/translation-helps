@@ -12,9 +12,9 @@ export const parseSenses = (lexiconMarkdown) => {
   senseSections.forEach(senseSection => {
     const definitionRegexp = /####\s*Definitions?.*?[\n\s]+(.*?)\n/;
     const glossRegexp = /####\s*Glosse?s?.*?[\n\s]+(.*?)\n/;
-    let definition = definitionRegexp.exec(senseSection)[1];
+    let definition = definitionRegexp.test(senseSection) ? definitionRegexp.exec(senseSection)[1] : null;
     definition = (!/#/.test(definition)) ? definition : null;
-    let gloss = glossRegexp.exec(senseSection)[1];
+    let gloss = glossRegexp.test(senseSection) ? glossRegexp.exec(senseSection)[1] : null;
     gloss = (!/#/.test(gloss)) ? gloss : null;
     const sense = {
       definition: definition,
@@ -22,7 +22,8 @@ export const parseSenses = (lexiconMarkdown) => {
     };
     senses.push(sense);
   });
-  return senses;
+  const uniqueSenses = unique(senses);
+  return uniqueSenses;
 };
 
 export const senses = (strong) => new Promise((resolve, reject) => {
@@ -33,3 +34,14 @@ export const senses = (strong) => new Promise((resolve, reject) => {
     resolve(senses);
   }).catch(reject);
 });
+
+export const unique = (array, response=[]) => {
+  let _array = array;
+  array.forEach(object => {
+    _array = _array.filter(_object =>
+      !(object.gloss === _object.gloss && object.definition === _object.definition) 
+    );
+    _array.push(object);
+  });
+  return _array;
+}

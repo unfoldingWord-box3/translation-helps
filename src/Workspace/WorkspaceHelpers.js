@@ -15,6 +15,15 @@ export const fetchBook = (username, languageId, bookId, manifest) => new Promise
   }).catch(reject);
 });
 
+export const fetchUGNTBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
+  const repository = ApplicationHelpers.resourceRepositories(languageId).ugnt;
+  fetchFileByBookId(username, repository, bookId, manifest)
+  .then(usfm => {
+    const json = usfmjs.toJSON(usfm);
+    resolve(json);
+  }).catch(reject);
+});
+
 export const translationNotes = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
   fetchNotes(username, languageId, bookId, manifest)
   .then(array => {

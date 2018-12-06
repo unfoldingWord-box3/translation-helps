@@ -11,19 +11,27 @@ import styles from './styles';
 import TranslationHelps from '../TranslationHelps';
 import ExpansionComponent from './ExpansionComponent';
 import VerseComponent from './VerseComponent';
-import TextComponentWithRCLinks from '../TranslationHelps/TextComponentWithRCLinks';
 
-export const ChapterComponent = ({classes, chapterKey, chapterData, translationNotesChapterData}) => {
-  const verses = Object.keys(chapterData)
+export const ChapterComponent = ({
+  classes,
+  languageId,
+  chapterKey,
+  bookChapterData,
+  ugntChapterData,
+  translationNotesChapterData
+}) => {
+  const verses = Object.keys(bookChapterData)
   .filter(verseKey => {
-    const text = chapterData[verseKey].verseObjects.map(o => o.text).join('');
+    const text = bookChapterData[verseKey].verseObjects.map(o => o.text).join('');
     return /\S+/g.test(text);
   })
   .map(verseKey =>
     <VerseComponent
       key={verseKey}
       verseKey={verseKey}
-      verseData={chapterData[verseKey]}
+      languageId={languageId}
+      bookVerseData={bookChapterData[verseKey]}
+      ugntVerseData={ugntChapterData ? ugntChapterData[verseKey] : null}
       translationNotesVerseData={translationNotesChapterData[verseKey]}
     />
   );
@@ -50,8 +58,10 @@ export const ChapterComponent = ({classes, chapterKey, chapterData, translationN
 ChapterComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   chapterKey: PropTypes.number.isRequired,
-  chapterData: PropTypes.object.isRequired,
+  bookChapterData: PropTypes.object.isRequired,
+  ugntChapterData: PropTypes.object.isRequired,
   translationNotesChapterData: PropTypes.object,
+  languageId: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(ChapterComponent);

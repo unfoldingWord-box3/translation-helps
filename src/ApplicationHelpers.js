@@ -1,6 +1,7 @@
 import path from 'path';
 import YAML from 'yaml';
 import {each} from 'async';
+import request from 'request-promise';
 
 const uriBase = "https://git.door43.org/";
 
@@ -15,6 +16,7 @@ export const resourceRepositories = (languageId) => {
     ugl: languageId + '_ugl',
     ta: languageId + '-ta',
     tw: languageId + '-tw',
+    ugnt: 'UGNT',
   };
 };
 
@@ -55,7 +57,5 @@ export const fetchFileFromServer = (username, repository, filepath, branch='mast
 
 export const get = (_uri) => new Promise((resolve, reject) => {
   const uri = uriBase + _uri;
-  fetch(uri, { mode: 'cors' }).then(response => {
-    resolve(response.text())
-  }).catch(reject);
+  request(uri).then(resolve).catch(reject);
 });
