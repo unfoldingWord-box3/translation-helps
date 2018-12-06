@@ -59,16 +59,21 @@ export const fetchNotes = (username, languageId, bookId, manifest) => new Promis
 });
 
 export const fetchFileByBookId = (username, repository, bookId, manifest) => new Promise((resolve, reject) => {
-  let {path} = projectByBookId(manifest.projects, bookId);
-  path = path.replace(/^\.\//, '');
-  ApplicationHelpers.fetchFileFromServer(username, repository, path)
-  .then(resolve).catch(reject);
+  try {
+    let {path} = projectByBookId(manifest.projects, bookId);
+    path = path.replace(/^\.\//, '');
+    ApplicationHelpers.fetchFileFromServer(username, repository, path)
+    .then(resolve).catch(reject);
+  } catch {
+    console.log(`manifest is not populated`, manifest);
+    debugger
+  }
 });
 
 export const projectByBookId = (projects, bookId) => {
   const _projects = projects.filter(item => item.identifier === bookId);
   let project;
-  if (projects.length > 0) {
+  if (_projects.length > 0) {
     project = _projects[0];
   } else {
     console.log(`${bookId} not found in projects list: `, projects);
