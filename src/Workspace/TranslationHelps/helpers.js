@@ -4,10 +4,12 @@ import * as TranslationWordsHelpers from './TranslationWords/helpers';
 export const fetchTitle = (languageId, resourceId, linkPath) => new Promise((resolve, reject) => {
   switch (resourceId) {
     case 'ta':
-      TranslationAcademyHelpers.fetchTitle(languageId, linkPath).then(resolve)
+      TranslationAcademyHelpers.fetchTitle(languageId, linkPath)
+      .then(resolve).catch(error => console.log(error));
       break;
     case 'tw':
-      TranslationWordsHelpers.fetchTitle(languageId, linkPath).then(resolve);
+      TranslationWordsHelpers.fetchTitle(languageId, linkPath)
+      .then(resolve).catch(error => console.log(error));
       break;
     default:
       reject(`resourceId not configured: ${languageId} - ${resourceId} - ${linkPath}`);
@@ -18,10 +20,12 @@ export const fetchTitle = (languageId, resourceId, linkPath) => new Promise((res
 export const fetchArticle = (languageId, resourceId, linkPath) => new Promise((resolve, reject) => {
   switch (resourceId) {
     case 'ta':
-      TranslationAcademyHelpers.fetchArticle(languageId, linkPath).then(resolve);
+      TranslationAcademyHelpers.fetchArticle(languageId, linkPath)
+      .then(resolve).catch(error => console.log(error));
       break;
     case 'tw':
-      TranslationWordsHelpers.fetchArticle(languageId, linkPath).then(resolve);
+      TranslationWordsHelpers.fetchArticle(languageId, linkPath)
+      .then(resolve).catch(error => console.log(error));
       break;
     default:
       reject(`resourceId not configured: ${languageId} - ${resourceId} - ${linkPath}`);
