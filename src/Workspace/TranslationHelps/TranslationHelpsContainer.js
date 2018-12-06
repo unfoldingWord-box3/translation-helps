@@ -79,10 +79,10 @@ class TranslationHelpsContainer extends React.Component {
         </Badge>
       );
       tabLabels.push(
-        <Tab label={ (badgeCount > 0) ? badge : tab.title } />
+        <Tab key={tabLabels.length} label={ (badgeCount > 0) ? badge : tab.title } />
       );
       tabContents.push(
-        <div className={(index === tabIndex) ? classes.width : classes.hidden }>
+        <div key={tabContents.length} className={(index === tabIndex) ? classes.width : classes.hidden }>
           {content}
         </div>);
     });
