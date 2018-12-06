@@ -19,9 +19,10 @@ export const GreekWordComponent = ({classes, verseObject, senses}) => {
       {
         senses.map((sense, index) =>
           <Typography key={index}>
+            <sup>{index + 1}</sup>
             {
               sense.gloss ?
-              <span><em>Gloss:</em> {sense.gloss}</span>
+              <span> <em>Gloss:</em> {sense.gloss}</span>
               : ''
             }
             {

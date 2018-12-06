@@ -27,7 +27,6 @@ class WorkspaceContainer extends React.Component {
               ugntData,
             });
           }).catch(error => {
-            debugger
             this.setState({
               bookData,
               translationNotesData,
