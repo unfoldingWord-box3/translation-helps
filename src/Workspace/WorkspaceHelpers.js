@@ -65,8 +65,17 @@ export const fetchFileByBookId = (username, repository, bookId, manifest) => new
   .then(resolve).catch(reject);
 });
 
-export const projectByBookId = (projects, bookId) =>
-  projects.filter(item => item.identifier === bookId)[0];
+export const projectByBookId = (projects, bookId) => {
+  const _projects = projects.filter(item => item.identifier === bookId);
+  let project;
+  if (projects.length > 0) {
+    project = _projects[0];
+  } else {
+    console.log(`${bookId} not found in projects list: `, projects);
+    project = {};
+  }
+  return project;
+}
 
 export const tsvParse = (tsv) =>
   tsv.split('\n').map(row => row.trim().split('\t'));
