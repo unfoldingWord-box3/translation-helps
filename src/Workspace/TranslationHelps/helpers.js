@@ -12,7 +12,8 @@ export const fetchTitle = (languageId, resourceId, linkPath) => new Promise((res
       .then(resolve).catch(error => console.log(error));
       break;
     default:
-      reject(`resourceId not configured: ${languageId} - ${resourceId} - ${linkPath}`);
+      const message = `resourceId not configured: ${languageId} - ${resourceId} - ${linkPath}`;
+      console.log(message);
       break;
   };
 });
@@ -28,7 +29,8 @@ export const fetchArticle = (languageId, resourceId, linkPath) => new Promise((r
       .then(resolve).catch(error => console.log(error));
       break;
     default:
-      reject(`resourceId not configured: ${languageId} - ${resourceId} - ${linkPath}`);
+      const message = `resourceId not configured: ${languageId} - ${resourceId} - ${linkPath}`;
+      console.log(message);
       break;
   };
 });
