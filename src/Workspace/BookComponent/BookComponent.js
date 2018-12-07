@@ -48,7 +48,7 @@ export const BookComponent = ({
             escapeHtml={false}
           />
         }
-        details={<TranslationHelps tabs={tabs} />}
+        details={<TranslationHelps languageId={languageId} tabs={tabs} />}
       />
       {chapterComponent}
     </div>
@@ -61,6 +61,7 @@ BookComponent.propTypes = {
   bookData: PropTypes.object.isRequired,
   translationNotesData: PropTypes.object,
   languageId: PropTypes.string.isRequired,
+  ugntData: PropTypes.object,
 };
 
 export default withStyles(styles)(BookComponent);

@@ -70,9 +70,9 @@ VerseComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   verseKey: PropTypes.string.isRequired,
   bookVerseData: PropTypes.object.isRequired,
-  ugntVerseData: PropTypes.object.isRequired,
   translationNotesVerseData: PropTypes.array,
   languageId: PropTypes.string.isRequired,
+  ugntVerseData: PropTypes.object,
 };
 
 export default withStyles(styles, { withTheme: true })(VerseComponent);

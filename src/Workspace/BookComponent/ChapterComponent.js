@@ -47,7 +47,7 @@ export const ChapterComponent = ({
     <ExpansionComponent
       key={'chapter'+chapterKey}
       summary={<h2>Chapter {chapterKey}</h2>}
-      details={<TranslationHelps tabs={tabs} />}
+      details={<TranslationHelps languageId={languageId} tabs={tabs} />}
     />
   );
   const panels = [introPanel].concat(verses);
@@ -59,9 +59,9 @@ ChapterComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   chapterKey: PropTypes.number.isRequired,
   bookChapterData: PropTypes.object.isRequired,
-  ugntChapterData: PropTypes.object.isRequired,
   translationNotesChapterData: PropTypes.object,
   languageId: PropTypes.string.isRequired,
+  ugntChapterData: PropTypes.object,
 };
 
 export default withStyles(styles)(ChapterComponent);

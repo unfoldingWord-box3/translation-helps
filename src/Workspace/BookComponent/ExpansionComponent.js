@@ -12,9 +12,9 @@ import {
 
 import styles from './styles';
 
-export const ExpansionComponent = ({classes, key, summary, details}) => {
+export const ExpansionComponent = ({classes, summary, details}) => {
   return (
-    <ExpansionPanel className={classes.column} key={key}>
+    <ExpansionPanel className={classes.column}>
       <ExpansionPanelSummary expandIcon={<ExpandMore />}>
         {summary}
       </ExpansionPanelSummary>
@@ -27,9 +27,8 @@ export const ExpansionComponent = ({classes, key, summary, details}) => {
 
 ExpansionComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  key: PropTypes.string.isRequired,
   summary: PropTypes.object.isRequired,
-  details: PropTypes.object.isRequired,
+  details: PropTypes.object,
 };
 
 export default withStyles(styles)(ExpansionComponent);
