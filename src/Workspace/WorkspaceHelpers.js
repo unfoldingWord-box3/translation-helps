@@ -8,7 +8,9 @@ import * as ApplicationHelpers from '../ApplicationHelpers';
 
 export const fetchBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
   if (!projectByBookId(manifest.projects, bookId)) {
-    reject('book not found in ult');
+    const error = 'book not found in ult';
+    console.warn(error);
+    reject(error);
   }
   const repository = ApplicationHelpers.resourceRepositories(languageId).ult;
   fetchFileByBookId(username, repository, bookId, manifest)
@@ -20,7 +22,9 @@ export const fetchBook = (username, languageId, bookId, manifest) => new Promise
 
 export const fetchUGNTBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
   if (!projectByBookId(manifest.projects, bookId)) {
-    reject('book not found in ugnt');
+    const error = 'book not found in ugnt';
+    console.warn(error);
+    reject(error);
   }
   const repository = ApplicationHelpers.resourceRepositories(languageId).ugnt;
   fetchFileByBookId(username, repository, bookId, manifest)
@@ -76,8 +80,6 @@ export const projectByBookId = (projects, bookId) => {
   let project;
   if (_projects.length > 0) {
     project = _projects[0];
-  } else {
-    console.log(`${bookId} not found in projects list: `, projects);
   }
   return project;
 }
