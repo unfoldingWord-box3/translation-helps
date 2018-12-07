@@ -45,7 +45,7 @@ export const Workspace = ({
     />
   );
   const loadingComponent = (
-    <CircularProgress className={classes.progress} color="secondary" />
+    <CircularProgress className={classes.progress} color="secondary" disableShrink />
   );
 
   const canShowBibleManager = (!reference.book);

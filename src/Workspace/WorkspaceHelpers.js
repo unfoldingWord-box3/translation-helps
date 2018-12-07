@@ -7,6 +7,9 @@ import usfmjs from 'usfm-js';
 import * as ApplicationHelpers from '../ApplicationHelpers';
 
 export const fetchBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
+  if (!projectByBookId(manifest.projects, bookId)) {
+    reject('book not found in ult');
+  }
   const repository = ApplicationHelpers.resourceRepositories(languageId).ult;
   fetchFileByBookId(username, repository, bookId, manifest)
   .then(usfm => {
@@ -16,6 +19,9 @@ export const fetchBook = (username, languageId, bookId, manifest) => new Promise
 });
 
 export const fetchUGNTBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
+  if (!projectByBookId(manifest.projects, bookId)) {
+    reject('book not found in ugnt');
+  }
   const repository = ApplicationHelpers.resourceRepositories(languageId).ugnt;
   fetchFileByBookId(username, repository, bookId, manifest)
   .then(usfm => {
@@ -59,15 +65,10 @@ export const fetchNotes = (username, languageId, bookId, manifest) => new Promis
 });
 
 export const fetchFileByBookId = (username, repository, bookId, manifest) => new Promise((resolve, reject) => {
-  try {
-    let {path} = projectByBookId(manifest.projects, bookId);
-    path = path.replace(/^\.\//, '');
-    ApplicationHelpers.fetchFileFromServer(username, repository, path)
-    .then(resolve).catch(reject);
-  } catch {
-    console.log(`manifest is not populated`, manifest);
-    debugger
-  }
+  let {path} = projectByBookId(manifest.projects, bookId);
+  path = path.replace(/^\.\//, '');
+  ApplicationHelpers.fetchFileFromServer(username, repository, path)
+  .then(resolve).catch(reject);
 });
 
 export const projectByBookId = (projects, bookId) => {
@@ -77,7 +78,6 @@ export const projectByBookId = (projects, bookId) => {
     project = _projects[0];
   } else {
     console.log(`${bookId} not found in projects list: `, projects);
-    project = {};
   }
   return project;
 }
