@@ -79,7 +79,7 @@ function registerValidSW(swUrl, config) {
               // It's the perfect time to display a
               // "Content is cached for offline use." message.
               if (window) window.alert(
-                'This App requires an internet connection.'
+                'The first load of a Book and Chapter may take longer to download the resources.'
               );
 
               // Execute callback
