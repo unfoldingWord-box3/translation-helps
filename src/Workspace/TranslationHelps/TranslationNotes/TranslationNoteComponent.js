@@ -16,9 +16,9 @@ export const TranslationNoteComponent = ({classes, note, addTab}) => {
   return (
     <div className={classes.root}>
       <Divider />
-      <p className={classes.note}>
+      <div className={classes.note}>
         <strong>{note.gl_quote}</strong> {noteComponent}
-      </p>
+      </div>
     </div>
   );
 };

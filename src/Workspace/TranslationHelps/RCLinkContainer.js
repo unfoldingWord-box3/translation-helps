@@ -76,10 +76,11 @@ class RCLinkContainer extends React.Component {
     return (
       <Chip
         label={
-          <Typography noWrap>
+          <Typography noWrap component='span'>
             {title || path}
           </Typography>
         }
+        component='span'
         className={classes.chip}
         classes={{label: classes.label}}
         onClick={this.handleOpen}
@@ -91,7 +92,7 @@ class RCLinkContainer extends React.Component {
 
 RCLinkContainer.propTypes = {
   classes: PropTypes.object.isRequired,
-  url: PropTypes.string.isRequired,
+  href: PropTypes.string.isRequired,
   addTab: PropTypes.func.isRequired,
 };
 
