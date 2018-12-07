@@ -11,6 +11,8 @@ export const fetchTitle = (languageId, resourceId, linkPath) => new Promise((res
       TranslationWordsHelpers.fetchTitle(languageId, linkPath)
       .then(resolve).catch(error => console.log(error));
       break;
+    case 'tn':
+      break;
     default:
       const message = `resourceId not configured: ${languageId} - ${resourceId} - ${linkPath}`;
       console.log(message);
@@ -27,6 +29,8 @@ export const fetchArticle = (languageId, resourceId, linkPath) => new Promise((r
     case 'tw':
       TranslationWordsHelpers.fetchArticle(languageId, linkPath)
       .then(resolve).catch(error => console.log(error));
+      break;
+    case 'tn':
       break;
     default:
       const message = `resourceId not configured: ${languageId} - ${resourceId} - ${linkPath}`;

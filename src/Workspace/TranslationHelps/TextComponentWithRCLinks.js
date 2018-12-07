@@ -15,10 +15,16 @@ class TextComponentWithRCLinks extends React.Component {
   };
 
   componentDidMount() {
-    const {text, addTab} = this.props;
+    const {text, addTab, setReference} = this.props;
     const options = {
       remarkReactComponents: {
-        a: (props) => <RCLinkContainer {...props} addTab={addTab} />,
+        a: (props) => (
+          <RCLinkContainer
+            {...props}
+            setReference={setReference}
+            addTab={addTab}
+          />
+        ),
         div: (props) => <div {...props} style={{width: '100%'}}/>,
       }
     };
@@ -38,6 +44,7 @@ class TextComponentWithRCLinks extends React.Component {
 TextComponentWithRCLinks.propTypes = {
   text: PropTypes.string.isRequired,
   addTab: PropTypes.func.isRequired,
+  setReference: PropTypes.func.isRequired,
 };
 
 export default TextComponentWithRCLinks;

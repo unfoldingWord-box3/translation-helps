@@ -9,10 +9,16 @@ import {
 
 import TextComponentWithRCLinks from '../TextComponentWithRCLinks';
 
-export const TranslationNoteComponent = ({classes, note, addTab}) => {
+export const TranslationNoteComponent = ({classes, note, addTab, setReference}) => {
   if (!note) debugger
   const occurrence_note = note.occurrence_note.replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '');
-  const noteComponent = <TextComponentWithRCLinks text={occurrence_note} addTab={addTab} />;
+  const noteComponent = (
+    <TextComponentWithRCLinks
+      setReference={setReference}
+      text={occurrence_note}
+      addTab={addTab}
+    />
+  );
   return (
     <div className={classes.root}>
       <Divider />
@@ -27,6 +33,7 @@ TranslationNoteComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   note: PropTypes.object.isRequired,
   addTab: PropTypes.func.isRequired,
+  setReference: PropTypes.func.isRequired,
 };
 
 const styles = theme => ({

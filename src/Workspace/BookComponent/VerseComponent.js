@@ -18,7 +18,8 @@ export const VerseComponent = ({
   verseKey,
   bookVerseData,
   ugntVerseData,
-  translationNotesVerseData
+  translationNotesVerseData,
+  setReference,
 }) => {
   const verseObjects =
   bookVerseData.verseObjects ?
@@ -50,7 +51,15 @@ export const VerseComponent = ({
     tabs.push(wordsTab);
   }
 
-  const details = (tabs.length > 0) ? <TranslationHelps languageId={languageId} tabs={tabs} /> : null;
+  const details = (tabs.length > 0) ?
+    <TranslationHelps
+      languageId={languageId}
+      tabs={tabs}
+      setReference={setReference}
+    /> : null;
+
+  // const element = document.getElementById(this.state.media);
+  // element.scrollIntoView({behavior: 'smooth'});
 
   return (
     <ExpansionComponent
@@ -73,6 +82,7 @@ VerseComponent.propTypes = {
   translationNotesVerseData: PropTypes.array,
   languageId: PropTypes.string.isRequired,
   ugntVerseData: PropTypes.object,
+  setReference: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(VerseComponent);

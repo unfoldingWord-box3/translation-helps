@@ -18,7 +18,8 @@ export const ChapterComponent = ({
   chapterKey,
   bookChapterData,
   ugntChapterData,
-  translationNotesChapterData
+  translationNotesChapterData,
+  setReference,
 }) => {
   const verses = Object.keys(bookChapterData)
   .filter(verseKey => {
@@ -33,6 +34,7 @@ export const ChapterComponent = ({
       bookVerseData={bookChapterData[verseKey]}
       ugntVerseData={ugntChapterData ? ugntChapterData[verseKey] : null}
       translationNotesVerseData={translationNotesChapterData[verseKey]}
+      setReference={setReference}
     />
   );
   const intro = (translationNotesChapterData['intro'] && translationNotesChapterData['intro'][0]) ?
@@ -47,7 +49,13 @@ export const ChapterComponent = ({
     <ExpansionComponent
       key={'chapter'+chapterKey}
       summary={<h2>Chapter {chapterKey}</h2>}
-      details={<TranslationHelps languageId={languageId} tabs={tabs} />}
+      details={
+        <TranslationHelps
+          languageId={languageId}
+          tabs={tabs}
+          setReference={setReference}
+        />
+      }
     />
   );
   const panels = [introPanel].concat(verses);
@@ -62,6 +70,7 @@ ChapterComponent.propTypes = {
   translationNotesChapterData: PropTypes.object,
   languageId: PropTypes.string.isRequired,
   ugntChapterData: PropTypes.object,
+  setReference: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(ChapterComponent);

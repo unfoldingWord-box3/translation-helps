@@ -21,6 +21,7 @@ export const Workspace = ({
   manifests,
   reference,
   setReference,
+  referenceLoaded,
 }) => {
   const bibleManager = (
     <BibleManager
@@ -42,6 +43,7 @@ export const Workspace = ({
       bookData={bookData}
       ugntData={ugntData}
       translationNotesData={translationNotesData}
+      setReference={setReference}
     />
   );
   const loadingComponent = (
@@ -50,7 +52,8 @@ export const Workspace = ({
 
   const canShowBibleManager = (!reference.book);
   const canShowChapterManager = (!reference.chapter);
-  const canShowBookComponent = (!!bookData && !!translationNotesData);
+  const referenceIsLoaded = (referenceLoaded && referenceLoaded.book === reference.book);
+  const canShowBookComponent = (referenceIsLoaded && !!bookData && !!translationNotesData);
 
   let component = loadingComponent;
   if (canShowBibleManager) component = bibleManager;
@@ -74,6 +77,7 @@ Workspace.propTypes = {
   ugntData: PropTypes.object,
   bookData: PropTypes.object,
   translationNotesData: PropTypes.object,
+  referenceLoaded: PropTypes.object.isRequired,
 };
 
 const styles = theme => ({

@@ -40,7 +40,7 @@ class TranslationHelpsContainer extends React.Component {
   };
 
   render() {
-    const { classes, languageId } = this.props;
+    const { classes, languageId, setReference } = this.props;
     const {tabs, tabIndex} = this.state;
     let tabLabels = [];
     let tabContents = [];
@@ -49,11 +49,20 @@ class TranslationHelpsContainer extends React.Component {
       let content;
       if (tab.text) {
         badgeCount = 0;
-        content = <TextComponentWithRCLinks text={tab.text} addTab={this.addTab.bind(this)} />;
+        content = <TextComponentWithRCLinks
+          text={tab.text}
+          addTab={this.addTab.bind(this)}
+          setReference={setReference}
+        />;
       } else if (tab.notes) {
         badgeCount = tab.notes.length;
         content = tab.notes.map((note, index) =>
-          <TranslationNotes key={index} note={note} addTab={this.addTab.bind(this)} />
+          <TranslationNotes
+            key={index}
+            note={note}
+            addTab={this.addTab.bind(this)}
+            setReference={setReference}
+          />
         );
       } else if (tab.ugnt) {
         const wordObjects = ugntHelpers.taggedWords(tab.ugnt);
@@ -67,7 +76,11 @@ class TranslationHelpsContainer extends React.Component {
           return (
             <div key={index}>
               <Divider />
-              <TextComponentWithRCLinks text={text} addTab={this.addTab.bind(this)} />
+              <TextComponentWithRCLinks
+                text={text}
+                addTab={this.addTab.bind(this)}
+                setReference={setReference}
+              />
               {greekWords}
             </div>
           );
@@ -118,6 +131,7 @@ TranslationHelpsContainer.propTypes = {
   theme: PropTypes.object.isRequired,
   tabs: PropTypes.array.isRequired,
   languageId: PropTypes.string.isRequired,
+  setReference: PropTypes.func.isRequired,
 };
 
 const styles = theme => ({

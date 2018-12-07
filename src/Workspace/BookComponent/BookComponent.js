@@ -19,7 +19,8 @@ export const BookComponent = ({
   reference,
   bookData,
   ugntData,
-  translationNotesData
+  translationNotesData,
+  setReference,
 }) => {
   const {chapter} = reference;
   const chapterComponent = (
@@ -29,6 +30,7 @@ export const BookComponent = ({
       bookChapterData={bookData.chapters[chapter]}
       ugntChapterData={ugntData ? ugntData.chapters[chapter] : null}
       translationNotesChapterData={translationNotesData[chapter]}
+      setReference={setReference}
     />
   );
   const intro = translationNotesData['front']['intro'][0]['occurrence_note'];
@@ -48,7 +50,13 @@ export const BookComponent = ({
             escapeHtml={false}
           />
         }
-        details={<TranslationHelps languageId={languageId} tabs={tabs} />}
+        details={
+          <TranslationHelps
+            setReference={setReference}
+            languageId={languageId}
+            tabs={tabs}
+          />
+        }
       />
       {chapterComponent}
     </div>
@@ -62,6 +70,7 @@ BookComponent.propTypes = {
   translationNotesData: PropTypes.object,
   languageId: PropTypes.string.isRequired,
   ugntData: PropTypes.object,
+  setReference: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(BookComponent);

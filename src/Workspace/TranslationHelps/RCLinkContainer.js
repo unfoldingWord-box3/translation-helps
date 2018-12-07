@@ -16,10 +16,11 @@ class RCLinkContainer extends React.Component {
     title: null,
     article: null,
     open: null,
+    reference: null,
   };
 
   parseHref(href) {
-    let _match, languageId, resourceId, path;
+    let _match, languageId, resourceId, path, reference;
     const regexpLanguageIdResourcePath = /http:\/\/([\w-_]+)\/([\w-_]+)\/(.+)/;
     if (regexpLanguageIdResourcePath.test(href)) {
       const match = regexpLanguageIdResourcePath.exec(href);
@@ -27,23 +28,37 @@ class RCLinkContainer extends React.Component {
     } else {
       path = href;
     }
+    if (resourceId === 'tn') {
+      const regexpReference = /\/([\w]+)\/([\d]+)\/([\d]+)/;
+      if (regexpReference.test(path)) {
+        const match = regexpReference.exec(path);
+        const [_match, book, chapter, verse] = match;
+        if (book !== 'obs') {
+          reference = {book, chapter: parseInt(chapter), verse: parseInt(verse)};
+        }
+      }
+    }
     return {
-      languageId: languageId,
-      resourceId: resourceId,
-      path: path,
+      languageId,
+      resourceId,
+      path,
+      reference,
     }
   };
 
   componentWillMount() {
     const {href, children} = this.props;
     let state = this.parseHref(href);
-    state.title = children[0];
+    const text = children[0];
+    if (text !== href) {
+      state.title = text;
+    }
     this.setState(state);
   };
 
   componentDidMount() {
-    const {languageId, resourceId, path} = this.state;
-    if (languageId && resourceId && path) {
+    const {title, languageId, resourceId, path} = this.state;
+    if (!title && languageId && resourceId && path) {
       helpers.fetchTitle(languageId, resourceId, path)
       .then(title => {
         this.setState({
@@ -54,15 +69,19 @@ class RCLinkContainer extends React.Component {
   };
 
   handleOpen = () => {
-    const {languageId, resourceId, path, title} = this.state;
-    helpers.fetchArticle(languageId, resourceId, path)
-    .then(article => {
-      const tab = {
-        title: title || path,
-        text: article,
-      };
-      this.props.addTab(tab);
-    });
+    const {languageId, resourceId, path, title, reference} = this.state;
+    if (reference) {
+      this.props.setReference(reference)
+    } else {
+      helpers.fetchArticle(languageId, resourceId, path)
+      .then(article => {
+        const tab = {
+          title: title || path,
+          text: article,
+        };
+        this.props.addTab(tab);
+      });
+    }
   };
 
   handleClose = () => {
@@ -94,6 +113,7 @@ RCLinkContainer.propTypes = {
   classes: PropTypes.object.isRequired,
   href: PropTypes.string.isRequired,
   addTab: PropTypes.func.isRequired,
+  setReference: PropTypes.func.isRequired,
 };
 
 

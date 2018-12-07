@@ -18,7 +18,7 @@ class ApplicationContainer extends React.Component {
 
   componentWillMount() {
     const reference = localstorage.get(keyPrefix + 'reference');
-    if (reference) this.setState({reference});
+    if (reference && reference.book !== 'obs') this.setState({reference});
   };
 
   setReference(reference) {
