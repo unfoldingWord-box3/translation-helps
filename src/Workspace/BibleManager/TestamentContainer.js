@@ -28,7 +28,6 @@ class TestamentContainer extends React.Component {
 };
 
 TestamentContainer.propTypes = {
-  classes: PropTypes.object.isRequired,
   testamentId: PropTypes.string.isRequired,
   books: PropTypes.array.isRequired,
   reference: PropTypes.object.isRequired,
