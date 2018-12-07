@@ -12,7 +12,7 @@ const store = localforage.createInstance({
 });
 const api = setup({
   baseURL: baseURL,
-  cache: {store, maxAge: 15 * 60 * 1000},
+  cache: {store, maxAge: 1 * 60 * 60 * 1000},
 });
 
 // Purpose: application wide
