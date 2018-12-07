@@ -82,7 +82,7 @@ class TranslationHelpsContainer extends React.Component {
         <Tab key={tabLabels.length} label={ (badgeCount > 0) ? badge : tab.title } />
       );
       tabContents.push(
-        <div key={tabContents.length} className={(index === tabIndex) ? classes.width : classes.hidden }>
+        <div key={tabContents.length} className={(index === tabIndex) ? classes.tabContent : classes.hidden }>
           {content}
         </div>);
     });
@@ -129,8 +129,9 @@ const styles = theme => ({
     width: '100%',
   },
   appBar: {
-    width: '100%',
+    width: '95%',
     zIndex: '10',
+    margin: 'auto',
   },
   hidden: {
     height: '0px',
@@ -138,6 +139,9 @@ const styles = theme => ({
   padding: {
     padding: `0 ${theme.spacing.unit * 2}px`,
   },
+  tabContent: {
+    padding: `0 ${theme.spacing.unit * 3}px`,
+  }
 });
 
 export default withStyles(styles, { withTheme: true })(TranslationHelpsContainer);

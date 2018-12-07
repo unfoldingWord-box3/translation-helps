@@ -18,7 +18,7 @@ export const ExpansionComponent = ({classes, key, summary, details}) => {
       <ExpansionPanelSummary expandIcon={<ExpandMore />}>
         {summary}
       </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
+      <ExpansionPanelDetails className={classes.expansionPanelDetails}>
         <div className={classes.fullWidth}>{details}</div>
       </ExpansionPanelDetails>
     </ExpansionPanel>

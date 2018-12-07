@@ -13,6 +13,10 @@ export const styles = theme => ({
   },
   fullWidth: {
     width: '100%'
+  },
+  expansionPanelDetails: {
+    paddingLeft: 0,
+    paddingRight: 0,
   }
 });
 

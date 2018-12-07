@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Chip,
+  Typography,
 } from '@material-ui/core';
 
 import * as helpers from './helpers';
@@ -74,9 +75,15 @@ class RCLinkContainer extends React.Component {
 
     return (
       <Chip
-        label={title || path}
+        label={
+          <Typography noWrap>
+            {title || path}
+          </Typography>
+        }
         className={classes.chip}
+        classes={{label: classes.label}}
         onClick={this.handleOpen}
+        clickable
       />
     );
   }
@@ -92,7 +99,11 @@ RCLinkContainer.propTypes = {
 const styles = theme => ({
   chip: {
     height: 'unset',
+    maxWidth: '95%',
   },
+  label: {
+    maxWidth: '90%',
+  }
 });
 
 export default withStyles(styles, { withTheme: true })(RCLinkContainer);
