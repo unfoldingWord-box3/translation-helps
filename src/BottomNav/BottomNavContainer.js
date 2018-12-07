@@ -50,6 +50,7 @@ class BottomNavContainer extends React.Component {
           <BottomNavigationAction
             label="Bookmarks"
             icon={<Bookmarks />}
+            disabled={true}
           />
           <BottomNavigationAction
             label="Books"

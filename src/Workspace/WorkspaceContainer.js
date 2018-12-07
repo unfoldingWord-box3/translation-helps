@@ -44,14 +44,22 @@ class WorkspaceContainer extends React.Component {
     }
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.reference.book !== this.props.reference.book) {
+  fetchResourcesConditionally(nextProps) {
+    const referenceChanged = (nextProps.reference.book !== this.props.reference.book);
+    const emptyBookData = (!this.state.bookData);
+    const needToFetch = (emptyBookData || referenceChanged)
+    const canFetch = (Object.keys(nextProps.manifests).length > 0);
+    if (canFetch && needToFetch) {
       this.fetchResources(nextProps);
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.fetchResourcesConditionally(nextProps);
   };
 
   componentDidMount() {
-    this.fetchResources(this.props);
+    this.fetchResourcesConditionally(this.props);
   };
 
   render() {

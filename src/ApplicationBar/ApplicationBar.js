@@ -18,7 +18,7 @@ const ApplicationBar = ({
 }) => {
 
   let bookName = '';
-  if (manifests['ult'] && manifests['ult'].projects && reference.book) {
+  if (manifests && manifests['ult'] && manifests['ult'].projects && reference.book) {
     const project = WorkspaceHelpers.projectByBookId(manifests['ult'].projects, reference.book);
     bookName = project.title;
   }

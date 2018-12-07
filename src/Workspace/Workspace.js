@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
+  CircularProgress,
 } from '@material-ui/core';
 import {
 } from '@material-ui/icons';
@@ -43,8 +44,18 @@ export const Workspace = ({
       translationNotesData={translationNotesData}
     />
   );
-  let component = (!reference.book) ? bibleManager : chapterManager;
-  component = (bookData && translationNotesData && reference.chapter) ? bookComponent : component;
+  const loadingComponent = (
+    <CircularProgress className={classes.progress} color="secondary" />
+  );
+
+  const canShowBibleManager = (!reference.book);
+  const canShowChapterManager = (!reference.chapter);
+  const canShowBookComponent = (!!bookData && !!translationNotesData);
+
+  let component = loadingComponent;
+  if (canShowBibleManager) component = bibleManager;
+  else if (canShowChapterManager) component = chapterManager;
+  else if (canShowBookComponent) component = bookComponent;
 
   return (
     <div className={classes.root}>
@@ -68,6 +79,10 @@ Workspace.propTypes = {
 const styles = theme => ({
   root: {
     width: '100%',
+  },
+  progress: {
+    margin: 'auto',
+    display: 'block',
   },
 });
 

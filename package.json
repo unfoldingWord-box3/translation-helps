@@ -6,8 +6,11 @@
   "dependencies": {
     "@material-ui/core": "^3.5.1",
     "@material-ui/icons": "^3.0.1",
+    "axios": "^0.18.0",
+    "axios-cache-adapter": "^2.1.1",
     "gh-pages": "^2.0.1",
-    "mui-datatables": "^2.0.0-beta-39",
+    "local-storage": "^1.4.2",
+    "localforage": "^1.7.3",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-headroom": "^2.2.2",

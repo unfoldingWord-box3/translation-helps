@@ -1,9 +1,12 @@
 import React from 'react';
+import localstorage from 'local-storage'
 
 import Application from './Application';
 import './Application.css';
 
 import * as ApplicationHelpers from './ApplicationHelpers';
+
+const keyPrefix = 'ApplicationContainer.state.';
 
 class ApplicationContainer extends React.Component {
   state = {
@@ -13,11 +16,17 @@ class ApplicationContainer extends React.Component {
     reference: {},
   };
 
+  componentWillMount() {
+    const reference = localstorage.get(keyPrefix + 'reference');
+    if (reference) this.setState({reference});
+  };
+
   setReference(reference) {
     window.scrollTo(0,0);
     this.setState({
-      reference: reference,
+      reference,
     });
+    localstorage.set(keyPrefix + 'reference', reference);
   };
 
   componentDidMount() {
@@ -25,7 +34,7 @@ class ApplicationContainer extends React.Component {
     ApplicationHelpers.fetchResourceManifests(username, languageId)
     .then(manifests => {
       this.setState({
-        manifests: manifests,
+        manifests,
       });
     });
   };

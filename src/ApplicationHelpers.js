@@ -1,9 +1,19 @@
 import path from 'path';
 import YAML from 'yaml';
 import {each} from 'async';
-import request from 'request-promise';
+import localforage from 'localforage';
+import { setup } from 'axios-cache-adapter';
 
-const uriBase = "https://d3r5pm83aa8hdu.cloudfront.net/";
+const baseURL = "https://d3r5pm83aa8hdu.cloudfront.net/";
+
+const store = localforage.createInstance({
+  driver: [localforage.INDEXEDDB],
+  name: 'web-cache',
+});
+const api = setup({
+  baseURL: baseURL,
+  cache: {store, maxAge: 15 * 60 * 1000},
+});
 
 // Purpose: application wide
 // Scope: limited to resource manifests and information
@@ -55,7 +65,8 @@ export const fetchFileFromServer = (username, repository, filepath, branch='mast
   get(uri).then(resolve).catch(reject);
 });
 
-export const get = (_uri) => new Promise((resolve, reject) => {
-  const uri = uriBase + _uri;
-  request(uri).then(resolve).catch(reject);
+export const get = (uri) => new Promise((resolve, reject) => {
+  api.get(uri).then(response => {
+    resolve(response.data);
+  }).catch(error => console.warn(error));
 });
