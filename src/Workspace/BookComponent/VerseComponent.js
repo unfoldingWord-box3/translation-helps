@@ -66,7 +66,7 @@ export const VerseComponent = ({
     <ExpansionComponent
       summary={
         <span className={classes.verse}>
-          <span id={id} style={{position: 'absolute', top: '-1em'}}></span>
+          <span id={id} style={{position: 'absolute', top: '-5em'}}></span>
           <sup>{verseKey}</sup>
           {verseObjects}
         </span>
