@@ -45,7 +45,6 @@ export const fetchResources = (props) => new Promise((resolve, reject) => {
       }
     },
     (error) => {
-      debugger
       resolve(resources);
     }
   );
