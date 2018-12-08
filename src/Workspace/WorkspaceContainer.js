@@ -66,6 +66,18 @@ class WorkspaceContainer extends React.Component {
     this.fetchResourcesConditionally(this.props);
   };
 
+  componentDidUpdate() {
+    const {book, chapter, verse} = this.props.reference;
+    const id = `${book}_${chapter}_${verse}`;
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }
+
   render() {
     const props = this.props;
     const {bookData, translationNotesData, ugntData, referenceLoaded} = this.state;

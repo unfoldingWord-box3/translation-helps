@@ -19,6 +19,7 @@ export const VerseComponent = ({
   bookVerseData,
   ugntVerseData,
   translationNotesVerseData,
+  reference,
   setReference,
 }) => {
   const verseObjects =
@@ -58,14 +59,14 @@ export const VerseComponent = ({
       setReference={setReference}
     /> : null;
 
-  // const element = document.getElementById(this.state.media);
-  // element.scrollIntoView({behavior: 'smooth'});
+  const {book, chapter} = reference;
+  const id = `${book}_${chapter}_${verseKey}`;
 
   return (
     <ExpansionComponent
-      key={'verse'+verseKey}
       summary={
         <span className={classes.verse}>
+          <span id={id} style={{position: 'absolute', top: '-1em'}}></span>
           <sup>{verseKey}</sup>
           {verseObjects}
         </span>
@@ -83,6 +84,7 @@ VerseComponent.propTypes = {
   languageId: PropTypes.string.isRequired,
   ugntVerseData: PropTypes.object,
   setReference: PropTypes.func.isRequired,
+  reference: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(VerseComponent);

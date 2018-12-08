@@ -20,6 +20,7 @@ export const ChapterComponent = ({
   ugntChapterData,
   translationNotesChapterData,
   setReference,
+  reference,
 }) => {
   const verses = Object.keys(bookChapterData)
   .filter(verseKey => {
@@ -35,6 +36,7 @@ export const ChapterComponent = ({
       ugntVerseData={ugntChapterData ? ugntChapterData[verseKey] : null}
       translationNotesVerseData={translationNotesChapterData[verseKey]}
       setReference={setReference}
+      reference={reference}
     />
   );
   const intro = (translationNotesChapterData['intro'] && translationNotesChapterData['intro'][0]) ?
@@ -71,6 +73,7 @@ ChapterComponent.propTypes = {
   languageId: PropTypes.string.isRequired,
   ugntChapterData: PropTypes.object,
   setReference: PropTypes.func.isRequired,
+  reference: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ChapterComponent);

@@ -67,13 +67,13 @@ function registerValidSW(swUrl, config) {
               // but the previous service worker will still serve the older
               // content until all client tabs are closed.
               if (window) window.alert(
-                'Update is available, close the App and/or all tabs to get the latest.'
+                'Update is available, close the App and/or all tabs and restart the App to get the latest.'
               );
-
               // Execute callback
-              if (config && config.onUpdate) {
-                config.onUpdate(registration);
-              }
+              // if (config && config.onUpdate) {
+              //   config.onUpdate(registration);
+              // }
+              unregister();
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a
