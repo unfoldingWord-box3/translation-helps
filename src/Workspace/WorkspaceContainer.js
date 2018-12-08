@@ -7,54 +7,24 @@ import * as WorkspaceHelpers from './WorkspaceHelpers';
 
 class WorkspaceContainer extends React.Component {
   state = {
-    bookData: null,
-    translationNotesData: null,
-    originalData: null,
+    ult: null,
+    tn: null,
+    original: null,
     referenceLoaded: null,
   };
 
-  fetchResources(props) {
-    const {username, languageId, reference, manifests} = props;
-    if (reference.book) {
-      WorkspaceHelpers.fetchBook(username, languageId, reference.book, manifests.ult)
-      .then(bookData => {
-        WorkspaceHelpers.translationNotes(username, languageId, reference.book, manifests.tn)
-        .then(translationNotesData => {
-          WorkspaceHelpers.fetchOriginalBook(username, languageId, reference.book, manifests.uhb, manifests.ugnt)
-          .then(originalData => {
-            this.setState({
-              bookData,
-              translationNotesData,
-              originalData,
-              referenceLoaded: reference,
-            });
-          }).catch(error => {
-            this.setState({
-              bookData,
-              translationNotesData,
-              originalData: null,
-              referenceLoaded: reference,
-            });
-          });
-        });
-      });
-    } else {
-      this.setState({
-        bookData: null,
-        translationNotesData: null,
-        originalData: null,
-        referenceLoaded: null,
-      });
-    }
-  };
-
   fetchResourcesConditionally(nextProps) {
+    const {reference} = nextProps;
     const referenceChanged = (nextProps.reference.book !== this.props.reference.book);
     const emptyBookData = (!this.state.bookData);
     const needToFetch = (emptyBookData || referenceChanged)
-    const canFetch = (Object.keys(nextProps.manifests).length > 0);
+    const canFetch = (reference.book && Object.keys(nextProps.manifests).length > 0);
     if (canFetch && needToFetch) {
-      this.fetchResources(nextProps);
+      WorkspaceHelpers.fetchResources(nextProps)
+      .then(newState => {
+        newState.referenceLoaded = reference;
+        this.setState(newState);
+      });
     }
   }
 
@@ -80,14 +50,14 @@ class WorkspaceContainer extends React.Component {
 
   render() {
     const props = this.props;
-    const {bookData, translationNotesData, originalData, referenceLoaded} = this.state;
+    const {ult, tn, original, referenceLoaded} = this.state;
     return (
       <Workspace
         {...props}
         referenceLoaded={referenceLoaded}
-        bookData={bookData}
-        translationNotesData={translationNotesData}
-        originalData={originalData}
+        bookData={ult}
+        translationNotesData={tn}
+        originalData={original}
       />
     );
   };

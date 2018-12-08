@@ -27,8 +27,8 @@ export const BookComponent = ({
     <ChapterComponent
       languageId={languageId}
       chapterKey={reference.chapter}
-      bookChapterData={bookData.chapters[chapter]}
-      originalChapterData={originalData ? originalData.chapters[chapter] : null}
+      bookChapterData={bookData[chapter]}
+      originalChapterData={originalData[chapter]}
       translationNotesChapterData={translationNotesData[chapter]}
       setReference={setReference}
       reference={reference}

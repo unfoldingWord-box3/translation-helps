@@ -1,10 +1,55 @@
 import usfmjs from 'usfm-js';
+import {each} from 'async';
 
 // Purpose: application wide
 // Scope: limited to resource files and parsing
 // Notes: pass in manifests don't fetch them
 
 import * as ApplicationHelpers from '../ApplicationHelpers';
+
+export const fetchResources = (props) => new Promise((resolve, reject) => {
+  const {username, languageId, reference, manifests} = props;
+  let resources = {
+    ult: null,
+    tn: null,
+    original: null,
+  };
+  const resourceIds = ['ult', 'tn', 'original'];
+  each(resourceIds,
+    (resourceId, done) => {
+      switch (resourceId) {
+        case 'ult':
+          fetchBook(username, languageId, reference.book, manifests.ult)
+          .then(data => {
+            resources[resourceId] = data.chapters;
+            done();
+          });
+          break;
+        case 'tn':
+          translationNotes(username, languageId, reference.book, manifests.tn)
+          .then(data => {
+            resources[resourceId] = data;
+            done();
+          });
+          break;
+        case 'original':
+          fetchOriginalBook(username, languageId, reference.book, manifests.uhb, manifests.ugnt)
+          .then(data => {
+            resources[resourceId] = data.chapters;
+            done();
+          });
+          break;
+        default:
+          done();
+          break;
+      }
+    },
+    (error) => {
+      debugger
+      resolve(resources);
+    }
+  );
+});
 
 export const fetchBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
   if (!projectByBookId(manifest.projects, bookId)) {
@@ -41,11 +86,6 @@ export const fetchOriginalBook = (username, languageId, bookId, uhbManifest, ugn
 });
 
 export const fetchUGNTBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
-  if (!projectByBookId(manifest.projects, bookId)) {
-    const error = 'book not found in ugnt';
-    console.warn(error);
-    reject(error);
-  }
   const repository = ApplicationHelpers.resourceRepositories(languageId).ugnt;
   fetchFileByBookId(username, repository, bookId, manifest)
   .then(usfm => {
@@ -55,11 +95,6 @@ export const fetchUGNTBook = (username, languageId, bookId, manifest) => new Pro
 });
 
 export const fetchUHBBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
-  if (!projectByBookId(manifest.projects, bookId)) {
-    const error = 'book not found in uhb';
-    console.warn(error);
-    reject(error);
-  }
   const repository = ApplicationHelpers.resourceRepositories(languageId).uhb;
   fetchFileByBookId(username, repository, bookId, manifest)
   .then(usfm => {
