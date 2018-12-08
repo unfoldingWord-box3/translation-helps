@@ -23,11 +23,12 @@ export const resourceRepositories = (languageId) => {
   return {
     ult: languageId + '_ult',
     tn: languageId + '-tn',
-    ugl: languageId + '_ugl',
     ta: languageId + '-ta',
     tw: languageId + '-tw',
     ugnt: 'UGNT',
     uhb: 'UHB',
+    ugl: languageId + '_ugl',
+    uhal: languageId + '_uhal',
   };
 };
 

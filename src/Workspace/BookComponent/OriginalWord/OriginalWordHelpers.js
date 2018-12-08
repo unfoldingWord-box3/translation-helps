@@ -3,7 +3,7 @@ import * as ApplicationHelpers from '../../../ApplicationHelpers';
 
 const username = 'unfoldingword';
 const languageId = 'en'
-const repository = ApplicationHelpers.resourceRepositories(languageId).ugl;
+const repositories = ApplicationHelpers.resourceRepositories(languageId);
 
 export const parseSenses = (lexiconMarkdown) => {
   let senses = [];
@@ -27,7 +27,15 @@ export const parseSenses = (lexiconMarkdown) => {
 };
 
 export const senses = (strong) => new Promise((resolve, reject) => {
-  const filepath = path.join('content', strong, '01.md');
+  let repository, filepath;
+  if (/^H/.test(strong)) {
+    repository = repositories.uhal;
+    filepath = path.join('content', strong + '.md');
+  }
+  if (/^G/.test(strong)) {
+    repository = repositories.ugl;
+    filepath = path.join('content', strong, '01.md');
+  }
   ApplicationHelpers.fetchFileFromServer(username, repository, filepath)
   .then(markdown => {
     const senses = parseSenses(markdown);
@@ -39,7 +47,7 @@ export const unique = (array, response=[]) => {
   let _array = array;
   array.forEach(object => {
     _array = _array.filter(_object =>
-      !(object.gloss === _object.gloss && object.definition === _object.definition) 
+      !(object.gloss === _object.gloss && object.definition === _object.definition)
     );
     _array.push(object);
   });
