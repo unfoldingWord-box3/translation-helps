@@ -74,6 +74,7 @@ function registerValidSW(swUrl, config) {
               //   config.onUpdate(registration);
               // }
               unregister();
+              register();
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a
