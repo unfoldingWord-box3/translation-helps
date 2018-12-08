@@ -8,6 +8,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-size: 0.9em;
   line-height: 1.75em;
+  -webkit-text-size-adjust: 100%;
 }
 
 code {
