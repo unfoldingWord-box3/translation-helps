@@ -31,7 +31,13 @@ export const ExpansionPanelComponent = ({
         {summary}
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className={classes.expansionPanelDetails}>
-        <div className={classes.fullWidth}>{details}</div>
+      {
+        open ?
+          <div className={classes.fullWidth}>
+            {details}
+          </div>
+        : ''
+      }
       </ExpansionPanelDetails>
       <ExpansionPanelActions className={classes.expansionPanelActions}>
         <IconButton
