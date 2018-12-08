@@ -77,7 +77,7 @@ Workspace.propTypes = {
   ugntData: PropTypes.object,
   bookData: PropTypes.object,
   translationNotesData: PropTypes.object,
-  referenceLoaded: PropTypes.object.isRequired,
+  referenceLoaded: PropTypes.object,
 };
 
 const styles = theme => ({

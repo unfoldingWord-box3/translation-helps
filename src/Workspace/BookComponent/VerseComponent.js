@@ -8,7 +8,7 @@ import {
 
 import styles from './styles';
 
-import ExpansionComponent from './ExpansionComponent';
+import ExpansionPanelContainer from './ExpansionPanelContainer';
 import VerseObjectComponent from './VerseObjectComponent';
 import TranslationHelps from '../TranslationHelps';
 
@@ -63,7 +63,7 @@ export const VerseComponent = ({
   const id = `${book}_${chapter}_${verseKey}`;
 
   return (
-    <ExpansionComponent
+    <ExpansionPanelContainer
       summary={
         <span className={classes.verse}>
           <span id={id} style={{position: 'absolute', top: '-5em'}}></span>

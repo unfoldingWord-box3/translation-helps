@@ -9,7 +9,7 @@ import {
 
 import styles from './styles';
 
-import ExpansionComponent from './ExpansionComponent';
+import ExpansionPanelContainer from './ExpansionPanelContainer';
 import ChapterComponent from './ChapterComponent';
 import TranslationHelps from '../TranslationHelps';
 
@@ -43,7 +43,7 @@ export const BookComponent = ({
   }];
   return (
     <div className={classes.root}>
-      <ExpansionComponent
+      <ExpansionPanelContainer
         key={''+reference.book+'intro'}
         summary={
           <ReactMarkdown

@@ -9,7 +9,7 @@ import {
 import styles from './styles';
 
 import TranslationHelps from '../TranslationHelps';
-import ExpansionComponent from './ExpansionComponent';
+import ExpansionPanelContainer from './ExpansionPanelContainer';
 import VerseComponent from './VerseComponent';
 
 export const ChapterComponent = ({
@@ -48,7 +48,7 @@ export const ChapterComponent = ({
     text: intro,
   }];
   const introPanel = (
-    <ExpansionComponent
+    <ExpansionPanelContainer
       key={'chapter'+chapterKey}
       summary={<h2>Chapter {chapterKey}</h2>}
       details={

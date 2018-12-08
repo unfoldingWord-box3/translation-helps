@@ -17,7 +17,11 @@ export const styles = theme => ({
   expansionPanelDetails: {
     paddingLeft: 0,
     paddingRight: 0,
-  }
+    paddingBottom: 0,
+  },
+  expansionPanelActions: {
+    padding: 0,
+  },
 });
 
 export default styles;

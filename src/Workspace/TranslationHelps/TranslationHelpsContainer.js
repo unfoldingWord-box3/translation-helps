@@ -55,8 +55,6 @@ class TranslationHelpsContainer extends React.Component {
 }
 
 TranslationHelpsContainer.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
   tabs: PropTypes.array.isRequired,
   languageId: PropTypes.string.isRequired,
   setReference: PropTypes.func.isRequired,
