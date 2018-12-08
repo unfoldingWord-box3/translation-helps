@@ -10,6 +10,7 @@ export const styles = theme => ({
     marginRight: 'auto',
   },
   verse: {
+    margin: 0,
   },
   fullWidth: {
     width: '100%'
