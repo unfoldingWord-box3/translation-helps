@@ -12,12 +12,14 @@ import ExpansionPanelContainer from './ExpansionPanelContainer';
 import VerseObjectComponent from './VerseObjectComponent';
 import TranslationHelps from '../TranslationHelps';
 
+import * as originalHelpers from '../TranslationHelps/Original/helpers';
+
 export const VerseComponent = ({
   classes,
   languageId,
   verseKey,
   bookVerseData,
-  ugntVerseData,
+  originalVerseData,
   translationNotesVerseData,
   reference,
   setReference,
@@ -31,7 +33,7 @@ export const VerseComponent = ({
       <VerseObjectComponent
         key={index}
         verseObject={verseObject}
-        greekWords={[]}
+        originalWords={[]}
       />
     );
   }) : <span />;
@@ -44,10 +46,11 @@ export const VerseComponent = ({
     };
     tabs.push(notesTab)
   };
-  if (ugntVerseData) {
+  const wordObjects = originalHelpers.taggedWords(originalVerseData.verseObjects);
+  if (wordObjects.length > 0) {
     const wordsTab = {
       title: 'Words',
-      ugnt: ugntVerseData.verseObjects,
+      original: wordObjects,
     };
     tabs.push(wordsTab);
   }
@@ -82,7 +85,7 @@ VerseComponent.propTypes = {
   bookVerseData: PropTypes.object.isRequired,
   translationNotesVerseData: PropTypes.array,
   languageId: PropTypes.string.isRequired,
-  ugntVerseData: PropTypes.object,
+  originalVerseData: PropTypes.object,
   setReference: PropTypes.func.isRequired,
   reference: PropTypes.object.isRequired,
 };

@@ -18,7 +18,7 @@ export const BookComponent = ({
   languageId,
   reference,
   bookData,
-  ugntData,
+  originalData,
   translationNotesData,
   setReference,
 }) => {
@@ -28,7 +28,7 @@ export const BookComponent = ({
       languageId={languageId}
       chapterKey={reference.chapter}
       bookChapterData={bookData.chapters[chapter]}
-      ugntChapterData={ugntData ? ugntData.chapters[chapter] : null}
+      originalChapterData={originalData ? originalData.chapters[chapter] : null}
       translationNotesChapterData={translationNotesData[chapter]}
       setReference={setReference}
       reference={reference}
@@ -69,7 +69,7 @@ BookComponent.propTypes = {
   bookData: PropTypes.object.isRequired,
   translationNotesData: PropTypes.object,
   languageId: PropTypes.string.isRequired,
-  ugntData: PropTypes.object,
+  originalData: PropTypes.object,
   setReference: PropTypes.func.isRequired,
   reference: PropTypes.object.isRequired,
 };

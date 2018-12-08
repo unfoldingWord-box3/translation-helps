@@ -12,9 +12,7 @@ import {
 
 import TextComponentWithRCLinks from './TextComponentWithRCLinks';
 import TranslationNotes from './TranslationNotes';
-import GreekWord from '../BookComponent/GreekWord';
-
-import * as ugntHelpers from './UGNT/helpers';
+import OriginalWord from '../BookComponent/OriginalWord';
 
 import styles from './TranslationHelpsStyles';
 
@@ -51,13 +49,13 @@ export const TranslationHelpsComponent = ({
           setReference={setReference}
         />
       );
-    } else if (tab.ugnt) {
-      const wordObjects = ugntHelpers.taggedWords(tab.ugnt);
+    } else if (tab.original) {
+      const wordObjects = tab.original;
       badgeCount = wordObjects.length;
       content = wordObjects.map((wordObject, index) => {
         const link = wordObject.link.replace('rc://*/', `http://${languageId}/`);
-        const greekWords = wordObject.greekWords.map((verseObject, index) =>
-          <GreekWord key={index} verseObject={verseObject} />
+        const originalWords = wordObject.originalWords.map((verseObject, index) =>
+          <OriginalWord key={index} verseObject={verseObject} />
         );
         const text = `${link}`;
         return (
@@ -68,7 +66,7 @@ export const TranslationHelpsComponent = ({
               addTab={addTab}
               setReference={setReference}
             />
-            {greekWords}
+            {originalWords}
           </div>
         );
       });

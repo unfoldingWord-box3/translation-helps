@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import GreekWordComponent from './GreekWordComponent';
-import * as GreekWordHelpers from './GreekWordHelpers';
+import OriginalWordComponent from './OriginalWordComponent';
+import * as OriginalWordHelpers from './OriginalWordHelpers';
 
-class GreekWordsContainer extends React.Component {
+class OriginalWordsContainer extends React.Component {
   state = {
     senses: [],
   };
 
   componentDidMount() {
-    GreekWordHelpers.senses(this.props.verseObject.strong)
+    OriginalWordHelpers.senses(this.props.verseObject.strong)
     .then(senses => {
       this.setState({
         senses: senses,
@@ -23,7 +23,7 @@ class GreekWordsContainer extends React.Component {
 
   render() {
     return (
-      <GreekWordComponent
+      <OriginalWordComponent
         verseObject={this.props.verseObject}
         senses={this.state.senses}
       />
@@ -31,7 +31,7 @@ class GreekWordsContainer extends React.Component {
   };
 };
 
-GreekWordsContainer.propTypes = {
+OriginalWordsContainer.propTypes = {
   classes: PropTypes.object.isRequired,
   verseObject: PropTypes.object.isRequired,
 };
@@ -39,4 +39,4 @@ GreekWordsContainer.propTypes = {
 const styles = theme => ({
 });
 
-export default withStyles(styles, { withTheme: true })(GreekWordsContainer);
+export default withStyles(styles, { withTheme: true })(OriginalWordsContainer);

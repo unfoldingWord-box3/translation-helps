@@ -7,7 +7,7 @@ import {
 import {
 } from '@material-ui/icons';
 
-export const GreekWordComponent = ({classes, verseObject, senses}) => {
+export const OriginalWordComponent = ({classes, verseObject, senses}) => {
 
   return (
     <div>
@@ -37,7 +37,7 @@ export const GreekWordComponent = ({classes, verseObject, senses}) => {
   );
 };
 
-GreekWordComponent.propTypes = {
+OriginalWordComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   verseObject: PropTypes.object.isRequired,
   senses: PropTypes.array,
@@ -49,4 +49,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(GreekWordComponent);
+export default withStyles(styles)(OriginalWordComponent);

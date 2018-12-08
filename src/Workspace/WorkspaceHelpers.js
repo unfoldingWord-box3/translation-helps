@@ -20,6 +20,26 @@ export const fetchBook = (username, languageId, bookId, manifest) => new Promise
   }).catch(reject);
 });
 
+export const fetchOriginalBook = (username, languageId, bookId, uhbManifest, ugntManifest) => new Promise((resolve, reject) => {
+  let manifest, repository;
+  const uhbProject = projectByBookId(uhbManifest.projects, bookId);
+  const ugntProject = projectByBookId(ugntManifest.projects, bookId);
+  const repositories = ApplicationHelpers.resourceRepositories(languageId);
+  if (uhbProject) {
+    manifest = uhbManifest;
+    repository = repositories.uhb;
+  };
+  if (ugntProject) {
+    manifest = ugntManifest;
+    repository = repositories.ugnt;
+  };
+  fetchFileByBookId(username, repository, bookId, manifest)
+  .then(usfm => {
+    const json = usfmjs.toJSON(usfm);
+    resolve(json);
+  }).catch(reject);
+});
+
 export const fetchUGNTBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
   if (!projectByBookId(manifest.projects, bookId)) {
     const error = 'book not found in ugnt';
@@ -27,6 +47,20 @@ export const fetchUGNTBook = (username, languageId, bookId, manifest) => new Pro
     reject(error);
   }
   const repository = ApplicationHelpers.resourceRepositories(languageId).ugnt;
+  fetchFileByBookId(username, repository, bookId, manifest)
+  .then(usfm => {
+    const json = usfmjs.toJSON(usfm);
+    resolve(json);
+  }).catch(reject);
+});
+
+export const fetchUHBBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
+  if (!projectByBookId(manifest.projects, bookId)) {
+    const error = 'book not found in uhb';
+    console.warn(error);
+    reject(error);
+  }
+  const repository = ApplicationHelpers.resourceRepositories(languageId).uhb;
   fetchFileByBookId(username, repository, bookId, manifest)
   .then(usfm => {
     const json = usfmjs.toJSON(usfm);

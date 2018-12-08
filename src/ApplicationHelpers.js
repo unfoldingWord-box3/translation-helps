@@ -27,6 +27,7 @@ export const resourceRepositories = (languageId) => {
     ta: languageId + '-ta',
     tw: languageId + '-tw',
     ugnt: 'UGNT',
+    uhb: 'UHB',
   };
 };
 

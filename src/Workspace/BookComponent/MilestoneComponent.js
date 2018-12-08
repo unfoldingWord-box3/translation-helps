@@ -7,20 +7,20 @@ import {
 } from '@material-ui/icons';
 
 import VerseObjectComponent from './VerseObjectComponent';
-import GreekWordsContainer from './GreekWordsContainer';
+import OriginalWordsContainer from './OriginalWordsContainer';
 
-export const MilestoneComponent = ({classes, verseObject, greekWords}) => {
-  greekWords.push(verseObject);
+export const MilestoneComponent = ({classes, verseObject, originalWords}) => {
+  originalWords.push(verseObject);
   const container = (verseObject.children[0].type === 'milestone') ?
     verseObject.children.map((child, index) =>
       <VerseObjectComponent
         key={index}
         verseObject={child}
-        greekWords={greekWords}
+        originalWords={originalWords}
       />
     ) :
-    <GreekWordsContainer
-      greekWords={greekWords}
+    <OriginalWordsContainer
+      originalWords={originalWords}
       children={verseObject.children}
     />;
 
@@ -30,7 +30,7 @@ export const MilestoneComponent = ({classes, verseObject, greekWords}) => {
 MilestoneComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   verseObject: PropTypes.object.isRequired,
-  greekWords: PropTypes.array,
+  originalWords: PropTypes.array,
 };
 
 const styles = theme => ({

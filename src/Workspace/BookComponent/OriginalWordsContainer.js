@@ -6,9 +6,9 @@ import {
 } from '@material-ui/core';
 
 import TextComponent from './TextComponent';
-import GreekWord from './GreekWord/index.js';
+import OriginalWord from './OriginalWord/index.js';
 
-class GreekWordsContainer extends React.Component {
+class OriginalWordsContainer extends React.Component {
   state = {
     anchorEl: null,
   };
@@ -22,7 +22,7 @@ class GreekWordsContainer extends React.Component {
   };
 
   render() {
-    const { classes, children, greekWords } = this.props;
+    const { classes, children, originalWords } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     return (
@@ -60,8 +60,8 @@ class GreekWordsContainer extends React.Component {
           disableRestoreFocus
         >
         {
-          greekWords.map((verseObject, index) =>
-            <GreekWord key={index} verseObject={verseObject} />
+          originalWords.map((verseObject, index) =>
+            <OriginalWord key={index} verseObject={verseObject} />
           )
         }
         </Popover>
@@ -70,10 +70,10 @@ class GreekWordsContainer extends React.Component {
   }
 }
 
-GreekWordsContainer.propTypes = {
+OriginalWordsContainer.propTypes = {
   classes: PropTypes.object.isRequired,
   children: PropTypes.array.isRequired,
-  greekWords: PropTypes.array,
+  originalWords: PropTypes.array,
 };
 
 const styles = theme => ({
@@ -90,4 +90,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles, { withTheme: true })(GreekWordsContainer);
+export default withStyles(styles, { withTheme: true })(OriginalWordsContainer);

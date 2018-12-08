@@ -14,7 +14,7 @@ import ChapterManager from './ChapterManager';
 export const Workspace = ({
   classes,
   bookData,
-  ugntData,
+  originalData,
   translationNotesData,
   username,
   languageId,
@@ -41,7 +41,7 @@ export const Workspace = ({
       languageId={languageId}
       reference={reference}
       bookData={bookData}
-      ugntData={ugntData}
+      originalData={originalData}
       translationNotesData={translationNotesData}
       setReference={setReference}
     />
@@ -74,7 +74,7 @@ Workspace.propTypes = {
   reference: PropTypes.object.isRequired,
   setReference: PropTypes.func.isRequired,
   manifests: PropTypes.object,
-  ugntData: PropTypes.object,
+  originalData: PropTypes.object,
   bookData: PropTypes.object,
   translationNotesData: PropTypes.object,
   referenceLoaded: PropTypes.object,

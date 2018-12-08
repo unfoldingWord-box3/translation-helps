@@ -17,7 +17,7 @@ export const ChapterComponent = ({
   languageId,
   chapterKey,
   bookChapterData,
-  ugntChapterData,
+  originalChapterData,
   translationNotesChapterData,
   setReference,
   reference,
@@ -33,7 +33,7 @@ export const ChapterComponent = ({
       verseKey={verseKey}
       languageId={languageId}
       bookVerseData={bookChapterData[verseKey]}
-      ugntVerseData={ugntChapterData ? ugntChapterData[verseKey] : null}
+      originalVerseData={originalChapterData ? originalChapterData[verseKey] : null}
       translationNotesVerseData={translationNotesChapterData[verseKey]}
       setReference={setReference}
       reference={reference}
@@ -71,7 +71,7 @@ ChapterComponent.propTypes = {
   bookChapterData: PropTypes.object.isRequired,
   translationNotesChapterData: PropTypes.object,
   languageId: PropTypes.string.isRequired,
-  ugntChapterData: PropTypes.object,
+  originalChapterData: PropTypes.object,
   setReference: PropTypes.func.isRequired,
   reference: PropTypes.object.isRequired,
 };

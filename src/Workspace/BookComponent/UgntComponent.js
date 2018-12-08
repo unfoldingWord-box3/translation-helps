@@ -12,7 +12,7 @@
 // import VerseObjectComponent from './VerseObjectComponent';
 // import TranslationHelps from '../TranslationHelps';
 //
-// export const VerseComponent = ({classes, verseKey, bookVerseData, ugntVerseData, translationNotesVerseData}) => {
+// export const VerseComponent = ({classes, verseKey, bookVerseData, originalVerseData, translationNotesVerseData}) => {
 //   const verseObjects =
 //   bookVerseData.verseObjects ?
 //   bookVerseData.verseObjects.map((verseObject, index) => {
@@ -22,7 +22,7 @@
 //       <VerseObjectComponent
 //         key={index}
 //         verseObject={verseObject}
-//         greekWords={[]}
+//         originalWords={[]}
 //       />
 //     );
 //   }) : <span />;
@@ -51,7 +51,7 @@
 //   classes: PropTypes.object.isRequired,
 //   verseKey: PropTypes.string.isRequired,
 //   bookVerseData: PropTypes.object.isRequired,
-//   ugntVerseData: PropTypes.object.isRequired,
+//   originalVerseData: PropTypes.object.isRequired,
 //   translationNotesVerseData: PropTypes.array,
 // };
 //
