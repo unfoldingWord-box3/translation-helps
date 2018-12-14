@@ -23,32 +23,33 @@ const theme = createMuiTheme({
   },
 });
 
-export const Application = ({classes, username, languageId, reference, manifests, setReference}) =>
+export const Application = ({
+  classes,
+  context,
+  setContext,
+  manifests,
+}) =>
 <MuiThemeProvider theme={theme}>
   <div className={classes.root}>
     <div className={classes.appFrame}>
       <main className={classes.main}>
         <ApplicationBar
-          username={username}
-          languageId={languageId}
+          context={context}
+          setContext={setContext}
           manifests={manifests}
-          reference={reference}
-          setReference={setReference}
         />
         <div className={classes.workspace}>
           <Workspace
-            username={username}
-            languageId={languageId}
+            context={context}
+            setContext={setContext}
             manifests={manifests}
-            reference={reference}
-            setReference={setReference}
           />
         </div>
       </main>
       <nav className={classes.bottomNav}>
         <BottomNav
-          reference={reference}
-          setReference={setReference}
+          context={context}
+          setContext={setContext}
         />
       </nav>
     </div>
@@ -57,10 +58,8 @@ export const Application = ({classes, username, languageId, reference, manifests
 
 Application.propTypes = {
   classes: PropTypes.object.isRequired,
-  username: PropTypes.string.isRequired,
-  languageId: PropTypes.string.isRequired,
-  reference: PropTypes.object.isRequired,
-  setReference: PropTypes.func.isRequired,
+  context: PropTypes.object.isRequired,
+  setContext: PropTypes.func.isRequired,
   manifests: PropTypes.object,
 };
 

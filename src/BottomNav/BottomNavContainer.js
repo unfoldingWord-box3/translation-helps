@@ -8,36 +8,48 @@ import {
   BottomNavigationAction,
 } from '@material-ui/core';
 import {
-  Bookmarks,
+  LibraryBooks,
   Book,
   Bookmark,
 } from '@material-ui/icons';
 
 class BottomNavContainer extends React.Component {
   handleChange = (event, value) => {
-    let newReference = this.props.reference;
+    let {
+      context,
+      context: {
+        username,
+        languageId,
+        reference,
+      }
+    } = this.props;
     switch (value) {
+      case 0:
+        context = {username, languageId, reference: {}};
+        break;
       case 1:
-        newReference = {};
+        context.reference = {};
         break;
       case 2:
-        newReference = {book: this.props.reference.book};
+        context.reference = {bookId: reference.bookId};
         break;
       default:
         break;
     };
-    this.props.setReference(newReference);
+    this.props.setContext(context);
   };
 
   render() {
-    const { classes, reference } = this.props;
+    const { classes, context } = this.props;
 
-    let value = null;
-    if (!reference.book) {
-      value = 1;
-    } else if (!reference.chapter) {
-      value = 2;
-    }
+    let value;
+    const couldShowReference = (!context.resourceId);
+    const couldShowBook = (!context.resourceId === 'obs' && !(context.reference && context.reference.bookId));
+    const couldShowChapter = (!(context.reference && context.reference.chapter));
+
+    if (couldShowReference) { value = 0; }
+    else if (couldShowBook) { value = 1; }
+    else if (couldShowChapter) { value = 2; }
 
     return (
       <Paper className={classes.root}>
@@ -48,9 +60,8 @@ class BottomNavContainer extends React.Component {
           className={classes.root}
         >
           <BottomNavigationAction
-            label="Bookmarks"
-            icon={<Bookmarks />}
-            disabled={true}
+            label="Resources"
+            icon={<LibraryBooks />}
           />
           <BottomNavigationAction
             label="Books"
@@ -68,8 +79,8 @@ class BottomNavContainer extends React.Component {
 
 BottomNavContainer.propTypes = {
   classes: PropTypes.object.isRequired,
-  reference: PropTypes.object.isRequired,
-  setReference: PropTypes.func.isRequired,
+  context: PropTypes.object.isRequired,
+  setContext: PropTypes.func.isRequired,
 };
 
 const styles = theme => ({

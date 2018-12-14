@@ -11,29 +11,38 @@ import {
   BookOutlined,
 } from '@material-ui/icons';
 
-import * as chaptersAndVerses from '../../chaptersAndVerses';
+import * as chaptersAndVerses from '../../../chaptersAndVerses';
 
-export const BookComponent = ({classes, bookMetadata, reference, setReference}) => {
+export const BookComponent = ({
+  classes,
+  bookMetadata,
+  context,
+  setContext,
+  context: {
+    reference,
+  },
+}) => {
   const bookId = bookMetadata.identifier;
   const chapterCount = chaptersAndVerses.chaptersInBook(bookId).length;
   return (
     <ListItem
       button
-      selected={reference.book === bookMetadata.identifier}
+      selected={reference.bookId === bookMetadata.identifier}
       className={classes.bookListItem}
       style={{
         paddingLeft: '2.2em',
         paddingRight: '0.7em',
       }}
       onClick={() => {
-        setReference({
-          book: bookId,
-        });
+        context.reference = {
+          bookId: bookId
+        }
+        setContext(context);
       }}
     >
       <ListItemIcon className={classes.listItemIcon}>
         {
-          (reference.book === bookMetadata.identifier) ?
+          (reference.bookId === bookMetadata.identifier) ?
           <Book /> :
           <BookOutlined />
         }
@@ -50,8 +59,8 @@ export const BookComponent = ({classes, bookMetadata, reference, setReference}) 
 BookComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   bookMetadata: PropTypes.object.isRequired,
-  reference: PropTypes.object.isRequired,
-  setReference: PropTypes.func.isRequired,
+  context: PropTypes.object.isRequired,
+  setContext: PropTypes.func.isRequired,
 }
 
 const styles = theme => ({

@@ -10,27 +10,35 @@ const keyPrefix = 'ApplicationContainer.state.';
 
 class ApplicationContainer extends React.Component {
   state = {
-    username: 'unfoldingWord',
-    languageId: 'en',
     manifests: {},
-    reference: {},
+    context: {
+      username: 'unfoldingWord',
+      languageId: 'en',
+      resourceId: null,
+      reference: {},
+    },
   };
-
+  
   componentWillMount() {
-    const reference = localstorage.get(keyPrefix + 'reference');
-    if (reference && reference.book !== 'obs') this.setState({reference});
+    const context = localstorage.get(keyPrefix + 'context');
+    if (context) {
+      this.setState({context});
+    }
   };
 
-  setReference(reference) {
+  setContext(context) {
     window.scrollTo(0,0);
-    this.setState({
-      reference,
-    });
-    localstorage.set(keyPrefix + 'reference', reference);
+    this.setState({context});
+    localstorage.set(keyPrefix + 'context', context);
   };
 
   componentDidMount() {
-    const {username, languageId} = this.state;
+    const {
+      context: {
+        username,
+        languageId
+      },
+    } = this.state;
     ApplicationHelpers.fetchResourceManifests(username, languageId)
     .then(manifests => {
       this.setState({
@@ -40,13 +48,11 @@ class ApplicationContainer extends React.Component {
   };
 
   render() {
-    const {username, languageId, reference, manifests} = this.state;
+    const {context, manifests} = this.state;
     return (
       <Application
-        username={username}
-        languageId={languageId}
-        reference={reference}
-        setReference={this.setReference.bind(this)}
+        context={context}
+        setContext={this.setContext.bind(this)}
         manifests={manifests}
       />
     );

@@ -15,14 +15,22 @@ import {
 
 import BookComponent from './BookComponent';
 
-export const TestamentComponent = ({classes, testamentId, books, reference, setReference, open, toggle}) => {
+export const TestamentComponent = ({
+  classes,
+  testamentId,
+  books,
+  context,
+  setContext,
+  open,
+  toggle
+}) => {
   const bookComponents = books ?
     books.map((bookMetadata) =>
       <BookComponent
         key={bookMetadata.identifier}
         bookMetadata={bookMetadata}
-        reference={reference}
-        setReference={setReference}
+        context={context}
+        setContext={setContext}
       />
     ) : [];
 
@@ -65,8 +73,8 @@ TestamentComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   testamentId: PropTypes.string.isRequired,
   books: PropTypes.array.isRequired,
-  reference: PropTypes.object.isRequired,
-  setReference: PropTypes.func.isRequired,
+  context: PropTypes.object.isRequired,
+  setContext: PropTypes.func.isRequired,
 }
 const styles = theme => ({
   list: {

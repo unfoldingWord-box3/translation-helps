@@ -13,7 +13,7 @@ import {
   ExpandLess,
 } from '@material-ui/icons';
 
-import styles from './styles';
+import styles from '../../styles';
 
 export const ExpansionPanelComponent = ({
   classes,

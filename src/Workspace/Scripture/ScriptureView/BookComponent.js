@@ -7,34 +7,37 @@ import {
 import {
 } from '@material-ui/icons';
 
-import styles from './styles';
+import styles from '../../styles';
 
 import ExpansionPanelContainer from './ExpansionPanelContainer';
 import ChapterComponent from './ChapterComponent';
-import TranslationHelps from '../TranslationHelps';
+import TranslationHelps from '../../TranslationHelps';
 
 export const BookComponent = ({
   classes,
-  languageId,
-  reference,
-  bookData,
-  originalData,
-  translationNotesData,
-  setReference,
+  context,
+  setContext,
+  context: {
+    reference: {
+      chapter,
+    },
+  },
+  resources: {
+    ult,
+    original,
+    tn,
+  },
 }) => {
-  const {chapter} = reference;
   const chapterComponent = (
     <ChapterComponent
-      languageId={languageId}
-      chapterKey={reference.chapter}
-      bookChapterData={bookData[chapter]}
-      originalChapterData={originalData[chapter]}
-      translationNotesChapterData={translationNotesData[chapter]}
-      setReference={setReference}
-      reference={reference}
+      context={context}
+      setContext={setContext}
+      bookChapterData={ult[chapter]}
+      originalChapterData={original[chapter]}
+      translationNotesChapterData={tn[chapter]}
     />
   );
-  const intro = translationNotesData['front']['intro'][0]['occurrence_note'];
+  const intro = tn['front']['intro'][0]['occurrence_note'];
   const introDetails = intro.split('\n').splice(1).join('\n')
     .replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '');
   const tabs = [{
@@ -44,7 +47,7 @@ export const BookComponent = ({
   return (
     <div className={classes.root}>
       <ExpansionPanelContainer
-        key={''+reference.book+'intro'}
+        key={''+context.reference.bookId+'intro'}
         summary={
           <ReactMarkdown
             source={intro.split('\n')[0]}
@@ -53,8 +56,8 @@ export const BookComponent = ({
         }
         details={
           <TranslationHelps
-            setReference={setReference}
-            languageId={languageId}
+            context={context}
+            setContext={setContext}
             tabs={tabs}
           />
         }
@@ -66,12 +69,9 @@ export const BookComponent = ({
 
 BookComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  bookData: PropTypes.object.isRequired,
-  translationNotesData: PropTypes.object,
-  languageId: PropTypes.string.isRequired,
-  originalData: PropTypes.object,
-  setReference: PropTypes.func.isRequired,
-  reference: PropTypes.object.isRequired,
+  resources: PropTypes.object.isRequired,
+  setContext: PropTypes.func.isRequired,
+  context: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(BookComponent);

@@ -8,18 +8,22 @@ import {
 import {
 } from '@material-ui/icons';
 
-import * as WorkspaceHelpers from '../Workspace/WorkspaceHelpers';
+import * as ScriptureHelpers from '../Workspace/Scripture/helpers';
 
 const ApplicationBar = ({
   classes,
   projectName,
   manifests,
-  reference,
+  context: {
+    resourceId,
+    reference
+  },
 }) => {
 
   let bookName = '';
-  if (manifests && manifests['ult'] && manifests['ult'].projects && reference.book) {
-    const project = WorkspaceHelpers.projectByBookId(manifests['ult'].projects, reference.book);
+
+  if (manifests && manifests[resourceId] && manifests[resourceId].projects && reference && reference.bookId) {
+    const project = ScriptureHelpers.projectByBookId(manifests[resourceId].projects, reference.bookId);
     bookName = project.title;
   }
   const referenceComponent = (bookName ? <span>&nbsp;-&nbsp;{bookName} {reference.chapter}</span> : <span />);
@@ -44,7 +48,7 @@ ApplicationBar.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   manifests: PropTypes.object.isRequired,
-  reference: PropTypes.object.isRequired,
+  context: PropTypes.object.isRequired,
   projectName: PropTypes.string.isRequired,
 };
 

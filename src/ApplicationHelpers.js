@@ -12,7 +12,7 @@ const store = localforage.createInstance({
 });
 const api = setup({
   baseURL: baseURL,
-  cache: {store, maxAge: 1 * 60 * 60 * 1000},
+  cache: {store, maxAge: 24 * 60 * 60 * 1000},
 });
 
 // Purpose: application wide
@@ -29,6 +29,9 @@ export const resourceRepositories = (languageId) => {
     uhb: 'UHB',
     ugl: languageId + '_ugl',
     uhal: languageId + '_uhal',
+    obs: languageId + '_obs',
+    'obs-tn': languageId + '_obs-tn',
+    'obs-tq': languageId + '_obs-tq',
   };
 };
 
@@ -70,5 +73,7 @@ export const fetchFileFromServer = (username, repository, filepath, branch='mast
 export const get = (uri) => new Promise((resolve, reject) => {
   api.get(uri).then(response => {
     resolve(response.data);
-  }).catch(error => console.warn(error));
+  }).catch(error => {
+    reject(error);
+  });
 });

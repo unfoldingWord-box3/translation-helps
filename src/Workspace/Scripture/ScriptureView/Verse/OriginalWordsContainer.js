@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 
 import TextComponent from './TextComponent';
-import OriginalWord from './OriginalWord/index.js';
+import OriginalWord from '../OriginalWord';
 
 class OriginalWordsContainer extends React.Component {
   state = {

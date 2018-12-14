@@ -8,17 +8,25 @@ import {
 
 import ChapterComponent from './ChapterComponent';
 
-import * as chaptersAndVerses from '../../chaptersAndVerses';
+import * as chaptersAndVerses from '../../../chaptersAndVerses';
 
-export const ChaptersComponent = ({classes, bookData, reference, setReference}) => {
-  const chapters = chaptersAndVerses.chaptersInBook(reference.book)
+export const ChaptersComponent = ({
+  classes,
+  bookData,
+  context,
+  setContext,
+  context: {
+    reference,
+  },
+}) => {
+  const chapters = chaptersAndVerses.chaptersInBook(reference.bookId)
   .map((verses, index) =>
     <ChapterComponent
       key={index}
       chapter={index+1}
       verses={verses}
-      reference={reference}
-      setReference={setReference}
+      context={context}
+      setContext={setContext}
     />
   );
 
@@ -39,8 +47,8 @@ export const ChaptersComponent = ({classes, bookData, reference, setReference}) 
 
 ChaptersComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  reference: PropTypes.object.isRequired,
-  setReference: PropTypes.func.isRequired,
+  context: PropTypes.object.isRequired,
+  setContext: PropTypes.func.isRequired,
 };
 
 const styles = theme => ({

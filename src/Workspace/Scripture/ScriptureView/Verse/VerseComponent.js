@@ -6,13 +6,13 @@ import {
 import {
 } from '@material-ui/icons';
 
-import styles from './styles';
+import styles from '../../../styles';
 
-import ExpansionPanelContainer from './ExpansionPanelContainer';
+import ExpansionPanelContainer from '../ExpansionPanelContainer';
 import VerseObjectComponent from './VerseObjectComponent';
-import TranslationHelps from '../TranslationHelps';
+import TranslationHelps from '../../../TranslationHelps';
 
-import * as originalHelpers from '../TranslationHelps/Original/helpers';
+import * as originalHelpers from '../../../TranslationHelps/Original/helpers';
 
 export const VerseComponent = ({
   classes,
@@ -21,8 +21,11 @@ export const VerseComponent = ({
   bookVerseData,
   originalVerseData,
   translationNotesVerseData,
-  reference,
-  setReference,
+  context,
+  setContext,
+  context: {
+    reference,
+  },
 }) => {
   const verseObjects =
   bookVerseData.verseObjects ?
@@ -57,13 +60,13 @@ export const VerseComponent = ({
 
   const details = (tabs.length > 0) ?
     <TranslationHelps
-      languageId={languageId}
+      context={context}
+      setContext={setContext}
       tabs={tabs}
-      setReference={setReference}
     /> : null;
 
-  const {book, chapter} = reference;
-  const id = `${book}_${chapter}_${verseKey}`;
+  const {bookId, chapter} = reference;
+  const id = `${bookId}_${chapter}_${verseKey}`;
 
   return (
     <ExpansionPanelContainer
@@ -81,13 +84,12 @@ export const VerseComponent = ({
 
 VerseComponent.propTypes = {
   classes: PropTypes.object.isRequired,
+  context: PropTypes.object.isRequired,
+  setContext: PropTypes.func.isRequired,
   verseKey: PropTypes.string.isRequired,
   bookVerseData: PropTypes.object.isRequired,
   translationNotesVerseData: PropTypes.array,
-  languageId: PropTypes.string.isRequired,
   originalVerseData: PropTypes.object,
-  setReference: PropTypes.func.isRequired,
-  reference: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(VerseComponent);

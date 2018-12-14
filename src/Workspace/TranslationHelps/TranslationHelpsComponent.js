@@ -12,14 +12,14 @@ import {
 
 import TextComponentWithRCLinks from './TextComponentWithRCLinks';
 import TranslationNotes from './TranslationNotes';
-import OriginalWord from '../BookComponent/OriginalWord';
+import OriginalWord from '../Scripture/ScriptureView/OriginalWord';
 
-import styles from './TranslationHelpsStyles';
+import styles from './styles';
 
 export const TranslationHelpsComponent = ({
   classes,
-  languageId,
-  setReference,
+  context,
+  setContext,
   tabs,
   addTab,
   tabIndex,
@@ -37,7 +37,8 @@ export const TranslationHelpsComponent = ({
       content = <TextComponentWithRCLinks
         text={tab.text}
         addTab={addTab}
-        setReference={setReference}
+        context={context}
+        setContext={setContext}
       />;
     } else if (tab.notes) {
       badgeCount = tab.notes.length;
@@ -46,14 +47,15 @@ export const TranslationHelpsComponent = ({
           key={index}
           note={note}
           addTab={addTab}
-          setReference={setReference}
+          context={context}
+          setContext={setContext}
         />
       );
     } else if (tab.original) {
       const wordObjects = tab.original;
       badgeCount = wordObjects.length;
       content = wordObjects.map((wordObject, index) => {
-        const link = wordObject.link.replace('rc://*/', `http://${languageId}/`);
+        const link = wordObject.link.replace('rc://*/', `http://${context.languageId}/`);
         const originalWords = wordObject.originalWords.map((verseObject, index) =>
           <OriginalWord key={index} verseObject={verseObject} />
         );
@@ -64,9 +66,25 @@ export const TranslationHelpsComponent = ({
             <TextComponentWithRCLinks
               text={text}
               addTab={addTab}
-              setReference={setReference}
+              context={context}
+              setContext={setContext}
             />
             {originalWords}
+          </div>
+        );
+      });
+    } else if (tab.words) {
+      badgeCount = tab.words.length;
+      content = tab.words.map((word, index) => {
+        return (
+          <div key={index}>
+            <Divider />
+            <TextComponentWithRCLinks
+              text={word}
+              addTab={addTab}
+              context={context}
+              setContext={setContext}
+            />
           </div>
         );
       });
@@ -113,11 +131,11 @@ export const TranslationHelpsComponent = ({
 TranslationHelpsComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
+  context: PropTypes.object.isRequired,
+  setContext: PropTypes.func.isRequired,
   tabs: PropTypes.array.isRequired,
   addTab: PropTypes.func.isRequired,
   handleChangeIndex: PropTypes.func.isRequired,
-  languageId: PropTypes.string.isRequired,
-  setReference: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(TranslationHelpsComponent);

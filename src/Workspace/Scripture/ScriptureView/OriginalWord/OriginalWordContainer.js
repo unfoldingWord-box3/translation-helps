@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import OriginalWordComponent from './OriginalWordComponent';
-import * as OriginalWordHelpers from './OriginalWordHelpers';
+import * as helpers from './helpers';
 
 class OriginalWordsContainer extends React.Component {
   state = {
@@ -11,7 +11,7 @@ class OriginalWordsContainer extends React.Component {
   };
 
   componentDidMount() {
-    OriginalWordHelpers.senses(this.props.verseObject.strong)
+    helpers.senses(this.props.verseObject.strong)
     .then(senses => {
       this.setState({
         senses: senses,

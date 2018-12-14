@@ -7,34 +7,40 @@ import {
 import {
 } from '@material-ui/icons';
 
-import Resources from './Resources';
-import Scripture from './Scripture';
-import OpenBibleStories from './OpenBibleStories';
+import BookSelection from './BookSelection';
+import ChapterSelection from './ChapterSelection';
+import ScriptureView from './ScriptureView';
 
-export const Workspace = ({
+export const Scripture = ({
   classes,
+  resources,
   manifests,
   context,
   setContext,
+  context: {
+    reference
+  },
+  referenceLoaded,
 }) => {
-  const resources = (
-    <Resources
+  const bookSelection = (
+    <BookSelection
       context={context}
       setContext={setContext}
       manifests={manifests}
     />
   );
-  const scripture = (
-    <Scripture
+  const chapterSelection = (
+    <ChapterSelection
       context={context}
       setContext={setContext}
       manifests={manifests}
     />
   );
-  const openBibleStories = (
-    <OpenBibleStories
+  const scriptureView = (
+    <ScriptureView
       context={context}
       setContext={setContext}
+      resources={resources}
     />
   );
   const loadingComponent = (
@@ -42,15 +48,13 @@ export const Workspace = ({
   );
 
   let component = loadingComponent;
-  if (Object.keys(manifests).length > 0) {
-    const shouldShowResources = (!context.resourceId);
-    const shouldShowScripture = (['ult','ust','uhb','ugnt'].includes(context.resourceId));
-    const shouldShowOpenBibleStories = (context.resourceId === 'obs');
+  const shouldShowBookSelection = (!reference.bookId);
+  const shouldShowChapterSelection = (reference.bookId && !reference.chapter);
+  const shouldShowScriptureView = (referenceLoaded && reference.bookId === referenceLoaded.bookId);
 
-    if (shouldShowResources) component = resources;
-    else if (shouldShowScripture) component = scripture;
-    else if (shouldShowOpenBibleStories) component = openBibleStories;
-  }
+  if (shouldShowBookSelection) component = bookSelection;
+  else if (shouldShowChapterSelection) component = chapterSelection;
+  else if (shouldShowScriptureView) component = scriptureView;
 
   return (
     <div className={classes.root}>
@@ -59,7 +63,7 @@ export const Workspace = ({
   );
 }
 
-Workspace.propTypes = {
+Scripture.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
@@ -76,4 +80,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(Workspace);
+export default withStyles(styles)(Scripture);

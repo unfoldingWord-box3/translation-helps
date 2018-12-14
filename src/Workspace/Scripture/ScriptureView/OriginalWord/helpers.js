@@ -1,5 +1,5 @@
 import path from 'path';
-import * as ApplicationHelpers from '../../../ApplicationHelpers';
+import * as ApplicationHelpers from '../../../../ApplicationHelpers';
 
 const username = 'unfoldingword';
 const languageId = 'en'

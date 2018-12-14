@@ -8,9 +8,9 @@ import {
 
 import TestamentContainer from './TestamentContainer';
 
-export const BibleComponent = ({classes, manifests, reference, setReference}) => {
+export const BibleComponent = ({classes, manifests, context, setContext}) => {
   let bible = {};
-  const ult = manifests['ult'];
+  const {ult} = manifests;
   if (ult) {
     ult.projects.forEach(project => {
       const testamentId = project.categories.includes('bible-ot') ? 'Old Testament': 'New Testament';
@@ -32,8 +32,8 @@ export const BibleComponent = ({classes, manifests, reference, setReference}) =>
                 key={testamentId}
                 testamentId={testamentId}
                 books={bible[testamentId]}
-                reference={reference}
-                setReference={setReference}
+                context={context}
+                setContext={setContext}
               />
             )
           }
@@ -46,8 +46,8 @@ export const BibleComponent = ({classes, manifests, reference, setReference}) =>
 BibleComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   manifests: PropTypes.object.isRequired,
-  reference: PropTypes.object.isRequired,
-  setReference: PropTypes.func.isRequired,
+  context: PropTypes.object.isRequired,
+  setContext: PropTypes.func.isRequired,
 };
 
 const styles = theme => ({

@@ -10,17 +10,19 @@ import * as helpers from './helpers';
 
 class RCLinkContainer extends React.Component {
   state = {
-    languageId: null,
-    resourceId: null,
+    context: {
+      languageId: null,
+      resourceId: null,
+      reference: null,
+    },
     path: null,
     title: null,
     article: null,
     open: null,
-    reference: null,
   };
 
   parseHref(href) {
-    let _match, languageId, resourceId, path, reference;
+    let _match, languageId, resourceId, path, reference, linkedResourceId;
     const regexpLanguageIdResourcePath = /http:\/\/([\w-_]+)\/([\w-_]+)\/(.+)/;
     if (regexpLanguageIdResourcePath.test(href)) {
       const match = regexpLanguageIdResourcePath.exec(href);
@@ -32,17 +34,23 @@ class RCLinkContainer extends React.Component {
       const regexpReference = /\/([\w]+)\/([\d]+)\/([\d]+)/;
       if (regexpReference.test(path)) {
         const match = regexpReference.exec(path);
-        const [_match, book, chapter, verse] = match;
-        if (book !== 'obs') {
-          reference = {book, chapter: parseInt(chapter), verse: parseInt(verse)};
+        const [_match, bookId, chapter, verse] = match;
+        if (bookId === 'obs') {
+          resourceId = 'obs';
+          reference = {chapter: parseInt(chapter), verse: parseInt(verse)};
+        } else {
+          resourceId = 'ult';
+          reference = {bookId, chapter: parseInt(chapter), verse: parseInt(verse)};
         }
       }
     }
     return {
-      languageId,
-      resourceId,
+      context: {
+        languageId,
+        resourceId,
+        reference,
+      },
       path,
-      reference,
     }
   };
 
@@ -57,7 +65,14 @@ class RCLinkContainer extends React.Component {
   };
 
   componentDidMount() {
-    const {title, languageId, resourceId, path} = this.state;
+    const {
+      context: {
+        languageId,
+        resourceId,
+      },
+      title,
+      path,
+    } = this.state;
     if (!title && languageId && resourceId && path) {
       helpers.fetchTitle(languageId, resourceId, path)
       .then(title => {
@@ -69,9 +84,20 @@ class RCLinkContainer extends React.Component {
   };
 
   handleOpen = () => {
-    const {languageId, resourceId, path, title, reference} = this.state;
+    const {
+      context: {
+        languageId,
+        resourceId,
+        reference,
+      },
+      path,
+      title,
+    } = this.state;
     if (reference) {
-      this.props.setReference(reference)
+      let {context} = this.props;
+      if (['ult','obs'].includes(resourceId)) context.resourceId = resourceId;
+      context.reference = reference;
+      this.props.setContext(context);
     } else {
       helpers.fetchArticle(languageId, resourceId, path)
       .then(article => {
@@ -113,7 +139,8 @@ RCLinkContainer.propTypes = {
   classes: PropTypes.object.isRequired,
   href: PropTypes.string.isRequired,
   addTab: PropTypes.func.isRequired,
-  setReference: PropTypes.func.isRequired,
+  context: PropTypes.object.isRequired,
+  setContext: PropTypes.func.isRequired,
 };
 
 

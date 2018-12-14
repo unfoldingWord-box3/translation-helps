@@ -11,42 +11,52 @@ import {
   BookmarkBorder,
 } from '@material-ui/icons';
 
-export const ChapterComponent = ({classes, chapter, verses, reference, setReference}) =>
+export const StoryComponent = ({
+  classes,
+  storyKey,
+  frames,
+  context,
+  setContext,
+  context: {
+    reference,
+  },
+}) =>
   <ListItem
     button
-    selected={reference.chapter === chapter}
+    selected={reference.chapter === storyKey}
     className={classes.bookListItem}
     style={{
       paddingLeft: '2em',
       paddingRight: '0.7em',
     }}
     onClick={() => {
-      setReference({
-        book: reference.book,
-        chapter: chapter,
-      });
+      context.reference = {
+        bookId: reference.bookId,
+        chapter: storyKey,
+      };
+      setContext(context);
     }}
   >
     <ListItemIcon className={classes.listItemIcon}>
       {
-        (reference.chapter === chapter) ?
+        (reference.chapter === storyKey) ?
         <Bookmark /> :
         <BookmarkBorder />
       }
     </ListItemIcon>
     <ListItemText
       className={classes.listItemText}
-      primary={'Chapter ' + chapter}
-      secondary={verses + ' Verses' }
+      primary={`Story ${frames[0].text.replace('#','').trim()}`}
+      secondary={Object.keys(frames).length + ' Frames' }
     />
   </ListItem>
 
-ChapterComponent.propTypes = {
+StoryComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  reference: PropTypes.object.isRequired,
-  setReference: PropTypes.func.isRequired,
-  chapter: PropTypes.number.isRequired,
-  verses: PropTypes.number.isRequired,
+  context: PropTypes.object.isRequired,
+  setContext: PropTypes.func.isRequired,
+  storyKey: PropTypes.number.isRequired,
+  frames: PropTypes.object.isRequired,
 }
 
 const styles = theme => ({
@@ -60,4 +70,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(ChapterComponent);
+export default withStyles(styles)(StoryComponent);
