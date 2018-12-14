@@ -89,6 +89,7 @@ export const TranslationHelpsComponent = ({
         );
       });
     } else if (tab.iframe) {
+      badgeCount = 0;
       content = tab.iframe;
     }
     const badge = (
