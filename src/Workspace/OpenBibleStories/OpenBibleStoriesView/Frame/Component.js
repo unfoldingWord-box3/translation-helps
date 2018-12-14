@@ -17,6 +17,7 @@ import {
 } from '@material-ui/icons';
 
 import TranslationHelps from '../../../TranslationHelps';
+import * as helpers from '../../helpers';
 
 export const Frame = ({
   classes,
@@ -52,6 +53,27 @@ export const Frame = ({
       notes: helps.questions,
     };
     tabs.push(questionsTab);
+  }
+  if (parseInt(frameKey) === 0) {
+    const youtubeId = helpers.youtubeId(storyKey);
+    const videoFrame = (
+      <div className={classes.iframe}>
+        <iframe
+          title="obs-youtube"
+          width="100%"
+          height="100%"
+          src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
+          frameborder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen="true"
+        />
+      </div>
+    );
+    const videoTab = {
+      title: 'Video',
+      iframe: videoFrame,
+    };
+    tabs.push(videoTab);
   }
 
   const details = (tabs.length > 0) ?
@@ -143,6 +165,12 @@ const styles = {
   button: {
     marginLeft: 'auto',
   },
+  iframe: {
+    width: 'calc(100vw - 5.3em)',
+    height: 'calc((100vw - 5.3em) * (9/16))',
+    maxWidth: 'calc(40em - 3.5em)',
+    maxHeight: 'calc((40em - 3.5em) * (9/16))',
+  }
 };
 
 export default withStyles(styles)(Frame);

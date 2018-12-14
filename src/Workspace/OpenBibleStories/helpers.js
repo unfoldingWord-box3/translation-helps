@@ -1,6 +1,7 @@
 import {each} from 'async';
 
 import * as ApplicationHelpers from '../../ApplicationHelpers';
+import youtubeIds from './youtubeIds';
 
 export const framesFromStory = (storyMarkdown) => {
   let frames = {};
@@ -49,3 +50,7 @@ export const fetchOpenBibleStories = (username, languageId) => new Promise((reso
     }
   );
 });
+
+export const youtubeId = (storyId) => {
+  return youtubeIds[storyId - 1];
+};

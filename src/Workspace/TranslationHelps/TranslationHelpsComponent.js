@@ -88,6 +88,8 @@ export const TranslationHelpsComponent = ({
           </div>
         );
       });
+    } else if (tab.iframe) {
+      content = tab.iframe;
     }
     const badge = (
       <Badge className={classes.padding} color="primary" badgeContent={badgeCount}>
