@@ -134,6 +134,6 @@ export const parseStudyNotes = (markdown) => {
       gl_quote,
       occurrence_note,
     };
-  });
+  }).filter(note => !/^;/.test(note.occurrence_note));
   return data;
 }
