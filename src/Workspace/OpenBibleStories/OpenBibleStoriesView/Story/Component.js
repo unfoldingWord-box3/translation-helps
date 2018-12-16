@@ -21,7 +21,7 @@ export const Story = ({
     const {image, text} = story[frameKey];
     return (
       <Frame
-        key={frameKey}
+        key={`${storyKey}-${frameKey}`}
         storyKey={storyKey}
         helps={index === 0 ? helps : {}}
         frameKey={frameKey}

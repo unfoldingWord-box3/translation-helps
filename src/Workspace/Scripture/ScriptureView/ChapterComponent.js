@@ -30,7 +30,7 @@ export const ChapterComponent = ({
   })
   .map(verseKey =>
     <Verse
-      key={verseKey}
+      key={`${reference.chapter}-${verseKey}`}
       context={context}
       setContext={setContext}
       verseKey={verseKey}
