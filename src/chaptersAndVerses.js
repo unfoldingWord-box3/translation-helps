@@ -2,6 +2,7 @@ import data from './chaptersAndVerses.json';
 
 export const chaptersInBook = bookId => {
 try {
+  if (!bookId || bookId === 'obs') return [...Array(50).keys()];;
   const chapters = bookData(bookId).chapters;
   return chapters;
 } catch {debugger}

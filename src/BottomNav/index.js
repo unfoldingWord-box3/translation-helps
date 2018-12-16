@@ -1,2 +1,2 @@
-import BottomNavContainer from './BottomNavContainer';
-export default BottomNavContainer;
+import Container from './Container';
+export default Container;

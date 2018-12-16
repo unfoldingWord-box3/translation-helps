@@ -6,12 +6,17 @@ import {
   Paper,
   BottomNavigation,
   BottomNavigationAction,
+  IconButton,
 } from '@material-ui/core';
 import {
   LibraryBooks,
   Book,
   Bookmark,
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
 } from '@material-ui/icons';
+
+import {chaptersInBook} from '../chaptersAndVerses';
 
 class BottomNavContainer extends React.Component {
   handleChange = (event, value) => {
@@ -25,17 +30,37 @@ class BottomNavContainer extends React.Component {
     } = this.props;
     switch (value) {
       case 0:
-        context = {username, languageId, reference: {}};
+        this.previousChapter();
         break;
       case 1:
-        context.reference = {};
+        context = {username, languageId, reference: {}};
         break;
       case 2:
+        context.reference = {};
+        break;
+      case 3:
         context.reference = {bookId: reference.bookId};
+        break;
+      case 4:
+        this.nextChapter();
         break;
       default:
         break;
     };
+    this.props.setContext(context);
+  };
+
+  previousChapter = () => {
+    let {context} = this.props;
+    let {chapter} = context.reference;
+    if (chapter > 1) context.reference.chapter = context.reference.chapter - 1;
+    this.props.setContext(context);
+  };
+
+  nextChapter = () => {
+    let {context} = this.props;
+    let {bookId, chapter} = context.reference;
+    if (chapter < chaptersInBook(bookId).length) context.reference.chapter = context.reference.chapter + 1;
     this.props.setContext(context);
   };
 
@@ -47,9 +72,9 @@ class BottomNavContainer extends React.Component {
     const couldShowBook = (!context.resourceId === 'obs' && !(context.reference && context.reference.bookId));
     const couldShowChapter = (!(context.reference && context.reference.chapter));
 
-    if (couldShowReference) { value = 0; }
-    else if (couldShowBook) { value = 1; }
-    else if (couldShowChapter) { value = 2; }
+    if (couldShowReference) { value = 1; }
+    else if (couldShowBook) { value = 2; }
+    else if (couldShowChapter) { value = 3; }
 
     return (
       <Paper className={classes.root}>
@@ -59,6 +84,9 @@ class BottomNavContainer extends React.Component {
           showLabels
           className={classes.root}
         >
+          <BottomNavigationAction
+            icon={<KeyboardArrowLeft />}
+          />
           <BottomNavigationAction
             label="Resources"
             icon={<LibraryBooks />}
@@ -70,6 +98,9 @@ class BottomNavContainer extends React.Component {
           <BottomNavigationAction
             label="Chapters"
             icon={<Bookmark />}
+          />
+          <BottomNavigationAction
+            icon={<KeyboardArrowRight />}
           />
         </BottomNavigation>
       </Paper>
