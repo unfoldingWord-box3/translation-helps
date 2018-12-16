@@ -45,12 +45,16 @@ export const Frame = ({
       },
     };
     videoFrame = (
-      <ReactPlayer
-        className={classes.media}
-        url={videoUrl}
-        controls={true}
-        config={config}
-      />
+      <div className={classes.media}>
+        <ReactPlayer
+          className={classes.media}
+          url={videoUrl}
+          controls={true}
+          config={config}
+          height="100%"
+          width="100%"
+        />
+      </div>
     );
   }
 
@@ -162,12 +166,10 @@ const styles = {
   button: {
     marginLeft: 'auto',
   },
-  video: {
-    width: 'calc(100vw - 5.3em)',
-    height: 'calc((100vw - 5.3em) * (9/16))',
-    maxWidth: 'calc(40em - 3.5em)',
-    maxHeight: 'calc((40em - 3.5em) * (9/16))',
-  }
+  player: {
+    width: '100%',
+    height: '100%',
+  },
 };
 
 export default withStyles(styles)(Frame);
