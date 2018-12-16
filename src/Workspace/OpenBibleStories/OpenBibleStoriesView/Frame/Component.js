@@ -47,7 +47,7 @@ export const Frame = ({
     videoFrame = (
       <div className={classes.media}>
         <ReactPlayer
-          className={classes.media}
+          className={classes.player}
           url={videoUrl}
           controls={true}
           config={config}
@@ -149,8 +149,8 @@ const styles = {
     marginBottom: '1em',
   },
   media: {
-    width: 'calc(100vw)',
-    height: 'calc(100vw * 9/16)',
+    width: 'calc(100vw - 1.9em)',
+    height: 'calc((100vw - 1.9em) * 9/16)',
     maxWidth: '40em',
     maxHeight: 'calc(40em * 9/16)',
   },
