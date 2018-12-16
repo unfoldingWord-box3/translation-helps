@@ -151,7 +151,10 @@ const styles = {
     marginBottom: '1em',
   },
   media: {
-    height: 320,
+    width: 'calc(100vw)',
+    height: 'calc(100vw * 9/16)',
+    maxWidth: '40em',
+    maxHeight: 'calc(40em * 9/16)',
   },
   content: {
     paddingBottom: 0,
