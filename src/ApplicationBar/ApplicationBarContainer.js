@@ -1,8 +1,6 @@
 import React from 'react';
 import ApplicationBar from './ApplicationBar';
 
-const projectName = 'uW translationHelps';
-
 class ApplicationBarContainer extends React.Component {
   state = {
   };
@@ -12,7 +10,6 @@ class ApplicationBarContainer extends React.Component {
     return (
       <ApplicationBar
         {...props}
-        projectName={projectName}
       />
     );
   };

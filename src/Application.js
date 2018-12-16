@@ -34,6 +34,7 @@ export const Application = ({
     <div className={classes.appFrame}>
       <main className={classes.main}>
         <ApplicationBar
+          applicationName="unfoldingWord"
           context={context}
           setContext={setContext}
           manifests={manifests}

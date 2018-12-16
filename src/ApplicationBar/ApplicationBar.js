@@ -12,7 +12,7 @@ import * as ScriptureHelpers from '../Workspace/Scripture/helpers';
 
 const ApplicationBar = ({
   classes,
-  projectName,
+  applicationName,
   manifests,
   context: {
     resourceId,
@@ -33,7 +33,7 @@ const ApplicationBar = ({
       <div className={classes.paper}>
         <div className={classes.toolbar}>
           <Typography className={classes.projectName} variant="subheading" color="inherit" noWrap>
-            {projectName}
+            {applicationName}
           </Typography>
           <Typography variant="title" color="inherit" className={classes.coin} noWrap>
             {referenceComponent}
