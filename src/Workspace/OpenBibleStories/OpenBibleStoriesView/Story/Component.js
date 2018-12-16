@@ -6,8 +6,8 @@ import {
 import {
 } from '@material-ui/icons';
 
-import styles from '../../styles';
-import Frame from './Frame/';
+import styles from '../../../styles';
+import Frame from '../Frame/';
 
 export const Story = ({
   classes,
@@ -15,13 +15,15 @@ export const Story = ({
   story,
   context,
   setContext,
+  helps,
 }) => {
   const frames = Object.keys(story).map((frameKey, index) => {
     const {image, text} = story[frameKey];
     return (
       <Frame
-        key={index}
+        key={frameKey}
         storyKey={storyKey}
+        helps={index === 0 ? helps : {}}
         frameKey={frameKey}
         image={image}
         text={text}
@@ -41,6 +43,7 @@ Story.propTypes = {
   classes: PropTypes.object.isRequired,
   storyKey: PropTypes.number.isRequired,
   story: PropTypes.object.isRequired,
+  helps: PropTypes.object,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
 };

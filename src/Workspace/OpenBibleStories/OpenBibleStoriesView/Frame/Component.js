@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import remark from 'remark';
 import remark2react from 'remark-react';
+import ReactPlayer from 'react-player';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Card,
@@ -31,49 +32,42 @@ export const Frame = ({
   text,
   helps,
 }) => {
-
-  let tabs = [];
-  if (helps && helps.notes) {
-    const notesTab = {
-      title: 'Notes',
-      notes: helps.notes,
-    };
-    tabs.push(notesTab)
-  };
-  if (helps && helps.words) {
-    const wordsTab = {
-      title: 'Words',
-      words: helps.words,
-    };
-    tabs.push(wordsTab);
-  }
-  if (helps && helps.questions) {
-    const questionsTab = {
-      title: 'Questions',
-      notes: helps.questions,
-    };
-    tabs.push(questionsTab);
-  }
+  let videoFrame;
   if (parseInt(frameKey) === 0) {
     const youtubeId = helpers.youtubeId(storyKey);
-    const videoFrame = (
-      <div className={classes.iframe}>
-        <iframe
-          title="obs-youtube"
-          width="100%"
-          height="100%"
-          src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
-          frameborder="0"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen="true"
-        />
-      </div>
-    );
-    const videoTab = {
-      title: 'Video',
-      iframe: videoFrame,
+    const videoUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
+    const config = {
+      youtube: {
+        playerVars: {
+          rel: 0,
+          modestbranding: 1,
+        },
+      },
     };
-    tabs.push(videoTab);
+    videoFrame = (
+      <ReactPlayer
+        className={classes.media}
+        url={videoUrl}
+        controls={true}
+        config={config}
+      />
+    );
+  }
+
+  let tabs = [];
+  if (helps) {
+    const {
+      notes,
+      words,
+      questions,
+      studyNotes,
+      studyQuestions,
+    } = helps;
+    if (studyQuestions) tabs.push({ title: 'Study Questions', text: helps.studyQuestions });
+    if (notes) tabs.push({ title: 'Notes', notes });
+    if (words) tabs.push({ title: 'Words', words });
+    if (questions) tabs.push({ title: 'Questions', notes: questions });
+    if (studyNotes) tabs.push({ title: 'Study Notes', notes: helps.studyNotes });
   }
 
   const details = (tabs.length > 0) ?
@@ -100,7 +94,7 @@ export const Frame = ({
           image={image}
           title="Open Bible Stories Image"
         />
-        : null
+        : videoFrame
       }
       <CardContent className={classes.content}>
         {content}
@@ -168,7 +162,7 @@ const styles = {
   button: {
     marginLeft: 'auto',
   },
-  iframe: {
+  video: {
     width: 'calc(100vw - 5.3em)',
     height: 'calc((100vw - 5.3em) * (9/16))',
     maxWidth: 'calc(40em - 3.5em)',

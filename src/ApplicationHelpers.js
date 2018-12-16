@@ -32,6 +32,8 @@ export const resourceRepositories = (languageId) => {
     obs: languageId + '_obs',
     'obs-tn': languageId + '_obs-tn',
     'obs-tq': languageId + '_obs-tq',
+    'obs-sn': languageId + '_obs-sn',
+    'obs-sq': languageId + '_obs-sq',
   };
 };
 

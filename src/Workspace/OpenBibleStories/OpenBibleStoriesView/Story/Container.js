@@ -9,7 +9,7 @@ class FrameContainer extends React.Component {
   state = {
     open: false,
     id: Math.random(),
-    helps: {},
+    helps: null,
   };
 
   handleToggleOpen = () => {
@@ -27,29 +27,24 @@ class FrameContainer extends React.Component {
     }
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const {
       storyKey,
-      frameKey,
       context: {
         username,
         languageId,
-        reference,
       },
     } = this.props;
-    translationHelps.fetchHelps(username, languageId, storyKey, frameKey)
-    .then(helps => {
-      this.setState({helps});
+    translationHelps.fetchStudyQuestions(username, languageId, storyKey)
+    .then(data => {
+      const helps = { studyQuestions: data };
+      this.setState({ helps });
     });
-    if (parseInt(reference.verse) === parseInt(frameKey)) {
-      this.scrollToId();
-    }
   };
 
   render() {
-    const {open, id} = this.state;
+    const {helps, open, id} = this.state;
     const {props} = this;
-    const helps = {...this.state.helps, ...this.props.helps};
     return (
       <div id={id}>
         <Component
@@ -66,10 +61,6 @@ class FrameContainer extends React.Component {
 FrameContainer.propTypes = {
   classes: PropTypes.object.isRequired,
   storyKey: PropTypes.number.isRequired,
-  frameKey: PropTypes.number.isRequired,
-  helps: PropTypes.object.isRequired,
-  text: PropTypes.string.isRequired,
-  image: PropTypes.string,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
 };

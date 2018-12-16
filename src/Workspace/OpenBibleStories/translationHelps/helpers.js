@@ -5,21 +5,28 @@ import * as ApplicationHelpers from '../../../ApplicationHelpers';
 export const fetchHelps = (username, languageId, storyKey, frameKey) => new Promise((resolve, reject) => {
   let helps = {};
   each(
-    ['obs-tn', 'obs-tq'],
+    ['obs-tn', 'obs-tq', 'obs-sn'],
     (resourceId, done) => {
       switch (resourceId) {
         case 'obs-tn':
           fetchNotesAndWords(username, languageId, storyKey, frameKey)
-          .then(response => {
-            helps.notes = response.notes;
-            helps.words = response.words;
+          .then(data => {
+            helps.notes = data.notes;
+            helps.words = data.words;
             done();
           }).catch(done);
           break;
         case 'obs-tq':
           fetchQuestions(username, languageId, storyKey, frameKey)
-          .then(questions => {
-            helps.questions = questions;
+          .then(data => {
+            helps.questions = data;
+            done();
+          }).catch(done);
+          break;
+        case 'obs-sn':
+          fetchStudyNotes(username, languageId, storyKey, frameKey)
+          .then(data => {
+            helps.studyNotes = data;
             done();
           }).catch(done);
           break;
@@ -34,13 +41,34 @@ export const fetchHelps = (username, languageId, storyKey, frameKey) => new Prom
   );
 });
 
+export const fetchStudyQuestions = (username, languageId, storyKey) => new Promise((resolve, reject) => {
+  const repository = ApplicationHelpers.resourceRepositories(languageId)['obs-sq'];
+  const file = pad(storyKey) + '.md';
+  const filepath = ['content', file].join('/');
+  ApplicationHelpers.fetchFileFromServer(username, repository, filepath)
+  .then(markdown => {
+    resolve(markdown);
+  }).catch(reject);
+});
+
+export const fetchStudyNotes = (username, languageId, storyKey, frameKey) => new Promise((resolve, reject) => {
+  const repository = ApplicationHelpers.resourceRepositories(languageId)['obs-sn'];
+  const file = pad(frameKey) + '.md';
+  const filepath = ['content', pad(storyKey), file].join('/');
+  ApplicationHelpers.fetchFileFromServer(username, repository, filepath)
+  .then(markdown => {
+    const data = parseStudyNotes(markdown);
+    resolve(data);
+  }).catch(reject);
+});
+
 export const fetchQuestions = (username, languageId, storyKey, frameKey) => new Promise((resolve, reject) => {
   const repository = ApplicationHelpers.resourceRepositories(languageId)['obs-tq'];
   const file = pad(frameKey) + '.md';
   const filepath = ['content', pad(storyKey), file].join('/');
   ApplicationHelpers.fetchFileFromServer(username, repository, filepath)
   .then(markdown => {
-    const questions = parseQuestionsMarkdown(markdown);
+    const questions = parseQuestions(markdown);
     resolve(questions);
   }).catch(reject);
 });
@@ -51,14 +79,14 @@ export const fetchNotesAndWords = (username, languageId, storyKey, frameKey) => 
   const filepath = ['content', pad(storyKey), file].join('/');
   ApplicationHelpers.fetchFileFromServer(username, repository, filepath)
   .then(markdown => {
-    const helps = parseNotesMarkdown(markdown);
+    const helps = parseNotes(markdown);
     resolve(helps);
   }).catch(reject);
 });
 
 export const pad = (number) => `${(number < 10) ? 0 : ''}${number}`;
 
-export const parseQuestionsMarkdown = (markdown) => {
+export const parseQuestions = (markdown) => {
   const questions = markdown.split(/\n\s*#\s*/m)
   .map(questionItem => {
     const [questionText, ...answerLines] = questionItem.split(/\n\s*/m);
@@ -72,7 +100,7 @@ export const parseQuestionsMarkdown = (markdown) => {
   return questions;
 }
 
-export const parseNotesMarkdown = (markdown) => {
+export const parseNotes = (markdown) => {
   const [notesMarkdown, wordsMarkdown] = markdown.split(/#+\s*translationWords\s*/m);
   const notes = notesMarkdown.split(/\n\s*#\s*/m)
   .map(noteText => {
@@ -94,4 +122,18 @@ export const parseNotesMarkdown = (markdown) => {
     words,
   };
   return helps;
+}
+
+export const parseStudyNotes = (markdown) => {
+  const data = markdown.split(/\n\s*#+\s*/m)
+  .map(noteText => {
+    const [quote, ...noteLines] = noteText.split(/\n\s*\n/m);
+    const gl_quote = quote.replace(/\s*#\s*/,'');
+    const occurrence_note = noteLines.join('\n\n');
+    return {
+      gl_quote,
+      occurrence_note,
+    };
+  });
+  return data;
 }
