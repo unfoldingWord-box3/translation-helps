@@ -26,15 +26,13 @@ const ApplicationBar = ({
     const project = ScriptureHelpers.projectByBookId(manifests[resourceId].projects, reference.bookId);
     bookName = project.title;
   }
-  const referenceComponent = (bookName ? <span>&nbsp;-&nbsp;{bookName} {reference.chapter}</span> : <span />);
+  const referenceComponent = (bookName ? <span>&nbsp;{bookName} {reference.chapter}</span> : <span />);
 
   return (
     <Headroom>
       <div className={classes.paper}>
         <div className={classes.toolbar}>
-          <Typography className={classes.projectName} variant="subheading" color="inherit" noWrap>
-            {applicationName}
-          </Typography>
+          <img className={classes.logo} src="./logo.png" alt="unfoldingWord Logo" />
           <Typography variant="title" color="inherit" className={classes.coin} noWrap>
             {referenceComponent}
           </Typography>
@@ -66,8 +64,9 @@ const styles = theme => ({
     display: 'inline-flex',
     padding: '1em 0',
   },
-  projectName: {
-    paddingTop: '0.1em',
+  logo: {
+    height: '1.8em',
+    paddingTop: '0.25em',
   },
 });
 
