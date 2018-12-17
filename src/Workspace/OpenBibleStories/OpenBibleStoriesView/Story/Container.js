@@ -27,19 +27,27 @@ class FrameContainer extends React.Component {
     }
   };
 
-  componentDidMount() {
+  fetchStudyQuestions(props) {
     const {
       storyKey,
       context: {
         username,
         languageId,
       },
-    } = this.props;
+    } = props;
     translationHelps.fetchStudyQuestions(username, languageId, storyKey)
     .then(data => {
       const helps = { studyQuestions: data };
       this.setState({ helps });
     });
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.fetchStudyQuestions(newProps);
+  }
+
+  componentDidMount() {
+    this.fetchStudyQuestions(this.props);
   };
 
   render() {
