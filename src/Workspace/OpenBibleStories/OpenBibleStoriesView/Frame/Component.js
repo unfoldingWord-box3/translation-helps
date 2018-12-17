@@ -2,21 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import remark from 'remark';
 import remark2react from 'remark-react';
-import ReactPlayer from 'react-player';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  IconButton,
-  Collapse,
 } from '@material-ui/core';
 import {
-  ExpandMore,
-  ExpandLess,
 } from '@material-ui/icons';
 
+import Card from '../Card';
 import TranslationHelps from '../../../TranslationHelps';
 import * as helpers from '../../helpers';
 
@@ -32,32 +24,6 @@ export const Frame = ({
   text,
   helps,
 }) => {
-  let videoFrame;
-  if (parseInt(frameKey) === 0) {
-    const youtubeId = helpers.youtubeId(storyKey);
-    const videoUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
-    const config = {
-      youtube: {
-        playerVars: {
-          rel: 0,
-          modestbranding: 1,
-        },
-      },
-    };
-    videoFrame = (
-      <div className={classes.media}>
-        <ReactPlayer
-          className={classes.player}
-          url={videoUrl}
-          controls={true}
-          config={config}
-          height="100%"
-          width="100%"
-        />
-      </div>
-    );
-  }
-
   let tabs = [];
   if (helps) {
     const {
@@ -89,46 +55,19 @@ export const Frame = ({
   const _text = (frameKey > 0) ? `**${frameKey}** ${text}` : text;
   const content = remark().use(remark2react, options).processSync(_text).contents;
 
+  let youtubeId;
+  if (parseInt(frameKey) === 0) {
+    youtubeId = helpers.youtubeId(storyKey);
+  }
+
   return (
-    <Card className={classes.card}>
-      {
-        image ?
-        <CardMedia
-          className={classes.media}
-          image={image}
-          title="Open Bible Stories Image"
-        />
-        : videoFrame
-      }
-      <CardContent className={classes.content}>
-        {content}
-      </CardContent>
-      <CardActions className={classes.actions} disableActionSpacing>
-        <IconButton
-          className={classes.button}
-          onClick={handleToggleOpen}
-          aria-expanded={open}
-          aria-label="Show more"
-        >
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </IconButton>
-      </CardActions>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <CardContent className={classes.details}>
-          {details}
-        </CardContent>
-        <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton
-            className={classes.button}
-            onClick={handleToggleOpen}
-            aria-expanded={open}
-            aria-label="collapse"
-          >
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </IconButton>
-        </CardActions>
-      </Collapse>
-    </Card>
+    <Card
+      context={context}
+      content={content}
+      details={details}
+      image={image}
+      youtubeId={youtubeId}
+    />
   );
 }
 
@@ -145,31 +84,6 @@ Frame.propTypes = {
 };
 
 const styles = {
-  card: {
-    marginBottom: '1em',
-  },
-  media: {
-    width: 'calc(100vw - 1.9em)',
-    height: 'calc((100vw - 1.9em) * 9/16)',
-    maxWidth: '40em',
-    maxHeight: 'calc(40em * 9/16)',
-  },
-  content: {
-    paddingBottom: 0,
-  },
-  details: {
-    padding: 0,
-  },
-  actions: {
-    padding: 0,
-  },
-  button: {
-    marginLeft: 'auto',
-  },
-  player: {
-    width: '100%',
-    height: '100%',
-  },
 };
 
 export default withStyles(styles)(Frame);

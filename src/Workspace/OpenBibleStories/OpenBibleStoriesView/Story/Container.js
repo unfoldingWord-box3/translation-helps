@@ -35,10 +35,16 @@ class FrameContainer extends React.Component {
         languageId,
       },
     } = props;
-    translationHelps.fetchStudyQuestions(username, languageId, storyKey)
-    .then(data => {
-      const helps = { studyQuestions: data };
-      this.setState({ helps });
+    translationHelps.fetchStudyQuestions(username, languageId, 0)
+    .then(guide => {
+      translationHelps.fetchStudyQuestions(username, languageId, storyKey)
+      .then(studyQuestions => {
+        const helps = { studyQuestions: studyQuestions };
+        this.setState({
+          helps,
+          guide,
+        });
+      });
     });
   }
 
@@ -51,13 +57,14 @@ class FrameContainer extends React.Component {
   };
 
   render() {
-    const {helps, open, id} = this.state;
+    const {helps, guide, open, id} = this.state;
     const {props} = this;
     return (
       <div id={id}>
         <Component
           {...props}
           helps={helps}
+          guide={guide}
           open={open}
           handleToggleOpen={this.handleToggleOpen.bind(this)}
         />
