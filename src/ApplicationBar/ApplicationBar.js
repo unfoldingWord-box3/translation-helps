@@ -26,7 +26,7 @@ const ApplicationBar = ({
     const project = ScriptureHelpers.projectByBookId(manifests[resourceId].projects, reference.bookId);
     bookName = project.title;
   }
-  const referenceComponent = (bookName ? <span>&nbsp;{bookName} {reference.chapter}</span> : <span />);
+  const referenceComponent = (bookName ? <span>&nbsp;&nbsp;{bookName} {reference.chapter}</span> : <span />);
 
   return (
     <Headroom>
