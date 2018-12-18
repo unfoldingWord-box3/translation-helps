@@ -30,9 +30,10 @@ class ApplicationContainer extends React.Component {
   }
 
   addToHistory(_context, _history) {
-    let history = JSON.parse(JSON.stringify(_history));
+    let history = [];
+    if (_history) history = JSON.parse(JSON.stringify(_history));
     const newContext = JSON.stringify(_context);
-    const oldContext = JSON.stringify(_history[0]);
+    const oldContext = JSON.stringify(history[0]);
     const isNew = !( newContext === oldContext );
     if (isNew) {
       const context = JSON.parse(newContext);
@@ -65,8 +66,12 @@ class ApplicationContainer extends React.Component {
     if (_history) {
       history = JSON.parse(JSON.stringify(_history));
     } else {
-      history = localstorage.get(keyPrefix + 'history');
-      debugger
+      try {
+        history = localstorage.get(keyPrefix + 'history');
+      } catch {
+        history = [];
+        debugger
+      }
     }
     if (context.resourceId === 'obs') context.reference.bookId = 'obs';
     let newState = {

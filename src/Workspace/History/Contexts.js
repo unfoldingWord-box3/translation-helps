@@ -14,15 +14,18 @@ export const Resources = ({
   manifests,
   contexts,
 }) => {
-  const contextComponents = contexts
-  .map((context, index) => (
-    <Context
+  let contextComponents = [];
+  if (contexts) {
+    contextComponents = contexts
+    .map((context, index) => (
+      <Context
       key={index + JSON.stringify(context)}
       context={context}
       setContext={setContext}
       manifest={manifests[context.resourceId]}
-    />
-  ));
+      />
+    ));
+  }
   return (
     <Paper className={classes.root}>
       <List
