@@ -13,13 +13,19 @@ class OriginalWordsContainer extends React.Component {
   componentDidMount() {
     helpers.senses(this.props.verseObject.strong)
     .then(senses => {
-      this.setState({
-        senses: senses,
-      });
+      if (!this.unmounted) {
+        this.setState({
+          senses: senses,
+        });
+      }
     }).catch(error => {
       console.log(error);
     });
   };
+
+  componentWillUnmount() {
+    this.unmounted = true;
+  }
 
   render() {
     return (

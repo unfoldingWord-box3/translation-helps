@@ -27,6 +27,7 @@ export const Application = ({
   classes,
   context,
   setContext,
+  history,
   manifests,
 }) =>
 <MuiThemeProvider theme={theme}>
@@ -43,6 +44,7 @@ export const Application = ({
           <Workspace
             context={context}
             setContext={setContext}
+            history={history}
             manifests={manifests}
           />
         </div>
@@ -60,6 +62,7 @@ export const Application = ({
 Application.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
+  history: PropTypes.array.isRequired,
   setContext: PropTypes.func.isRequired,
   manifests: PropTypes.object,
 };

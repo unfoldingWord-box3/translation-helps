@@ -7,6 +7,7 @@ import {
 import {
 } from '@material-ui/icons';
 
+import History from './History';
 import Resources from './Resources';
 import Scripture from './Scripture';
 import OpenBibleStories from './OpenBibleStories';
@@ -14,9 +15,18 @@ import OpenBibleStories from './OpenBibleStories';
 export const Workspace = ({
   classes,
   manifests,
+  history,
   context,
   setContext,
 }) => {
+  const historyComponent = (
+    <History
+      context={context}
+      setContext={setContext}
+      manifests={manifests}
+      contexts={history}
+    />
+  );
   const resources = (
     <Resources
       context={context}
@@ -42,12 +52,14 @@ export const Workspace = ({
   );
 
   let component = loadingComponent;
+  const shouldShowHistory = (context.view === 'history');
   if (Object.keys(manifests).length > 0) {
     const shouldShowResources = (!context.resourceId);
     const shouldShowScripture = (['ult','ust','uhb','ugnt'].includes(context.resourceId));
     const shouldShowOpenBibleStories = (context.resourceId === 'obs');
 
-    if (shouldShowResources) component = resources;
+    if (shouldShowHistory) component = historyComponent;
+    else if (shouldShowResources) component = resources;
     else if (shouldShowScripture) component = scripture;
     else if (shouldShowOpenBibleStories) component = openBibleStories;
   }
@@ -63,6 +75,7 @@ Workspace.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
+  history: PropTypes.array.isRequired,
   manifests: PropTypes.object,
 };
 

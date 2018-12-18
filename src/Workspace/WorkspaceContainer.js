@@ -8,14 +8,17 @@ class WorkspaceContainer extends React.Component {
   };
 
   componentDidUpdate() {
-    const {bookId, chapter, verse} = this.props.context.reference;
-    const id = `${bookId}_${chapter}_${verse}`;
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
+    const {reference} = this.props.context;
+    if (reference) {
+      const {bookId, chapter, verse} = reference;
+      const id = `${bookId}_${chapter}_${verse}`;
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
     }
   }
 
@@ -32,6 +35,7 @@ class WorkspaceContainer extends React.Component {
 WorkspaceContainer.propTypes = {
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
+  history: PropTypes.array.isRequired,
   manifests: PropTypes.object.isRequired,
 };
 

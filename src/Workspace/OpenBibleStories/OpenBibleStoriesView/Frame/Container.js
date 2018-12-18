@@ -8,7 +8,6 @@ import * as translationHelps from '../../translationHelps/helpers';
 class FrameContainer extends React.Component {
   state = {
     open: false,
-    id: Math.random(),
     helps: {},
   };
 
@@ -18,7 +17,7 @@ class FrameContainer extends React.Component {
   };
 
   scrollToId = () => {
-    const element = document.getElementById(this.state.id);
+    const element = document.getElementById(this.props.frameKey);
     if (element) {
       element.scrollIntoView({
         behavior: 'smooth',
@@ -27,7 +26,7 @@ class FrameContainer extends React.Component {
     }
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const {
       storyKey,
       frameKey,
@@ -47,11 +46,11 @@ class FrameContainer extends React.Component {
   };
 
   render() {
-    const {open, id} = this.state;
+    const {open} = this.state;
     const {props} = this;
     const helps = {...this.state.helps, ...this.props.helps};
     return (
-      <div id={id}>
+      <div id={props.frameKey}>
         <Component
           {...props}
           helps={helps}

@@ -68,6 +68,9 @@ const Resource = ({
 
 Resource.propTypes = {
   classes: PropTypes.object.isRequired,
+  manifest: PropTypes.object.isRequired,
+  context: PropTypes.object.isRequired,
+  setContext: PropTypes.func.isRequired,
 };
 
 const styles = {

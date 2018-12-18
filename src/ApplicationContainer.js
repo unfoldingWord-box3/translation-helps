@@ -17,18 +17,69 @@ class ApplicationContainer extends React.Component {
       resourceId: null,
       reference: {},
     },
-  };
-  
-  componentWillMount() {
-    const context = localstorage.get(keyPrefix + 'context');
-    if (context) {
-      this.setState({context});
-    }
+    history: [],
   };
 
-  setContext(context) {
+  defaultContext() {
+    return {
+      username: 'unfoldingWord',
+      languageId: 'en',
+      resourceId: null,
+      reference: {},
+    }
+  }
+
+  addToHistory(_context, _history) {
+    let history = JSON.parse(JSON.stringify(_history));
+    const newContext = JSON.stringify(_context);
+    const oldContext = JSON.stringify(_history[0]);
+    const isNew = !( newContext === oldContext );
+    if (isNew) {
+      const context = JSON.parse(newContext);
+      history.unshift(context);
+    }
+    if (!history) debugger
+    return history;
+  }
+
+  componentWillMount() {
+    let context, history;
+    context = localstorage.get(keyPrefix + 'context');
+    context = context || this.defaultContext();
+    try {
+      history = localstorage.get(keyPrefix + 'history');
+    } catch {
+      history = [];
+    }
+    this.setState({
+      context,
+      history,
+    });
+  };
+
+  setContext(_context) {
     window.scrollTo(0,0);
-    this.setState({context});
+    const context = JSON.parse(JSON.stringify(_context));
+    const {history: _history} = this.state;
+    let history;
+    if (_history) {
+      history = JSON.parse(JSON.stringify(_history));
+    } else {
+      history = localstorage.get(keyPrefix + 'history');
+      debugger
+    }
+    if (context.resourceId === 'obs') context.reference.bookId = 'obs';
+    let newState = {
+      context,
+      history,
+    };
+    const {reference} = context;
+    if (reference && reference.chapter) {
+      history = this.addToHistory(context, history);
+      localstorage.set(keyPrefix + 'history', _history);
+      newState.history = history;
+    }
+    this.setState(newState);
     localstorage.set(keyPrefix + 'context', context);
   };
 
@@ -48,10 +99,11 @@ class ApplicationContainer extends React.Component {
   };
 
   render() {
-    const {context, manifests} = this.state;
+    const {context, history, manifests} = this.state;
     return (
       <Application
         context={context}
+        history={history}
         setContext={this.setContext.bind(this)}
         manifests={manifests}
       />
