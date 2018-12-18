@@ -64,16 +64,24 @@ export const fetchBook = (username, languageId, bookId, manifest) => new Promise
   }).catch(reject);
 });
 
-export const fetchOriginalBook = (username, languageId, bookId, uhbManifest, ugntManifest) => new Promise((resolve, reject) => {
-  let manifest, repository;
+export const whichTestament = (bookId, uhbManifest, ugntManifest) => {
+  let testament;
   const uhbProject = projectByBookId(uhbManifest.projects, bookId);
   const ugntProject = projectByBookId(ugntManifest.projects, bookId);
+  if (uhbProject) testament = 'old';
+  if (ugntProject) testament = 'new';
+  return testament;
+}
+
+export const fetchOriginalBook = (username, languageId, bookId, uhbManifest, ugntManifest) => new Promise((resolve, reject) => {
+  let manifest, repository;
+  const testament = whichTestament(bookId, uhbManifest, ugntManifest);
   const repositories = ApplicationHelpers.resourceRepositories(languageId);
-  if (uhbProject) {
+  if (testament === 'old') {
     manifest = uhbManifest;
     repository = repositories.uhb;
   };
-  if (ugntProject) {
+  if (testament === 'new') {
     manifest = ugntManifest;
     repository = repositories.ugnt;
   };

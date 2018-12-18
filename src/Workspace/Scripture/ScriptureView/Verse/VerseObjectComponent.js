@@ -10,14 +10,27 @@ import MilestoneComponent from './MilestoneComponent';
 import TextComponent from './TextComponent';
 
 export const VerseObjectComponent = ({classes, verseObject, originalWords}) => {
-  const component = verseObject.type === 'milestone' ?
-    <MilestoneComponent
-      verseObject={verseObject}
-      originalWords={originalWords}
-    /> :
-    <TextComponent
-      verseObject={verseObject}
-    />;
+  let type = 'text';
+  // if (verseObject.lemma) type = 'original';
+  if (verseObject.type === 'milestone' && verseObject.lemma) type = 'milestone';
+
+  let component;
+  if (type === 'text') {
+    component = (
+      <TextComponent
+        verseObject={verseObject}
+      />
+    );
+  }
+  if (type === 'milestone') {
+    component = (
+      <MilestoneComponent
+        verseObject={verseObject}
+        originalWords={originalWords}
+      />
+    );
+  }
+
   return component;
 };
 

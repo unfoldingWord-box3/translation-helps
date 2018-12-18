@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import OriginalWordComponent from './OriginalWordComponent';
 import * as helpers from './helpers';
 
-class OriginalWordsContainer extends React.Component {
+class OriginalWordContainer extends React.Component {
   state = {
     senses: [],
   };
@@ -37,7 +37,7 @@ class OriginalWordsContainer extends React.Component {
   };
 };
 
-OriginalWordsContainer.propTypes = {
+OriginalWordContainer.propTypes = {
   classes: PropTypes.object.isRequired,
   verseObject: PropTypes.object.isRequired,
 };
@@ -45,4 +45,4 @@ OriginalWordsContainer.propTypes = {
 const styles = theme => ({
 });
 
-export default withStyles(styles, { withTheme: true })(OriginalWordsContainer);
+export default withStyles(styles, { withTheme: true })(OriginalWordContainer);

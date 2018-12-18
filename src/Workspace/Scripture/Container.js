@@ -31,7 +31,7 @@ class ScriptureContainer extends React.Component {
         });
       });
     }
-  }
+  };
 
   componentWillReceiveProps(nextProps) {
     this.fetchResourcesConditionally(nextProps);
@@ -51,7 +51,7 @@ class ScriptureContainer extends React.Component {
         block: 'start',
       });
     }
-  }
+  };
 
   render() {
     const props = this.props;

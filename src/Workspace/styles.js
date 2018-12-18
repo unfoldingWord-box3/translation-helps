@@ -12,6 +12,9 @@ export const styles = theme => ({
   verse: {
     margin: 0,
   },
+  originalVerse: {
+    margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+  },
   fullWidth: {
     width: '100%'
   },
