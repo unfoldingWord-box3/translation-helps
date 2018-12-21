@@ -27,11 +27,13 @@ export const BookComponent = ({
     original,
     tn,
   },
+  lemmaIndex,
 }) => {
   const chapterComponent = (
     <ChapterComponent
       context={context}
       setContext={setContext}
+      lemmaIndex={lemmaIndex}
       bookChapterData={ult[chapter]}
       originalChapterData={original[chapter]}
       translationNotesChapterData={tn[chapter]}
@@ -72,6 +74,7 @@ BookComponent.propTypes = {
   resources: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
   context: PropTypes.object.isRequired,
+  lemmaIndex: PropTypes.object,
 };
 
 export default withStyles(styles)(BookComponent);

@@ -19,6 +19,7 @@ export const ChapterComponent = ({
     reference,
   },
   setContext,
+  lemmaIndex,
   bookChapterData,
   originalChapterData,
   translationNotesChapterData,
@@ -33,6 +34,7 @@ export const ChapterComponent = ({
       key={`${reference.chapter}-${verseKey}`}
       context={context}
       setContext={setContext}
+      lemmaIndex={lemmaIndex}
       verseKey={verseKey}
       bookVerseData={bookChapterData[verseKey]}
       originalVerseData={originalChapterData ? originalChapterData[verseKey] : null}
@@ -69,6 +71,7 @@ ChapterComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
+  lemmaIndex: PropTypes.object,
   bookChapterData: PropTypes.object.isRequired,
   translationNotesChapterData: PropTypes.object,
   originalChapterData: PropTypes.object,

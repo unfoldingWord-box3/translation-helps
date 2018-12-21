@@ -88,9 +88,9 @@ export const TranslationHelpsComponent = ({
           </div>
         );
       });
-    } else if (tab.iframe) {
-      badgeCount = 0;
-      content = tab.iframe;
+    } else if (tab.content) {
+      badgeCount = tab.content.length;
+      content = tab.content;
     }
     const badge = (
       <Badge className={classes.padding} color="primary" badgeContent={badgeCount}>

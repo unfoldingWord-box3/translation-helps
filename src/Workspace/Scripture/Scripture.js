@@ -21,6 +21,7 @@ export const Scripture = ({
     reference
   },
   referenceLoaded,
+  lemmaIndex,
 }) => {
   const bookSelection = (
     <BookSelection
@@ -41,6 +42,7 @@ export const Scripture = ({
       context={context}
       setContext={setContext}
       resources={resources}
+      lemmaIndex={lemmaIndex}
     />
   );
   const loadingComponent = (
@@ -67,6 +69,7 @@ Scripture.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
+  lemmaIndex: PropTypes.object,
   manifests: PropTypes.object,
 };
 

@@ -12,6 +12,7 @@ import styles from '../../../styles';
 import ExpansionPanelContainer from '../ExpansionPanelContainer';
 import VerseObjectComponent from './VerseObjectComponent';
 import TranslationHelps from '../../../TranslationHelps';
+import AlignmentsTable from './AlignmentsTable';
 
 import * as originalHelpers from '../../../TranslationHelps/Original/helpers';
 import * as chaptersAndVerses from '../../../../chaptersAndVerses';
@@ -20,6 +21,7 @@ export const VerseComponent = ({
   classes,
   languageId,
   verseKey,
+  lemmaIndex,
   bookVerseData,
   originalVerseData,
   translationNotesVerseData,
@@ -74,6 +76,20 @@ export const VerseComponent = ({
     };
     tabs.push(wordsTab);
   }
+  if (lemmaIndex && Object.keys(lemmaIndex).length > 0) {
+    const {verseObjects} = originalVerseData;
+    const content = (
+      <AlignmentsTable
+        verseObjects={verseObjects}
+        lemmaIndex={lemmaIndex}
+      />
+    );
+    const lemmaTab = {
+      title: "Find",
+      content,
+    };
+    tabs.push(lemmaTab);
+  }
 
   const testament = chaptersAndVerses.testament(reference.bookId);
   const details = (
@@ -118,6 +134,7 @@ VerseComponent.propTypes = {
   setContext: PropTypes.func.isRequired,
   verseKey: PropTypes.string.isRequired,
   testament: PropTypes.string.isRequired,
+  lemmaIndex: PropTypes.object,
   bookVerseData: PropTypes.object.isRequired,
   translationNotesVerseData: PropTypes.array,
   originalVerseData: PropTypes.object,
