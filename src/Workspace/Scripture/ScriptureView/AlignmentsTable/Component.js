@@ -103,7 +103,7 @@ export const AlignmentsTable = ({
   return (
     <MuiThemeProvider theme={getMuiTheme()}>
       <MUIDataTable
-        title={"Find Original and Translated words"}
+        title={"Search UGNT and ULT for this book"}
         data={data}
         columns={columns}
         options={options}

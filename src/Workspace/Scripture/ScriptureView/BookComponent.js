@@ -53,7 +53,7 @@ export const BookComponent = ({
       />
     );
     const lemmaTab = {
-      title: "Find",
+      title: "Search",
       content,
     };
     tabs.push(lemmaTab);
