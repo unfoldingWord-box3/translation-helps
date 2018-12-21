@@ -96,6 +96,8 @@ export const AlignmentsTable = ({
     responsive: 'scroll',
     download: false,
     print: false,
+    filter: false,
+    viewColumns: false,
   };
 
   return (
