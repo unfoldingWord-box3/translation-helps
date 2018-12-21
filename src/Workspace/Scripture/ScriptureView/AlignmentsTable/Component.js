@@ -29,29 +29,28 @@ const getMuiTheme = () => createMuiTheme({
       }
     },
   }
-})
+});
 
 export const AlignmentsTable = ({
   lemmaIndex,
-  verseObjects,
 }) => {
   const columns = [
     {
-      name: "Lemma",
+      name: "Strong's: Lemma",
       options: {
         filter: false,
         sort: true,
       }
     },
     {
-      name: "Original",
+      name: "UGNT",
       options: {
        filter: false,
        sort: true,
       }
     },
     {
-      name: "Translation",
+      name: "ULT",
       options: {
        filter: false,
        sort: true,
@@ -70,18 +69,19 @@ export const AlignmentsTable = ({
   Object.keys(lemmaIndex).forEach(lemma => {
     const lemmaRows = lemmaIndex[lemma].map(entry => {
       const {
+        strong,
+        alignment,
         reference: {
           chapter,
           verse,
         },
-        alignment,
       } = entry;
       const {originalTexts, targetTexts} = helpers.textFromVerseObject(alignment);
       const original = originalTexts.join(' ');
       const target = targetTexts.join(' ');
       const reference = `${chapter}:${verse}`;
       return [
-        lemma,
+        `${strong}: ${lemma}`,
         original,
         target,
         reference
@@ -103,7 +103,7 @@ export const AlignmentsTable = ({
   return (
     <MuiThemeProvider theme={getMuiTheme()}>
       <MUIDataTable
-        title={"Alignments"}
+        title={"Find Original and Translated words"}
         data={data}
         columns={columns}
         options={options}
@@ -114,7 +114,6 @@ export const AlignmentsTable = ({
 
 AlignmentsTable.propTypes = {
   lemmaIndex: PropTypes.array.isRequired,
-  verseObjects: PropTypes.array.isRequired,
 };
 
 export default AlignmentsTable;

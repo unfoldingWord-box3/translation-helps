@@ -12,6 +12,7 @@ import styles from '../../styles';
 import ExpansionPanelContainer from './ExpansionPanelContainer';
 import ChapterComponent from './ChapterComponent';
 import TranslationHelps from '../../TranslationHelps';
+import AlignmentsTable from './AlignmentsTable';
 
 export const BookComponent = ({
   classes,
@@ -29,6 +30,7 @@ export const BookComponent = ({
   },
   lemmaIndex,
 }) => {
+  let tabs = [];
   const chapterComponent = (
     <ChapterComponent
       context={context}
@@ -42,10 +44,21 @@ export const BookComponent = ({
   const intro = tn['front']['intro'][0]['occurrence_note'];
   const introDetails = intro.split('\n').splice(1).join('\n')
     .replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '');
-  const tabs = [{
-    title: 'Book Notes',
-    text: introDetails
-  }];
+  tabs.push({ title: 'Book Notes', text: introDetails});
+
+  if (lemmaIndex && Object.keys(lemmaIndex).length > 0) {
+    const content = (
+      <AlignmentsTable
+        lemmaIndex={lemmaIndex}
+      />
+    );
+    const lemmaTab = {
+      title: "Find",
+      content,
+    };
+    tabs.push(lemmaTab);
+  }
+
   return (
     <div className={classes.root}>
       <ExpansionPanelContainer

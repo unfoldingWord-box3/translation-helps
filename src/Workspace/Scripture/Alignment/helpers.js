@@ -12,10 +12,11 @@ export const index = (chapters) => {
       verseObjects.forEach(verseObject => {
         const originalWords = getWords(verseObject);
         originalWords.forEach(originalWord => {
-          const {lemma} = originalWord;
+          const {lemma, strong} = originalWord;
           const entry = {
             reference: {chapter: chapterKey, verse: verseKey},
             alignment: verseObject,
+            strong,
           };
           if (!lemmaIndex[lemma]) lemmaIndex[lemma] = [];
           lemmaIndex[lemma].push(entry);
