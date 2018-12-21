@@ -15,6 +15,8 @@ export const OriginalWordComponent = ({classes, verseObject, senses}) => {
         <span><strong>{verseObject.text || verseObject.content}</strong> -</span>
         <span> <em>lemma:</em> {verseObject.lemma}</span>
         <span> <em>strong:</em> {verseObject.strong}</span>
+        <br/>
+        <span> <em>morph:</em> {verseObject.morph}</span>
       </Typography>
       {
         senses.map((sense, index) =>
