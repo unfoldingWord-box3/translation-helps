@@ -55,6 +55,7 @@ export const VerseComponent = ({
         />
       );
     });
+    const testament = chaptersAndVerses.testament(reference.bookId);
     originalVerseComponent = (
       <div className={classes.originalVerse} style={{direction: (testament === 'old') ? 'rtl' : 'ltr'}}>
         <sup>{verseKey} </sup>
@@ -79,7 +80,6 @@ export const VerseComponent = ({
     tabs.push(notesTab)
   };
 
-  const testament = chaptersAndVerses.testament(reference.bookId);
   const details = (
     <div>
       <Divider variant="middle" />
@@ -118,7 +118,6 @@ VerseComponent.propTypes = {
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
   verseKey: PropTypes.string.isRequired,
-  testament: PropTypes.string.isRequired,
   lemmaIndex: PropTypes.object,
   bookVerseData: PropTypes.object.isRequired,
   translationNotesVerseData: PropTypes.array,
