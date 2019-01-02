@@ -34,22 +34,6 @@ export const VerseComponent = ({
   const gatewayVerse =
   bookVerseData.verseObjects ?
   bookVerseData.verseObjects.map((verseObject, index) => {
-    // const lastVerseObject = (index > 0) ? verseData.verseObjects[index - 1] : null;
-    // const nextVerseObject = (index < verseData.verseObjects.length - 1) ? verseData.verseObjects[index + 1] : null;
-    return (
-      <VerseObjectComponent
-        key={index}
-        verseObject={verseObject}
-        originalWords={[]}
-      />
-    );
-  }) : <span />;
-
-  const originalVerse =
-  originalVerseData.verseObjects ?
-  originalVerseData.verseObjects.map((verseObject, index) => {
-    // const lastVerseObject = (index > 0) ? verseData.verseObjects[index - 1] : null;
-    // const nextVerseObject = (index < verseData.verseObjects.length - 1) ? verseData.verseObjects[index + 1] : null;
     return (
       <VerseObjectComponent
         key={index}
@@ -60,6 +44,33 @@ export const VerseComponent = ({
   }) : <span />;
 
   let tabs = [];
+  let originalVerseComponent = <span />;
+  if (originalVerseData && originalVerseData.verseObjects) {
+    const originalVerse = originalVerseData.verseObjects.map((verseObject, index) => {
+      return (
+        <VerseObjectComponent
+        key={index}
+        verseObject={verseObject}
+        originalWords={[]}
+        />
+      );
+    });
+    originalVerseComponent = (
+      <div className={classes.originalVerse} style={{direction: (testament === 'old') ? 'rtl' : 'ltr'}}>
+        <sup>{verseKey} </sup>
+        {originalVerse}
+      </div>
+    );
+
+    const wordObjects = originalHelpers.taggedWords(originalVerseData.verseObjects);
+    if (wordObjects.length > 0) {
+      const wordsTab = {
+        title: 'Words',
+        original: wordObjects,
+      };
+      tabs.push(wordsTab);
+    }
+  }
   if (translationNotesVerseData) {
     const notesTab = {
       title: 'Notes',
@@ -67,23 +78,12 @@ export const VerseComponent = ({
     };
     tabs.push(notesTab)
   };
-  const wordObjects = originalHelpers.taggedWords(originalVerseData.verseObjects);
-  if (wordObjects.length > 0) {
-    const wordsTab = {
-      title: 'Words',
-      original: wordObjects,
-    };
-    tabs.push(wordsTab);
-  }
 
   const testament = chaptersAndVerses.testament(reference.bookId);
   const details = (
     <div>
       <Divider variant="middle" />
-      <div className={classes.originalVerse} style={{direction: (testament === 'old') ? 'rtl' : 'ltr'}}>
-        <sup>{verseKey} </sup>
-        {originalVerse}
-      </div>
+      {originalVerseComponent}
       {
         (tabs.length > 0) ?
         <TranslationHelps
