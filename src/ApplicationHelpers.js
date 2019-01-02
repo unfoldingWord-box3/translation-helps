@@ -4,7 +4,7 @@ import {each} from 'async';
 import localforage from 'localforage';
 import { setup } from 'axios-cache-adapter';
 
-const baseURL = "https://d3r5pm83aa8hdu.cloudfront.net/";
+const baseURL = "https://git.door43.org/";
 
 const store = localforage.createInstance({
   driver: [localforage.INDEXEDDB],
