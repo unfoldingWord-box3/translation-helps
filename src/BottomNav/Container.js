@@ -78,11 +78,11 @@ class BottomNavContainer extends React.Component {
 
     const shouldShowHistory = (context.view === 'history');
     const couldShowReference = (!context.resourceId);
-    const couldShowBook = (!context.resourceId === 'obs' && !(context.reference && context.reference.bookId));
+    const couldShowBook = (!(context.resourceId === 'obs') && !(context.reference && context.reference.bookId));
     const couldShowChapter = (!(context.reference && context.reference.chapter));
 
     let value;
-    if (shouldShowHistory) { value = 1;}
+    if (shouldShowHistory) { value = 1; }
     else if (couldShowReference) { value = 2; }
     else if (couldShowBook) { value = 3; }
     else if (couldShowChapter) { value = 4; }
