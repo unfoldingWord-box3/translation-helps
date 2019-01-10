@@ -110,31 +110,34 @@ export const fetchUHBBook = (username, languageId, bookId, manifest) => new Prom
   }).catch(reject);
 });
 
+export const pivotTranslationNotes = (array) => {
+  let translationNotesObject = {};
+  let _array = JSON.parse(JSON.stringify(array));
+  _array.shift();
+  _array.forEach(item => {
+    let [book, chapter, verse, id, support_reference, original_quote, occurrence, gl_quote, occurrence_note] = item;
+    if (book && chapter && verse) {
+      if (!translationNotesObject[chapter]) translationNotesObject[chapter] = {};
+      if (!translationNotesObject[chapter][verse]) translationNotesObject[chapter][verse] = [];
+      occurrence_note = (!!occurrence_note) ? occurrence_note.replace(/<br>/g,'\n') : occurrence_note;
+      let object = {
+        id,
+        support_reference,
+        original_quote,
+        occurrence,
+        gl_quote,
+        occurrence_note,
+      };
+      translationNotesObject[chapter][verse].push(object);
+    }
+  });
+  return translationNotesObject
+}
+
 export const translationNotes = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
   fetchNotes(username, languageId, bookId, manifest)
-  .then(array => {
-    let translationNotesObject = {};
-    array.shift();
-    array.forEach(item => {
-      let [book, chapter, verse, id, support_reference, original_quote, occurrence, gl_quote, occurrence_note] = item;
-      if (book && chapter && verse) {
-        if (!translationNotesObject[chapter]) translationNotesObject[chapter] = {};
-        if (!translationNotesObject[chapter][verse]) translationNotesObject[chapter][verse] = [];
-        occurrence_note = (!!occurrence_note) ? occurrence_note.replace(/<br>/g,'\n') : occurrence_note;
-        let object = {
-          id,
-          support_reference,
-          original_quote,
-          occurrence,
-          gl_quote,
-          occurrence_note,
-        };
-        translationNotesObject[chapter][verse].push(object);
-      }
-    });
-    resolve(translationNotesObject);
-  }).catch(reject);
-})
+  .then(resolve).catch(reject);
+});
 
 export const fetchNotes = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
   const repository = ApplicationHelpers.resourceRepositories(languageId).tn;

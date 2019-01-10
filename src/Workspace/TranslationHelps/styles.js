@@ -12,7 +12,7 @@ export const styles = theme => ({
     margin: 'auto',
   },
   hidden: {
-    height: '0px',
+    // height: '0px',
   },
   padding: {
     padding: `0 ${theme.spacing.unit * 2}px`,

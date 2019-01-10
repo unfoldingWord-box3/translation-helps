@@ -60,6 +60,9 @@ export const TranslationHelpsComponent = ({
         />
       </div>);
   });
+
+  const currentTab = tabContents[tabIndex];
+
   return (
     <div id={id} className={classes.root}>
       <AppBar className={classes.appBar} position="sticky" color="default">
@@ -75,13 +78,9 @@ export const TranslationHelpsComponent = ({
           {tabLabels}
         </Tabs>
       </AppBar>
-      <SwipeableViews
-        className={classes.width}
-        index={tabIndex}
-        onChangeIndex={handleChangeIndex}
-      >
-        {tabContents}
-      </SwipeableViews>
+      <div className={classes.width}>
+        {currentTab}
+      </div>
     </div>
   );
 }

@@ -13,6 +13,9 @@ import ExpansionPanelContainer from './ExpansionPanelContainer';
 import ChapterComponent from './ChapterComponent';
 import TranslationHelps from '../../TranslationHelps';
 import AlignmentsTable from './AlignmentsTable';
+import TranslationNotesTable from './TranslationNotesTable';
+
+import * as helpers from '../helpers';
 
 export const BookComponent = ({
   classes,
@@ -30,21 +33,22 @@ export const BookComponent = ({
   },
   lemmaIndex,
 }) => {
+  let tnObject = helpers.pivotTranslationNotes(tn);
   let tabs = [];
-  const chapterComponent = (
-    <ChapterComponent
-      context={context}
-      setContext={setContext}
-      lemmaIndex={lemmaIndex}
-      bookChapterData={ult[chapter]}
-      originalChapterData={original[chapter]}
-      translationNotesChapterData={tn[chapter]}
-    />
-  );
-  const intro = tn['front']['intro'][0]['occurrence_note'];
+
+  const intro = tnObject['front']['intro'][0]['occurrence_note'];
   const introDetails = intro.split('\n').splice(1).join('\n')
     .replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '');
   tabs.push({ title: 'Book Notes', text: introDetails});
+
+  if (tn) {
+    const content = (
+      <TranslationNotesTable
+        tn={tn}
+      />
+    );
+    tabs.push({ title: 'Search Notes', content });
+  }
 
   if (lemmaIndex && Object.keys(lemmaIndex).length > 0) {
     const content = (
@@ -52,12 +56,19 @@ export const BookComponent = ({
         lemmaIndex={lemmaIndex}
       />
     );
-    const lemmaTab = {
-      title: "Search",
-      content,
-    };
-    tabs.push(lemmaTab);
+    tabs.push({ title: "Search Words", content });
   }
+
+  const chapterComponent = (
+    <ChapterComponent
+      context={context}
+      setContext={setContext}
+      lemmaIndex={lemmaIndex}
+      bookChapterData={ult[chapter]}
+      originalChapterData={original[chapter]}
+      translationNotesChapterData={tnObject[chapter]}
+    />
+  );
 
   return (
     <div className={classes.root}>
