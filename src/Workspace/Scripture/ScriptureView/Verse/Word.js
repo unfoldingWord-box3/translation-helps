@@ -6,15 +6,19 @@ import {
 import {
 } from '@material-ui/icons';
 
-export const TextComponent = ({classes, verseObject}) => {
-  const isWord = verseObject.type === 'word';
-  // const isText = verseObject.type === 'text';
+export const OriginalWordComponent = ({
+  classes,
+  verseObject,
+}) => {
+
   return (
-    <span>{isWord ? ' ': ''}{verseObject.text}</span>
+    <span>
+      {' '}{verseObject.text || verseObject.content}
+    </span>
   );
 };
 
-TextComponent.propTypes = {
+OriginalWordComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   verseObject: PropTypes.object.isRequired,
 };
@@ -25,4 +29,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(TextComponent);
+export default withStyles(styles)(OriginalWordComponent);

@@ -10,7 +10,7 @@ import {
 import styles from '../../../styles';
 
 import ExpansionPanelContainer from '../ExpansionPanelContainer';
-import VerseObjectComponent from './VerseObjectComponent';
+import VerseObject from './VerseObject';
 import TranslationHelps from '../../../TranslationHelps';
 
 import * as originalHelpers from '../../../TranslationHelps/Original/helpers';
@@ -35,10 +35,9 @@ export const VerseComponent = ({
   bookVerseData.verseObjects ?
   bookVerseData.verseObjects.map((verseObject, index) => {
     return (
-      <VerseObjectComponent
+      <VerseObject
         key={index}
         verseObject={verseObject}
-        originalWords={[]}
       />
     );
   }) : <span />;
@@ -48,10 +47,9 @@ export const VerseComponent = ({
   if (originalVerseData && originalVerseData.verseObjects) {
     const originalVerse = originalVerseData.verseObjects.map((verseObject, index) => {
       return (
-        <VerseObjectComponent
-        key={index}
-        verseObject={verseObject}
-        originalWords={[]}
+        <VerseObject
+          key={index}
+          verseObject={verseObject}
         />
       );
     });

@@ -7,7 +7,11 @@ import {
 import {
 } from '@material-ui/icons';
 
-export const OriginalWordComponent = ({classes, verseObject, senses}) => {
+export const OriginalWordComponent = ({
+  classes,
+  verseObject,
+  senses
+}) => {
 
   return (
     <div>

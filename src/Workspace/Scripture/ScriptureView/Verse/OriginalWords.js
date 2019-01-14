@@ -5,10 +5,10 @@ import {
   Popover,
 } from '@material-ui/core';
 
-import TextComponent from './TextComponent';
+import VerseObject from './VerseObject';
 import OriginalWord from '../OriginalWord';
 
-class OriginalWordsContainer extends React.Component {
+class OriginalWords extends React.Component {
   state = {
     anchorEl: null,
   };
@@ -36,7 +36,7 @@ class OriginalWordsContainer extends React.Component {
         >
           {
             children.map((verseObject, index) =>
-              <TextComponent key={index} verseObject={verseObject}/>
+              <VerseObject key={index} verseObject={verseObject} />
             )
           }
         </span>
@@ -70,7 +70,7 @@ class OriginalWordsContainer extends React.Component {
   }
 }
 
-OriginalWordsContainer.propTypes = {
+OriginalWords.propTypes = {
   classes: PropTypes.object.isRequired,
   children: PropTypes.array.isRequired,
   originalWords: PropTypes.array,
@@ -90,4 +90,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles, { withTheme: true })(OriginalWordsContainer);
+export default withStyles(styles, { withTheme: true })(OriginalWords);

@@ -72,7 +72,7 @@ export const TranslationHelpsComponent = ({
           onChange={handleChangeIndex}
           indicatorColor="primary"
           textColor="primary"
-          scrollable
+          variant="scrollable"
           scrollButtons="auto"
         >
           {tabLabels}

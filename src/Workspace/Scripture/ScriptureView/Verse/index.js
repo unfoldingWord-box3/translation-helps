@@ -1,2 +1,2 @@
-import VerseComponent from './VerseComponent';
-export default VerseComponent;
+import Component from './Component';
+export default Component;
