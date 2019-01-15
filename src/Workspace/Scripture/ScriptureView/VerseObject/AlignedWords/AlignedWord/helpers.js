@@ -1,5 +1,5 @@
 import path from 'path';
-import * as ApplicationHelpers from '../../../../ApplicationHelpers';
+import * as ApplicationHelpers from '../../../../../../ApplicationHelpers';
 
 const username = 'unfoldingword';
 const languageId = 'en'
@@ -28,11 +28,12 @@ export const parseSenses = (lexiconMarkdown) => {
 
 export const senses = (strong) => new Promise((resolve, reject) => {
   let repository, filepath;
-  if (/^H/.test(strong)) {
+  if (/H\d+/.test(strong)) {
     repository = repositories.uhal;
-    filepath = path.join('content', strong + '.md');
+    const _strong = strong.match(/H\d+/)[0];
+    filepath = path.join('content', _strong + '.md');
   }
-  if (/^G/.test(strong)) {
+  if (/G\d+/.test(strong)) {
     repository = repositories.ugl;
     filepath = path.join('content', strong, '01.md');
   }

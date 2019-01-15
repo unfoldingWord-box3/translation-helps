@@ -10,7 +10,7 @@ import {
 import styles from '../../../styles';
 
 import ExpansionPanelContainer from '../ExpansionPanelContainer';
-import VerseObject from './VerseObject';
+import VerseObject from '../VerseObject';
 import TranslationHelps from '../../../TranslationHelps';
 
 import * as originalHelpers from '../../../TranslationHelps/Original/helpers';

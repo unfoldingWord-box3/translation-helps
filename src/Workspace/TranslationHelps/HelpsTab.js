@@ -7,7 +7,7 @@ import {
 
 import TextComponentWithRCLinks from './TextComponentWithRCLinks';
 import TranslationNotes from './TranslationNotes';
-import OriginalWord from '../Scripture/ScriptureView/OriginalWord';
+import AlignedWord from '../Scripture/ScriptureView/VerseObject/AlignedWords/AlignedWord';
 
 import styles from './styles';
 
@@ -43,7 +43,7 @@ export const Component = ({
       content = wordObjects.map((wordObject, index) => {
         const link = wordObject.link.replace('rc://*/', `http://${context.languageId}/`);
         const originalWords = wordObject.originalWords.map((verseObject, index) =>
-          <OriginalWord key={index} verseObject={verseObject} />
+          <AlignedWord key={index} verseObject={verseObject} />
         );
         const text = `${link}`;
         return (

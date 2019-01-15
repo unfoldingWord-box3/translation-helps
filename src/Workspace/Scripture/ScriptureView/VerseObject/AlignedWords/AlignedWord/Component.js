@@ -7,7 +7,7 @@ import {
 import {
 } from '@material-ui/icons';
 
-export const OriginalWordComponent = ({
+export const Component = ({
   classes,
   verseObject,
   senses
@@ -43,7 +43,7 @@ export const OriginalWordComponent = ({
   );
 };
 
-OriginalWordComponent.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   verseObject: PropTypes.object.isRequired,
   senses: PropTypes.array,
@@ -55,4 +55,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(OriginalWordComponent);
+export default withStyles(styles)(Component);

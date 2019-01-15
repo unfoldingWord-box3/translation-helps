@@ -6,7 +6,7 @@ import {
 import {
 } from '@material-ui/icons';
 
-export const OriginalWordComponent = ({
+export const Word = ({
   classes,
   verseObject,
 }) => {
@@ -18,7 +18,7 @@ export const OriginalWordComponent = ({
   );
 };
 
-OriginalWordComponent.propTypes = {
+Word.propTypes = {
   classes: PropTypes.object.isRequired,
   verseObject: PropTypes.object.isRequired,
 };
@@ -29,4 +29,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(OriginalWordComponent);
+export default withStyles(styles)(Word);

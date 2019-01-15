@@ -5,10 +5,10 @@ import {
   Popover,
 } from '@material-ui/core';
 
-import VerseObject from './VerseObject';
-import OriginalWord from '../OriginalWord';
+import Word from '../Word';
+import AlignedWord from './AlignedWord';
 
-class OriginalWords extends React.Component {
+class AlignedWords extends React.Component {
   state = {
     anchorEl: null,
   };
@@ -36,7 +36,7 @@ class OriginalWords extends React.Component {
         >
           {
             children.map((verseObject, index) =>
-              <VerseObject key={index} verseObject={verseObject} />
+              <Word key={index} verseObject={verseObject} />
             )
           }
         </span>
@@ -61,7 +61,7 @@ class OriginalWords extends React.Component {
         >
         {
           originalWords.map((verseObject, index) =>
-            <OriginalWord key={index} verseObject={verseObject} />
+            <AlignedWord key={index} verseObject={verseObject} />
           )
         }
         </Popover>
@@ -70,7 +70,7 @@ class OriginalWords extends React.Component {
   }
 }
 
-OriginalWords.propTypes = {
+AlignedWords.propTypes = {
   classes: PropTypes.object.isRequired,
   children: PropTypes.array.isRequired,
   originalWords: PropTypes.array,
@@ -90,4 +90,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles, { withTheme: true })(OriginalWords);
+export default withStyles(styles, { withTheme: true })(AlignedWords);

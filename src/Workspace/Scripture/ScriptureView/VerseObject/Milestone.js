@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import VerseObject from './VerseObject';
-import OriginalWords from './OriginalWords';
+import VerseObject from '../VerseObject';
+import AlignedWords from './AlignedWords';
 
 export const Milestone = ({
   classes,
+  originalWords,
   verseObject: {
     tag,
     children,
@@ -37,12 +38,23 @@ export const Milestone = ({
         occurrences,
         content,
       };
-      component = (
-        <OriginalWords
-          originalWords={[originalWord]}
-          children={children}
-        />
-      );
+      let _originalWords = JSON.parse(JSON.stringify(originalWords));
+      _originalWords.push(originalWord);
+      if (children.length === 1 && children[0].type === 'milestone') {
+        component = (
+          <VerseObject
+            verseObject={children[0]}
+            originalWords={_originalWords}
+          />
+        );
+      } else {
+        component = (
+          <AlignedWords
+            originalWords={_originalWords}
+            children={children}
+          />
+        );
+      }
       break;
     default:
       component = (<div/>);
@@ -53,7 +65,6 @@ export const Milestone = ({
 };
 
 Milestone.propTypes = {
-  classes: PropTypes.object.isRequired,
   verseObject: PropTypes.object.isRequired,
   originalWords: PropTypes.array,
 };

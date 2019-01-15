@@ -6,7 +6,7 @@ import {
 import {
 } from '@material-ui/icons';
 
-export const TextComponent = ({classes, verseObject}) => {
+export const Text = ({classes, verseObject}) => {
   return (
     <span>
       {verseObject.text}
@@ -14,7 +14,7 @@ export const TextComponent = ({classes, verseObject}) => {
   );
 };
 
-TextComponent.propTypes = {
+Text.propTypes = {
   classes: PropTypes.object.isRequired,
   verseObject: PropTypes.object.isRequired,
 };
@@ -25,4 +25,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(TextComponent);
+export default withStyles(styles)(Text);
