@@ -21,7 +21,8 @@ export const VerseComponent = ({
   languageId,
   verseKey,
   lemmaIndex,
-  bookVerseData,
+  ultVerseData,
+  ustVerseData,
   originalVerseData,
   translationNotesVerseData,
   context,
@@ -31,9 +32,11 @@ export const VerseComponent = ({
     reference,
   },
 }) => {
-  const gatewayVerse =
-  bookVerseData.verseObjects ?
-  bookVerseData.verseObjects.map((verseObject, index) => {
+  let tabs = [];
+
+  const ultVerse =
+  ultVerseData.verseObjects ?
+  ultVerseData.verseObjects.map((verseObject, index) => {
     return (
       <VerseObject
         key={index}
@@ -42,7 +45,24 @@ export const VerseComponent = ({
     );
   }) : <span />;
 
-  let tabs = [];
+  let ustVerseComponent = <span />;
+  if (ustVerseData && ustVerseData.verseObjects) {
+    const ustVerse = ustVerseData.verseObjects.map((verseObject, index) => {
+      return (
+        <VerseObject
+          key={index}
+          verseObject={verseObject}
+        />
+      );
+    });
+    ustVerseComponent = (
+      <div className={classes.originalVerse}>
+        <sup>{verseKey} </sup>
+        {ustVerse}
+      </div>
+    );
+  }
+
   let originalVerseComponent = <span />;
   if (originalVerseData && originalVerseData.verseObjects) {
     const originalVerse = originalVerseData.verseObjects.map((verseObject, index) => {
@@ -82,6 +102,8 @@ export const VerseComponent = ({
     <div>
       <Divider variant="middle" />
       {originalVerseComponent}
+      <Divider variant="middle" />
+      {ustVerseComponent}
       {
         (tabs.length > 0) ?
         <TranslationHelps
@@ -102,7 +124,7 @@ export const VerseComponent = ({
           <div className={classes.verse}>
             <span id={id} style={{position: 'absolute', top: '-5em'}}></span>
             <sup>{verseKey} </sup>
-            {gatewayVerse}
+            {ultVerse}
           </div>
         </div>
       }
@@ -117,7 +139,8 @@ VerseComponent.propTypes = {
   setContext: PropTypes.func.isRequired,
   verseKey: PropTypes.string.isRequired,
   lemmaIndex: PropTypes.object,
-  bookVerseData: PropTypes.object.isRequired,
+  ultVerseData: PropTypes.object.isRequired,
+  ustVerseData: PropTypes.object.isRequired,
   translationNotesVerseData: PropTypes.array,
   originalVerseData: PropTypes.object,
 };

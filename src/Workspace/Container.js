@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Workspace from './Workspace';
+import Component from './Component';
 
-class WorkspaceContainer extends React.Component {
+class Container extends React.Component {
   state = {
   };
 
@@ -25,18 +25,18 @@ class WorkspaceContainer extends React.Component {
   render() {
     const props = this.props;
     return (
-      <Workspace
+      <Component
         {...props}
       />
     );
   };
 };
 
-WorkspaceContainer.propTypes = {
+Container.propTypes = {
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
   history: PropTypes.array.isRequired,
   manifests: PropTypes.object.isRequired,
 };
 
-export default WorkspaceContainer;
+export default Container;

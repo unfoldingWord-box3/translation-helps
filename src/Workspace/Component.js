@@ -12,7 +12,7 @@ import Resources from './Resources';
 import Scripture from './Scripture';
 import OpenBibleStories from './OpenBibleStories';
 
-export const Workspace = ({
+export const Component = ({
   classes,
   manifests,
   history,
@@ -71,7 +71,7 @@ export const Workspace = ({
   );
 }
 
-Workspace.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
@@ -89,4 +89,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(Workspace);
+export default withStyles(styles)(Component);

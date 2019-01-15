@@ -28,6 +28,7 @@ export const BookComponent = ({
   },
   resources: {
     ult,
+    ust,
     original,
     tn,
   },
@@ -64,12 +65,12 @@ export const BookComponent = ({
       context={context}
       setContext={setContext}
       lemmaIndex={lemmaIndex}
-      bookChapterData={ult[chapter]}
+      ultChapterData={ult[chapter]}
+      ustChapterData={ust[chapter]}
       originalChapterData={original[chapter]}
       translationNotesChapterData={tnObject[chapter]}
     />
   );
-
   return (
     <div className={classes.root}>
       <ExpansionPanelContainer

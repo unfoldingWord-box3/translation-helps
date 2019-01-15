@@ -11,15 +11,23 @@ export const fetchResources = (props) => new Promise((resolve, reject) => {
   const {context: {username, languageId, reference}, manifests} = props;
   let resources = {
     ult: null,
+    ust: null,
     tn: null,
     original: null,
   };
-  const resourceIds = ['ult', 'tn', 'original'];
+  const resourceIds = ['ult', 'ust', 'tn', 'original'];
   each(resourceIds,
     (resourceId, done) => {
       switch (resourceId) {
         case 'ult':
-          fetchBook(username, languageId, reference.bookId, manifests.ult)
+          fetchBook(username, languageId, resourceId, reference.bookId, manifests.ult)
+          .then(data => {
+            resources[resourceId] = data.chapters;
+            done();
+          });
+          break;
+        case 'ust':
+          fetchBook(username, languageId, resourceId, reference.bookId, manifests.ust)
           .then(data => {
             resources[resourceId] = data.chapters;
             done();
@@ -50,13 +58,13 @@ export const fetchResources = (props) => new Promise((resolve, reject) => {
   );
 });
 
-export const fetchBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
+export const fetchBook = (username, languageId, resourceId, bookId, manifest) => new Promise((resolve, reject) => {
   if (!projectByBookId(manifest.projects, bookId)) {
-    const error = 'book not found in ult';
+    const error = `book not found in ${resourceId}`;
     console.warn(error);
     reject(error);
   }
-  const repository = ApplicationHelpers.resourceRepositories(languageId).ult;
+  const repository = ApplicationHelpers.resourceRepositories(languageId)[resourceId];
   fetchFileByBookId(username, repository, bookId, manifest)
   .then(usfm => {
     const json = usfmjs.toJSON(usfm);

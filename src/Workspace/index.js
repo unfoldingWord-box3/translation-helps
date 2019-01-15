@@ -1,2 +1,2 @@
-import WorkspaceContainer from './WorkspaceContainer'
-export default WorkspaceContainer
+import Container from './Container';
+export default Container;

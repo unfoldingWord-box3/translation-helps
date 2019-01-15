@@ -20,13 +20,14 @@ export const ChapterComponent = ({
   },
   setContext,
   lemmaIndex,
-  bookChapterData,
+  ultChapterData,
+  ustChapterData,
   originalChapterData,
   translationNotesChapterData,
 }) => {
-  const verses = Object.keys(bookChapterData)
+  const verses = Object.keys(ultChapterData)
   .filter(verseKey => {
-    const text = bookChapterData[verseKey].verseObjects.map(o => o.text).join('');
+    const text = ultChapterData[verseKey].verseObjects.map(o => o.text).join('');
     return /\S+/g.test(text);
   })
   .map(verseKey =>
@@ -36,7 +37,8 @@ export const ChapterComponent = ({
       setContext={setContext}
       lemmaIndex={lemmaIndex}
       verseKey={verseKey}
-      bookVerseData={bookChapterData[verseKey]}
+      ultVerseData={ultChapterData[verseKey]}
+      ustVerseData={ustChapterData[verseKey]}
       originalVerseData={originalChapterData ? originalChapterData[verseKey] : null}
       translationNotesVerseData={translationNotesChapterData[verseKey]}
     />
@@ -72,7 +74,8 @@ ChapterComponent.propTypes = {
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
   lemmaIndex: PropTypes.object,
-  bookChapterData: PropTypes.object.isRequired,
+  ultChapterData: PropTypes.object.isRequired,
+  ustChapterData: PropTypes.object.isRequired,
   translationNotesChapterData: PropTypes.object,
   originalChapterData: PropTypes.object,
 };

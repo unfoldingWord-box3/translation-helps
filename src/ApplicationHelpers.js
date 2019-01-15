@@ -22,6 +22,7 @@ export const username = 'unfoldingword';
 export const resourceRepositories = (languageId) => {
   return {
     ult: languageId + '_ult',
+    ust: languageId + '_ust',
     tn: languageId + '-tn',
     ta: languageId + '-ta',
     tw: languageId + '-tw',

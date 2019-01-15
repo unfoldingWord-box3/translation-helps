@@ -12,6 +12,7 @@ class ScriptureContainer extends React.Component {
     referenceLoaded: null,
     resources: {
       ult: null,
+      ust: null,
       tn: null,
       original: null,
     },
@@ -19,9 +20,9 @@ class ScriptureContainer extends React.Component {
 
   fetchResourcesConditionally(nextProps) {
     const {manifests, context: {reference}} = nextProps;
-    const {ult, obs} = this.state;
+    const {ult, ust, obs} = this.state;
     const referenceChanged = (reference.bookId !== this.props.context.reference.bookId);
-    const emptyBookData = (!(ult || obs));
+    const emptyBookData = (!(ult || ust || obs));
     const needToFetch = (emptyBookData || referenceChanged)
     const canFetch = (reference.bookId && Object.keys(manifests).length > 0);
     if (canFetch && needToFetch) {
