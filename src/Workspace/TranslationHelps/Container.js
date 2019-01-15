@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import {
 } from '@material-ui/core';
 
-import TranslationHelpsComponent from './TranslationHelpsComponent';
+import Component from './Component';
 
-class TranslationHelpsContainer extends React.Component {
+class Container extends React.Component {
   state = {
     id: Math.random(),
     tabIndex: 0,
@@ -42,7 +42,7 @@ class TranslationHelpsContainer extends React.Component {
     const {props} = this;
     const {tabs, tabIndex, id} = this.state;
     return (
-      <TranslationHelpsComponent
+      <Component
         {...props}
         id={id}
         tabs={tabs}
@@ -54,10 +54,10 @@ class TranslationHelpsContainer extends React.Component {
   }
 }
 
-TranslationHelpsContainer.propTypes = {
+Container.propTypes = {
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
   tabs: PropTypes.array.isRequired,
 };
 
-export default TranslationHelpsContainer;
+export default Container;

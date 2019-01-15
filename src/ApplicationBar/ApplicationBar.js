@@ -5,8 +5,6 @@ import Headroom from 'react-headroom';
 import {
   Typography,
 } from '@material-ui/core';
-import {
-} from '@material-ui/icons';
 
 import * as ScriptureHelpers from '../Workspace/Scripture/helpers';
 
@@ -33,7 +31,7 @@ const ApplicationBar = ({
       <div className={classes.paper}>
         <div className={classes.toolbar}>
           <img className={classes.logo} src="./logo.png" alt="unfoldingWord Logo" />
-          <Typography variant="title" color="inherit" className={classes.coin} noWrap>
+          <Typography variant="h6" color="inherit" className={classes.coin} noWrap>
             {referenceComponent}
           </Typography>
         </div>
@@ -47,7 +45,7 @@ ApplicationBar.propTypes = {
   theme: PropTypes.object.isRequired,
   manifests: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
-  projectName: PropTypes.string.isRequired,
+  projectName: PropTypes.string,
 };
 
 const styles = theme => ({

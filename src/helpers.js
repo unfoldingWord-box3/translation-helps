@@ -18,7 +18,6 @@ const api = setup({
 // Purpose: application wide
 // Scope: limited to resource manifests and information
 
-export const username = 'unfoldingword';
 export const resourceRepositories = (languageId) => {
   return {
     ult: languageId + '_ult',

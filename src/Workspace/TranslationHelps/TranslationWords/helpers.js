@@ -1,12 +1,11 @@
-import * as ApplicationHelpers from '../../../ApplicationHelpers';
+import * as ApplicationHelpers from '../../../helpers';
 
-const username = ApplicationHelpers.username;
 const repository = (languageId) => ApplicationHelpers.resourceRepositories(languageId).tw;
 // https://git.door43.org/[username]/[languageId]_ta/src/branch/master/bible/kt/abomination.md
 // title = first line of file
 // markdown = the path + .md
 // rc://en/tw/dict/bible/kt/christ
-export const fetchTitle = (languageId, linkPath) => new Promise((resolve, reject) => {
+export const fetchTitle = (username, languageId, linkPath) => new Promise((resolve, reject) => {
   const uriPath = linkPath.split('/').splice(1).join('/') + '.md';
   ApplicationHelpers.fetchFileFromServer(username, repository(languageId), uriPath)
   .then(markdown => {
@@ -15,7 +14,7 @@ export const fetchTitle = (languageId, linkPath) => new Promise((resolve, reject
   }).catch(reject);
 });
 
-export const fetchArticle = (languageId, linkPath) => new Promise((resolve, reject) => {
+export const fetchArticle = (username, languageId, linkPath) => new Promise((resolve, reject) => {
   const uriPath = linkPath.split('/').splice(1).join('/') + '.md'; // remove "/dict/"
   ApplicationHelpers.fetchFileFromServer(username, repository(languageId), uriPath)
   .then(article => {

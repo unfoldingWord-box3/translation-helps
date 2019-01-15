@@ -78,6 +78,7 @@ export const AlignmentsTable = ({
   tn.pop();
   let data = tn.map(row => {
     const [book, chapter, verse, id, supportReference, origQuote, occurrence, glQuote, note] = row;
+    if (book) {/* book not used, this bypasses linter warning */}
     const type = (!supportReference) ? 'general' : supportReference;
     return [
       `${chapter}:${verse}`,

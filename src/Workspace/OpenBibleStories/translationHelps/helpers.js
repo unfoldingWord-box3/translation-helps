@@ -1,6 +1,6 @@
 import {each} from 'async';
 
-import * as ApplicationHelpers from '../../../ApplicationHelpers';
+import * as ApplicationHelpers from '../../../helpers';
 
 export const fetchHelps = (username, languageId, storyKey, frameKey) => new Promise((resolve, reject) => {
   let helps = {};

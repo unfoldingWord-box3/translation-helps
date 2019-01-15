@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
-import './Application.css';
-
 import ApplicationBar from './ApplicationBar';
 import Workspace from './Workspace';
 import BottomNav from './BottomNav';
@@ -23,7 +21,7 @@ const theme = createMuiTheme({
   },
 });
 
-export const Application = ({
+export const Component = ({
   classes,
   context,
   setContext,
@@ -59,7 +57,7 @@ export const Application = ({
   </div>
 </MuiThemeProvider>;
 
-Application.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   history: PropTypes.array.isRequired,
@@ -92,4 +90,4 @@ const styles = theme => ({
   }
 });
 
-export default withStyles(styles)(Application);
+export default withStyles(styles)(Component);

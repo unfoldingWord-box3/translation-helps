@@ -1,14 +1,14 @@
 import * as TranslationAcademyHelpers from './TranslationAcademy/helpers';
 import * as TranslationWordsHelpers from './TranslationWords/helpers';
 
-export const fetchTitle = (languageId, resourceId, linkPath) => new Promise((resolve, reject) => {
+export const fetchTitle = (username, languageId, resourceId, linkPath) => new Promise((resolve, reject) => {
   switch (resourceId) {
     case 'ta':
-      TranslationAcademyHelpers.fetchTitle(languageId, linkPath)
+      TranslationAcademyHelpers.fetchTitle(username, languageId, linkPath)
       .then(resolve).catch(error => console.log(error));
       break;
     case 'tw':
-      TranslationWordsHelpers.fetchTitle(languageId, linkPath)
+      TranslationWordsHelpers.fetchTitle(username, languageId, linkPath)
       .then(resolve).catch(error => console.log(error));
       break;
     case 'tn':
@@ -20,14 +20,14 @@ export const fetchTitle = (languageId, resourceId, linkPath) => new Promise((res
   };
 });
 
-export const fetchArticle = (languageId, resourceId, linkPath) => new Promise((resolve, reject) => {
+export const fetchArticle = (username, languageId, resourceId, linkPath) => new Promise((resolve, reject) => {
   switch (resourceId) {
     case 'ta':
-      TranslationAcademyHelpers.fetchArticle(languageId, linkPath)
+      TranslationAcademyHelpers.fetchArticle(username, languageId, linkPath)
       .then(resolve).catch(error => console.log(error));
       break;
     case 'tw':
-      TranslationWordsHelpers.fetchArticle(languageId, linkPath)
+      TranslationWordsHelpers.fetchArticle(username, languageId, linkPath)
       .then(resolve).catch(error => console.log(error));
       break;
     case 'tn':

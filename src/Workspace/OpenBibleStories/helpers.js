@@ -1,6 +1,6 @@
 import {each} from 'async';
 
-import * as ApplicationHelpers from '../../ApplicationHelpers';
+import * as ApplicationHelpers from '../../helpers';
 import youtubeIds from './youtubeIds';
 
 export const framesFromStory = (storyMarkdown) => {
@@ -17,6 +17,7 @@ export const frameData = (frameMarkdown) => {
   const imageRegexp = /\((http.*?\.jpg).*?\)/;
   if (imageRegexp.test(frameMarkdown)) {
     const [match, image] = imageRegexp.exec(frameMarkdown);
+    if (match) {/* not used, this bypasses linter warning */}
     data.image = image;
   }
   data.text = frameMarkdown.replace(/\s*\[.*?\]\(.*?\)\s*/,'').trim();

@@ -12,7 +12,7 @@ import HelpsTab from './HelpsTab';
 
 import styles from './styles';
 
-export const TranslationHelpsComponent = ({
+export const Component = ({
   classes,
   context,
   setContext,
@@ -84,7 +84,7 @@ export const TranslationHelpsComponent = ({
   );
 }
 
-TranslationHelpsComponent.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
@@ -94,4 +94,4 @@ TranslationHelpsComponent.propTypes = {
   handleChangeIndex: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(TranslationHelpsComponent);
+export default withStyles(styles, { withTheme: true })(Component);

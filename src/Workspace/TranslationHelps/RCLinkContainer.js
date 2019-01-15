@@ -10,11 +10,7 @@ import * as helpers from './helpers';
 
 class RCLinkContainer extends React.Component {
   state = {
-    context: {
-      languageId: null,
-      resourceId: null,
-      reference: null,
-    },
+    context: this.props.context,
     path: null,
     title: null,
     article: null,
@@ -22,7 +18,9 @@ class RCLinkContainer extends React.Component {
   };
 
   parseHref(href) {
+    const {username} = this.props.context;
     let _match, languageId, resourceId, path, reference, linkedResourceId;
+    if (_match && linkedResourceId) {/* not used, this bypasses linter warning */}
     const regexpLanguageIdResourcePath = /http:\/\/([\w-_]+)\/([\w-_]+)\/(.+)/;
     if (regexpLanguageIdResourcePath.test(href)) {
       const match = regexpLanguageIdResourcePath.exec(href);
@@ -35,6 +33,7 @@ class RCLinkContainer extends React.Component {
       if (regexpReference.test(path)) {
         const match = regexpReference.exec(path);
         const [_match, bookId, chapter, verse] = match;
+        if (_match) {/* not used, this bypasses linter warning */}
         if (bookId === 'obs') {
           resourceId = 'obs';
           reference = {chapter: parseInt(chapter), verse: parseInt(verse)};
@@ -46,6 +45,7 @@ class RCLinkContainer extends React.Component {
     }
     return {
       context: {
+        username,
         languageId,
         resourceId,
         reference,
@@ -67,6 +67,7 @@ class RCLinkContainer extends React.Component {
   componentDidMount() {
     const {
       context: {
+        username,
         languageId,
         resourceId,
       },
@@ -74,7 +75,7 @@ class RCLinkContainer extends React.Component {
       path,
     } = this.state;
     if (!title && languageId && resourceId && path) {
-      helpers.fetchTitle(languageId, resourceId, path)
+      helpers.fetchTitle(username, languageId, resourceId, path)
       .then(title => {
         this.setState({
           title: title,
@@ -86,6 +87,7 @@ class RCLinkContainer extends React.Component {
   handleOpen = () => {
     const {
       context: {
+        username,
         languageId,
         resourceId,
         reference,
@@ -99,7 +101,7 @@ class RCLinkContainer extends React.Component {
       context.reference = reference;
       this.props.setContext(context);
     } else {
-      helpers.fetchArticle(languageId, resourceId, path)
+      helpers.fetchArticle(username, languageId, resourceId, path)
       .then(article => {
         const tab = {
           title: title || path,

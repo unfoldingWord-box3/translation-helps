@@ -5,10 +5,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Typography,
 } from '@material-ui/core';
 import {
-  Bookmark,
   BookmarkBorder,
 } from '@material-ui/icons';
 

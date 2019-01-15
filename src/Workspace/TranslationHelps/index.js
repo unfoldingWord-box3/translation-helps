@@ -1,2 +1,2 @@
-import TranslationHelpsContainer from './TranslationHelpsContainer';
-export default TranslationHelpsContainer;
+import Container from './Container';
+export default Container;

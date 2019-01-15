@@ -5,7 +5,7 @@ import {each} from 'async';
 // Scope: limited to resource files and parsing
 // Notes: pass in manifests don't fetch them
 
-import * as ApplicationHelpers from '../../ApplicationHelpers';
+import * as ApplicationHelpers from '../../helpers';
 
 export const fetchResources = (props) => new Promise((resolve, reject) => {
   const {context: {username, languageId, reference}, manifests} = props;

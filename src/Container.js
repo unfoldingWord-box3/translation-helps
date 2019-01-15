@@ -1,22 +1,16 @@
 import React from 'react';
 import localstorage from 'local-storage'
 
-import Application from './Application';
-import './Application.css';
+import Component from './Component';
 
-import * as ApplicationHelpers from './ApplicationHelpers';
+import * as helpers from './helpers';
 
 const keyPrefix = 'ApplicationContainer.state.';
 
-class ApplicationContainer extends React.Component {
+class Container extends React.Component {
   state = {
     manifests: {},
-    context: {
-      username: 'unfoldingWord',
-      languageId: 'en',
-      resourceId: null,
-      reference: {},
-    },
+    context: this.defaultContext(),
     history: [],
   };
 
@@ -95,7 +89,7 @@ class ApplicationContainer extends React.Component {
         languageId
       },
     } = this.state;
-    ApplicationHelpers.fetchResourceManifests(username, languageId)
+    helpers.fetchResourceManifests(username, languageId)
     .then(manifests => {
       this.setState({
         manifests,
@@ -106,7 +100,7 @@ class ApplicationContainer extends React.Component {
   render() {
     const {context, history, manifests} = this.state;
     return (
-      <Application
+      <Component
         context={context}
         history={history}
         setContext={this.setContext.bind(this)}
@@ -116,4 +110,4 @@ class ApplicationContainer extends React.Component {
   };
 };
 
-export default ApplicationContainer;
+export default Container;
