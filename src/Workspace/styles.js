@@ -19,9 +19,7 @@ export const styles = theme => ({
     width: '100%'
   },
   expansionPanelDetails: {
-    paddingLeft: 0,
-    paddingRight: 0,
-    paddingBottom: 0,
+    padding: 0,
   },
   expansionPanelActions: {
     padding: 0,
