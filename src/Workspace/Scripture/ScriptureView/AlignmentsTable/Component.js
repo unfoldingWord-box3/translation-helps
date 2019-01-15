@@ -113,7 +113,7 @@ export const AlignmentsTable = ({
 };
 
 AlignmentsTable.propTypes = {
-  lemmaIndex: PropTypes.array.isRequired,
+  lemmaIndex: PropTypes.object.isRequired,
 };
 
 export default AlignmentsTable;
