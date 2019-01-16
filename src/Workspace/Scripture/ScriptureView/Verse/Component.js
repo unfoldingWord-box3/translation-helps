@@ -140,7 +140,7 @@ VerseComponent.propTypes = {
   verseKey: PropTypes.string.isRequired,
   lemmaIndex: PropTypes.object,
   ultVerseData: PropTypes.object.isRequired,
-  ustVerseData: PropTypes.object.isRequired,
+  ustVerseData: PropTypes.object,
   translationNotesVerseData: PropTypes.array,
   originalVerseData: PropTypes.object,
 };

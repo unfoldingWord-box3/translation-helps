@@ -18,6 +18,9 @@ export const Component = ({
     case 'text':
       component = <Text verseObject={verseObject} />;
       break;
+    case 'quote':
+      component = <blockquote><Text verseObject={verseObject} /></blockquote>;
+      break;
     case 'milestone':
       component = (
         <Milestone
@@ -38,12 +41,27 @@ export const Component = ({
         component = <Word verseObject={verseObject} />;
       }
       break;
+    case 'section':
+      component = <span/>;
+      break;
+    case 'paragraph':
+      component = <span/>;
+      break;
+    case 'footnote':
+      component = <sup>*</sup>;
+      break;
     default:
-      component = <div />;
+      debugger
+      component = <span>...</span>;
       break;
   };
 
-  return component;
+  return (
+    <span data-verseObject={JSON.stringify(verseObject)}>
+      {component}
+      {verseObject.nextChar}
+    </span>
+  );
 };
 
 Component.propTypes = {
