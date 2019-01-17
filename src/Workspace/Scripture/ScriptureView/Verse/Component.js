@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Divider,
+  Typography,
 } from '@material-ui/core';
 import {
 } from '@material-ui/icons';
@@ -32,7 +33,6 @@ export const VerseComponent = ({
     reference,
   },
 }) => {
-  let tabs = [];
 
   const ultVerse =
   ultVerseData.verseObjects ?
@@ -45,6 +45,8 @@ export const VerseComponent = ({
     );
   }) : <span />;
 
+  let tabs = [];
+
   let ustVerseComponent = <span />;
   if (ustVerseData && ustVerseData.verseObjects) {
     const ustVerse = ustVerseData.verseObjects.map((verseObject, index) => {
@@ -56,7 +58,7 @@ export const VerseComponent = ({
       );
     });
     ustVerseComponent = (
-      <div className={classes.originalVerse}>
+      <div className={classes.tabVerse}>
         <sup>{verseKey} </sup>
         {ustVerse}
       </div>
@@ -75,7 +77,7 @@ export const VerseComponent = ({
     });
     const testament = chaptersAndVerses.testament(reference.bookId);
     originalVerseComponent = (
-      <div className={classes.originalVerse} style={{direction: (testament === 'old') ? 'rtl' : 'ltr'}}>
+      <div className={classes.tabVerse} style={{direction: (testament === 'old') ? 'rtl' : 'ltr'}}>
         <sup>{verseKey} </sup>
         {originalVerse}
       </div>
@@ -98,12 +100,41 @@ export const VerseComponent = ({
     tabs.push(notesTab)
   };
 
-  const details = (
+  const titleComponentNT = (
+    <Typography variant="caption" align="right" gutterBottom>
+      <strong>UGNT</strong> (unfoldingWord Greek New Testament)
+    </Typography>
+  );
+  const titleComponentOT = (
+    <Typography variant="caption" align="right" gutterBottom>
+      <strong>UHB</strong> (unfoldingWord Hebrew Bible)
+    </Typography>
+  );
+  const titleComponentOriginal = chaptersAndVerses.testament(reference.bookId) === 'old' ? titleComponentOT : titleComponentNT;
+
+  const scriptureComponent = (
     <div>
+      {ustVerseComponent}
+      <Typography variant="caption" align="right" gutterBottom>
+        <strong>UST</strong> (unfoldingWord Simplified Text)
+      </Typography>
       <Divider variant="middle" />
       {originalVerseComponent}
-      <Divider variant="middle" />
-      {ustVerseComponent}
+      {titleComponentOriginal}
+    </div>
+  );
+
+  const scriptureTab = {
+    title: 'Reference',
+    content: scriptureComponent,
+  }
+  tabs.unshift(scriptureTab);
+
+  const details = (
+    <div>
+      <Typography variant="caption" align="right" style={{padding: '0 24px 12px 0'}} gutterBottom>
+        <strong>ULT</strong> (unfoldingWord Literal Text)
+      </Typography>
       {
         (tabs.length > 0) ?
         <TranslationHelps
