@@ -13,7 +13,7 @@ export const Title = ({
   },
 }) => (
   <Typography variant="caption" align="right" gutterBottom>
-    <strong>{identifier.toUpperCase()}</strong> {title}
+    <strong>{identifier.toUpperCase()}</strong> ({title})
   </Typography>
 );
 
