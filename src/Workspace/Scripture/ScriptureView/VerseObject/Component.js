@@ -19,7 +19,7 @@ export const Component = ({
       component = <Text verseObject={verseObject} />;
       break;
     case 'quote':
-      component = <blockquote><Text verseObject={verseObject} /></blockquote>;
+      component = <Text verseObject={verseObject} />;
       break;
     case 'milestone':
       component = (
