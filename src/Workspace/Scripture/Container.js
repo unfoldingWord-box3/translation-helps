@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Scripture from './Scripture';
+import Component from './Component';
 
 import * as helpers from './helpers';
 import * as AlignmentHelpers from './Alignment/helpers';
 
-class ScriptureContainer extends React.Component {
+class Container extends React.Component {
   state = {
     lemmaIndex: null,
     referenceLoaded: null,
@@ -28,7 +28,7 @@ class ScriptureContainer extends React.Component {
     if (canFetch && needToFetch) {
       helpers.fetchResources(nextProps)
       .then(resources => {
-        const lemmaIndex = AlignmentHelpers.index(resources.ult);
+        const lemmaIndex = AlignmentHelpers.index(resources.ult.data);
         this.setState({
           lemmaIndex,
           resources,
@@ -62,7 +62,7 @@ class ScriptureContainer extends React.Component {
     const props = this.props;
     const {lemmaIndex, resources, referenceLoaded} = this.state;
     return (
-      <Scripture
+      <Component
         {...props}
         lemmaIndex={lemmaIndex}
         referenceLoaded={referenceLoaded}
@@ -72,10 +72,10 @@ class ScriptureContainer extends React.Component {
   };
 };
 
-ScriptureContainer.propTypes = {
+Container.propTypes = {
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
   manifests: PropTypes.object.isRequired,
 };
 
-export default ScriptureContainer;
+export default Container;

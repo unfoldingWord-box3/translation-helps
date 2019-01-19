@@ -59,15 +59,21 @@ export const BookComponent = ({
     );
     tabs.push({ title: "Search Words", content });
   }
-
+  const _resources = {
+    ult,
+    ust,
+    original,
+    tn: {
+      manifest: tn.manifest,
+      data: tnObject,
+    },
+  };
   const chapterComponent = (
     <ChapterComponent
       context={context}
       setContext={setContext}
       lemmaIndex={lemmaIndex}
-      ultChapterData={ult[chapter]}
-      ustChapterData={ust[chapter]}
-      originalChapterData={original[chapter]}
+      resources={_resources}
       translationNotesChapterData={tnObject[chapter]}
     />
   );

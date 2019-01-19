@@ -17,18 +17,21 @@ export const ChapterComponent = ({
   context,
   context: {
     reference,
+    reference: {
+      chapter,
+    }
   },
   setContext,
   lemmaIndex,
-  ultChapterData,
-  ustChapterData,
-  originalChapterData,
-  translationNotesChapterData,
+  resources,
+  resources: {
+    ult,
+    tn,
+  }
 }) => {
-  const verses = Object.keys(ultChapterData)
+  const verses = Object.keys(ult.data[chapter])
   .filter(verseKey => {
-    const text = ultChapterData[verseKey].verseObjects.map(o => o.text).join('');
-    return /\S+/g.test(text);
+    return /\d+/g.test(verseKey); // don't show front/intro
   })
   .map(verseKey =>
     <Verse
@@ -37,14 +40,11 @@ export const ChapterComponent = ({
       setContext={setContext}
       lemmaIndex={lemmaIndex}
       verseKey={verseKey}
-      ultVerseData={ultChapterData[verseKey]}
-      ustVerseData={ustChapterData[verseKey]}
-      originalVerseData={originalChapterData ? originalChapterData[verseKey] : null}
-      translationNotesVerseData={translationNotesChapterData[verseKey]}
+      resources={resources}
     />
   );
-  const intro = (translationNotesChapterData['intro'] && translationNotesChapterData['intro'][0]) ?
-    translationNotesChapterData['intro'][0]['occurrence_note']
+  const intro = (tn.data[chapter]['intro'] && tn.data[chapter]['intro'][0]) ?
+    tn.data[chapter]['intro'][0]['occurrence_note']
     .replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '')
     : '';
   const tabs = [{
@@ -74,10 +74,7 @@ ChapterComponent.propTypes = {
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
   lemmaIndex: PropTypes.object,
-  ultChapterData: PropTypes.object.isRequired,
-  ustChapterData: PropTypes.object.isRequired,
-  translationNotesChapterData: PropTypes.object,
-  originalChapterData: PropTypes.object,
+  resources: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ChapterComponent);

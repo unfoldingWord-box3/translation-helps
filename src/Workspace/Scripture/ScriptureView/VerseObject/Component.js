@@ -57,7 +57,7 @@ export const Component = ({
   };
 
   return (
-    <span data-verseObject={JSON.stringify(verseObject)}>
+    <span data-verse-object={JSON.stringify(verseObject)}>
       {component}
       {verseObject.nextChar}
     </span>

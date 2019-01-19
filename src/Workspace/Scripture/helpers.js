@@ -18,18 +18,27 @@ export const fetchResources = (props) => new Promise((resolve, reject) => {
   const resourceIds = ['ult', 'ust', 'tn', 'original'];
   each(resourceIds,
     (resourceId, done) => {
+      let manifest;
       switch (resourceId) {
         case 'ult':
-          fetchBook(username, languageId, resourceId, reference.bookId, manifests.ult)
+          manifest = manifests[resourceId];
+          fetchBook(username, languageId, resourceId, reference.bookId, manifest)
           .then(data => {
-            resources[resourceId] = data.chapters;
+            resources[resourceId] = {
+              manifest,
+              data: data.chapters
+            };
             done();
           });
           break;
         case 'ust':
-          fetchBook(username, languageId, resourceId, reference.bookId, manifests.ust)
+          manifest = manifests[resourceId];
+          fetchBook(username, languageId, resourceId, reference.bookId, manifest)
           .then(data => {
-            resources[resourceId] = data.chapters;
+            resources[resourceId] = {
+              manifest,
+              data: data.chapters
+            };
             done();
           });
           break;
@@ -41,9 +50,14 @@ export const fetchResources = (props) => new Promise((resolve, reject) => {
           });
           break;
         case 'original':
+          const testament = whichTestament(reference.bookId, manifests.uhb, manifests.ugnt)
+          manifest = (testament === 'old') ? manifests.uhb : manifests.ugnt;
           fetchOriginalBook(username, languageId, reference.bookId, manifests.uhb, manifests.ugnt)
           .then(data => {
-            resources[resourceId] = data.chapters;
+            resources[resourceId] = {
+              manifest,
+              data: data.chapters
+            };
             done();
           });
           break;
