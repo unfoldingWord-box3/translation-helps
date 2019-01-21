@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import {
 } from '@material-ui/core';
 
-import ExpansionPanelComponent from './ExpansionPanelComponent';
+import Component from './Component';
 
-class ExpansionContainer extends React.Component {
+class Container extends React.Component {
   state = {
     id: Math.random(),
     open: false,
@@ -35,7 +35,7 @@ class ExpansionContainer extends React.Component {
     const {props} = this;
     const {open, id} = this.state;
     return (
-      <ExpansionPanelComponent
+      <Component
         {...props}
         id={id}
         open={open}
@@ -46,9 +46,9 @@ class ExpansionContainer extends React.Component {
   }
 }
 
-ExpansionContainer.propTypes = {
+Container.propTypes = {
   summary: PropTypes.object.isRequired,
   details: PropTypes.object,
 };
 
-export default ExpansionContainer;
+export default Container;

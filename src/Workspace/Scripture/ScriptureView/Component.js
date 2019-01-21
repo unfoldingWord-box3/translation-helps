@@ -2,22 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import { withStyles } from '@material-ui/core/styles';
-import {
-} from '@material-ui/core';
-import {
-} from '@material-ui/icons';
 
 import styles from '../../styles';
 
-import ExpansionPanelContainer from './ExpansionPanelContainer';
-import ChapterComponent from './ChapterComponent';
+import ExpansionPanel from './ExpansionPanel';
+import Chapter from './Chapter';
 import TranslationHelps from '../../TranslationHelps';
 import AlignmentsTable from './AlignmentsTable';
 import TranslationNotesTable from './TranslationNotesTable';
 
 import * as helpers from '../helpers';
 
-export const BookComponent = ({
+export const Component = ({
   classes,
   context,
   setContext,
@@ -69,7 +65,7 @@ export const BookComponent = ({
     },
   };
   const chapterComponent = (
-    <ChapterComponent
+    <Chapter
       context={context}
       setContext={setContext}
       lemmaIndex={lemmaIndex}
@@ -79,7 +75,7 @@ export const BookComponent = ({
   );
   return (
     <div className={classes.root}>
-      <ExpansionPanelContainer
+      <ExpansionPanel
         key={''+context.reference.bookId+'intro'}
         summary={
           <ReactMarkdown
@@ -100,7 +96,7 @@ export const BookComponent = ({
   );
 };
 
-BookComponent.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   resources: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
@@ -108,4 +104,4 @@ BookComponent.propTypes = {
   lemmaIndex: PropTypes.object,
 };
 
-export default withStyles(styles)(BookComponent);
+export default withStyles(styles)(Component);

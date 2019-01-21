@@ -4,8 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   CircularProgress,
 } from '@material-ui/core';
-import {
-} from '@material-ui/icons';
 
 import StorySelection from './StorySelection';
 import OpenBibleStoriesView from './OpenBibleStoriesView';

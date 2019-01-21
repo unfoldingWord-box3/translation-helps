@@ -1,2 +1,2 @@
-import BookComponent from './BookComponent';
-export default BookComponent;
+import Component from './Component';
+export default Component;

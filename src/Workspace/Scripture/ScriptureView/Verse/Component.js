@@ -7,7 +7,7 @@ import {
 
 import styles from '../../../styles';
 
-import ExpansionPanelContainer from '../ExpansionPanelContainer';
+import ExpansionPanel from '../ExpansionPanel';
 import TranslationHelps from '../../../TranslationHelps';
 import Reference from './Reference';
 import Title from './Title';
@@ -96,7 +96,7 @@ export const VerseComponent = ({
   const id = `${bookId}_${chapter}_${verseKey}`;
 
   return (
-    <ExpansionPanelContainer
+    <ExpansionPanel
       summary={
         <div>
           <span id={id} style={{position: 'absolute', top: '-5em'}}></span>

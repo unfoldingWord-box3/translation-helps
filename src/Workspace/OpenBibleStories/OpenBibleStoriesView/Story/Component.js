@@ -3,10 +3,6 @@ import PropTypes from 'prop-types';
 import remark from 'remark';
 import remark2react from 'remark-react';
 import { withStyles } from '@material-ui/core/styles';
-import {
-} from '@material-ui/core';
-import {
-} from '@material-ui/icons';
 
 import styles from '../../../styles';
 import Card from '../Card';

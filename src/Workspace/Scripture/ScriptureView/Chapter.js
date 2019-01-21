@@ -1,18 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {
-} from '@material-ui/core';
-import {
-} from '@material-ui/icons';
 
 import styles from '../../styles';
 
 import TranslationHelps from '../../TranslationHelps';
-import ExpansionPanelContainer from './ExpansionPanelContainer';
+import ExpansionPanel from './ExpansionPanel';
 import Verse from './Verse';
 
-export const ChapterComponent = ({
+export const Chapter = ({
   classes,
   context,
   context: {
@@ -52,7 +48,7 @@ export const ChapterComponent = ({
     text: intro,
   }];
   const introPanel = (
-    <ExpansionPanelContainer
+    <ExpansionPanel
       key={'chapter'+reference.chapter}
       summary={<h2>Chapter {reference.chapter}</h2>}
       details={
@@ -69,7 +65,7 @@ export const ChapterComponent = ({
   return panels;
 };
 
-ChapterComponent.propTypes = {
+Chapter.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
@@ -77,4 +73,4 @@ ChapterComponent.propTypes = {
   resources: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ChapterComponent);
+export default withStyles(styles)(Chapter);

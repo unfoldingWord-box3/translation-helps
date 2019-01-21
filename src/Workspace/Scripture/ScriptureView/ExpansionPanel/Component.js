@@ -13,9 +13,9 @@ import {
   ExpandLess,
 } from '@material-ui/icons';
 
-import styles from '../../styles';
+import styles from '../../../styles';
 
-export const ExpansionPanelComponent = ({
+export const Component = ({
   classes,
   summary,
   details,
@@ -52,7 +52,7 @@ export const ExpansionPanelComponent = ({
   );
 };
 
-ExpansionPanelComponent.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   summary: PropTypes.object.isRequired,
   details: PropTypes.object,
@@ -62,4 +62,4 @@ ExpansionPanelComponent.propTypes = {
   handleClose: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(ExpansionPanelComponent);
+export default withStyles(styles)(Component);
