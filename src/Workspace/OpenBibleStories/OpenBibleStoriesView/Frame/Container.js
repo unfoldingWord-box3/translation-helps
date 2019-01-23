@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Component from './Component';
 
-import * as translationHelps from '../../translationHelps/helpers';
+import * as thHelpers from '../../translationHelps/helpers';
 
 class FrameContainer extends React.Component {
   state = {
@@ -36,7 +36,7 @@ class FrameContainer extends React.Component {
         reference,
       },
     } = this.props;
-    translationHelps.fetchHelps(username, languageId, storyKey, frameKey)
+    thHelpers.fetchHelps({username, languageId, storyKey, frameKey})
     .then(helps => {
       this.setState({helps});
     });

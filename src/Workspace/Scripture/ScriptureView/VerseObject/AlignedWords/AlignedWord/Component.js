@@ -4,8 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   Typography,
 } from '@material-ui/core';
-import {
-} from '@material-ui/icons';
 
 export const Component = ({
   classes,

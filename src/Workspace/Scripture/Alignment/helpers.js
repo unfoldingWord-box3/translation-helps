@@ -1,16 +1,16 @@
 
-export const index = (chapters) => {
+export const index = ({data}) => {
   console.time('indexing');
   let lemmaIndex = {};
-  const chapterKeys = Object.keys(chapters);
+  const chapterKeys = Object.keys(data);
   chapterKeys.forEach(chapterKey => {
-    const chapter = chapters[chapterKey];
+    const chapter = data[chapterKey];
     const verseKeys = Object.keys(chapter);
     verseKeys.forEach(verseKey => {
       const verse = chapter[verseKey];
       const {verseObjects} = verse;
       verseObjects.forEach(verseObject => {
-        const originalWords = getWords(verseObject);
+        const originalWords = getWords({verseObject});
         originalWords.forEach(originalWord => {
           const {lemma, strong} = originalWord;
           const entry = {
@@ -28,14 +28,14 @@ export const index = (chapters) => {
   return lemmaIndex;
 };
 
-export const getWords = (verseObject, originalWords=[]) => {
+export const getWords = ({verseObject, originalWords=[]}) => {
   if (verseObject.type === 'milestone') {
     let originalWord = JSON.parse(JSON.stringify(verseObject));
     delete originalWord.children;
     originalWords.push(originalWord);
     const {children} = verseObject;
     children.forEach(_verseObject => {
-      getWords(_verseObject, originalWords);
+      getWords({verseObject: _verseObject, originalWords});
     });
   }
   return originalWords;

@@ -58,8 +58,9 @@ export const VerseComponent = ({
   }
   tabs.push(scriptureTab);
 
-  if (original.data[chapter][verseKey] && original.data[chapter][verseKey].verseObjects) {
-    const wordObjects = originalHelpers.taggedWords(original.data[chapter][verseKey].verseObjects);
+  if (original.data[chapter][verseKey]) {
+    const {verseObjects} = original.data[chapter][verseKey];
+    const wordObjects = originalHelpers.taggedWords(verseObjects);
     if (wordObjects.length > 0) {
       const wordsTab = {
         title: 'Words',

@@ -1,2 +1,2 @@
-import ChaptersComponent from './ChaptersComponent'
-export default ChaptersComponent
+import Component from './Component';
+export default Component;

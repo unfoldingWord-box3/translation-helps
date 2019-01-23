@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Component from './Component';
 
-import * as translationHelps from '../../translationHelps/helpers';
+import * as thHelpers from '../../translationHelps/helpers';
 
 class FrameContainer extends React.Component {
   state = {
@@ -27,17 +27,16 @@ class FrameContainer extends React.Component {
     }
   };
 
-  fetchStudyQuestions(props) {
-    const {
-      storyKey,
-      context: {
-        username,
-        languageId,
-      },
-    } = props;
-    translationHelps.fetchStudyQuestions(username, languageId, 0)
+  fetchStudyQuestions({
+    storyKey,
+    context: {
+      username,
+      languageId,
+    },
+  }) {
+    thHelpers.fetchStudyQuestions({username, languageId, storyKey: 0})
     .then(guide => {
-      translationHelps.fetchStudyQuestions(username, languageId, storyKey)
+      thHelpers.fetchStudyQuestions({username, languageId, storyKey})
       .then(studyQuestions => {
         const helps = { studyQuestions: studyQuestions };
         this.setState({

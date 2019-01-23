@@ -6,9 +6,9 @@ import {
   List,
 } from '@material-ui/core';
 
-import TestamentContainer from './TestamentContainer';
+import Testament from './Testament';
 
-export const BibleComponent = ({classes, manifests, context, setContext}) => {
+export const Component = ({classes, manifests, context, setContext}) => {
   let bible = {};
   const {ult} = manifests;
   if (ult) {
@@ -28,7 +28,7 @@ export const BibleComponent = ({classes, manifests, context, setContext}) => {
         <div className={classes.bibleList}>
           {
             Object.keys(bible).map(testamentId =>
-              <TestamentContainer
+              <Testament
                 key={testamentId}
                 testamentId={testamentId}
                 books={bible[testamentId]}
@@ -43,7 +43,7 @@ export const BibleComponent = ({classes, manifests, context, setContext}) => {
     )
 }
 
-BibleComponent.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   manifests: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
@@ -63,4 +63,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(BibleComponent);
+export default withStyles(styles)(Component);

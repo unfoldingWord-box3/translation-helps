@@ -1,2 +1,2 @@
-import BibleComponent from './BibleComponent'
-export default BibleComponent
+import Component from './Component';
+export default Component;

@@ -8,23 +8,26 @@ import {
 
 import * as ScriptureHelpers from '../Workspace/Scripture/helpers';
 
-const ApplicationBar = ({
+const Component = ({
   classes,
   applicationName,
   manifests,
   context: {
     resourceId,
-    reference
+    reference,
   },
 }) => {
 
   let bookName = '';
-
-  if (manifests && manifests[resourceId] && manifests[resourceId].projects && reference && reference.bookId) {
-    const project = ScriptureHelpers.projectByBookId(manifests[resourceId].projects, reference.bookId);
-    bookName = project.title;
+  let chapter = '';
+  if (manifests[resourceId] && reference) {
+    const { bookId } = reference;
+    chapter = reference.chapter;
+    const {projects} = manifests[resourceId];
+    const project = ScriptureHelpers.projectByBookId({projects, bookId});
+    bookName = project ? project.title : '';
   }
-  const referenceComponent = (bookName ? <span>&nbsp;&nbsp;{bookName} {reference.chapter}</span> : <span />);
+  const referenceComponent = (bookName ? <span>&nbsp;&nbsp;{bookName} {chapter}</span> : <span />);
 
   return (
     <Headroom>
@@ -40,7 +43,7 @@ const ApplicationBar = ({
   );
 }
 
-ApplicationBar.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   manifests: PropTypes.object.isRequired,
@@ -68,4 +71,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles, { withTheme: true })(ApplicationBar);
+export default withStyles(styles, { withTheme: true })(Component);

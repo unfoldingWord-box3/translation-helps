@@ -12,7 +12,7 @@ import {
 
 import * as ScriptureHelpers from '../Scripture/helpers';
 
-const Context = ({
+const Component = ({
   classes,
   manifest,
   manifest: {
@@ -37,8 +37,9 @@ const Context = ({
   setContext,
 }) => {
   let bookName = '';
-  if (manifest && manifest.projects && reference && reference.bookId) {
-    const project = ScriptureHelpers.projectByBookId(manifest.projects, reference.bookId);
+  if (manifest && reference && bookId) {
+    const {projects} = manifest;
+    const project = ScriptureHelpers.projectByBookId({projects, bookId});
     bookName = project.title;
   }
   return (
@@ -65,7 +66,7 @@ const Context = ({
   );
 }
 
-Context.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   manifest: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
@@ -83,4 +84,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(Context);
+export default withStyles(styles)(Component);

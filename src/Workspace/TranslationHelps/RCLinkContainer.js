@@ -5,6 +5,9 @@ import {
   Chip,
   Typography,
 } from '@material-ui/core';
+import {
+  Subject,
+} from '@material-ui/icons';
 
 import * as helpers from './helpers';
 
@@ -17,7 +20,7 @@ class RCLinkContainer extends React.Component {
     open: null,
   };
 
-  parseHref(href) {
+  parseHref({href}) {
     const {username} = this.props.context;
     let _match, languageId, resourceId, path, reference, linkedResourceId;
     if (_match && linkedResourceId) {/* not used, this bypasses linter warning */}
@@ -56,7 +59,7 @@ class RCLinkContainer extends React.Component {
 
   componentWillMount() {
     const {href, children} = this.props;
-    let state = this.parseHref(href);
+    let state = this.parseHref({href});
     const text = children[0];
     if (text !== href) {
       state.title = text;
@@ -75,7 +78,7 @@ class RCLinkContainer extends React.Component {
       path,
     } = this.state;
     if (!title && languageId && resourceId && path) {
-      helpers.fetchTitle(username, languageId, resourceId, path)
+      helpers.fetchTitle({username, languageId, resourceId, path})
       .then(title => {
         this.setState({
           title: title,
@@ -101,7 +104,7 @@ class RCLinkContainer extends React.Component {
       context.reference = reference;
       this.props.setContext(context);
     } else {
-      helpers.fetchArticle(username, languageId, resourceId, path)
+      helpers.fetchArticle({username, languageId, resourceId, path})
       .then(article => {
         const tab = {
           title: title || path,
@@ -131,6 +134,9 @@ class RCLinkContainer extends React.Component {
         className={classes.chip}
         classes={{label: classes.label}}
         onClick={this.handleOpen}
+        variant='outlined'
+        icon={<Subject />}
+        color='primary'
         clickable
       />
     );

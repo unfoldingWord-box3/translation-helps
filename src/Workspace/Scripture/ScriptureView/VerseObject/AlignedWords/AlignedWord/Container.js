@@ -11,11 +11,12 @@ class Container extends React.Component {
   };
 
   componentDidMount() {
-    helpers.senses(this.props.verseObject.strong)
+    const {strong} = this.props.verseObject;
+    helpers.senses({strong})
     .then(senses => {
       if (!this.unmounted) {
         this.setState({
-          senses: senses,
+          senses,
         });
       }
     }).catch(error => {

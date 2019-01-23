@@ -1,13 +1,15 @@
-const resources = languageId => ({
+const resources = ({languageId}) => ({
   scripture: {
     primary: {
-      text: languageId + '_ult',
+      text: languageId + '_irv',
       notes: languageId + '-tn',
       words: languageId + '-tw',
     },
-    secondary: {
-      text: languageId + '_ust',
-    },
+    secondary: [
+      {
+        text: languageId + '_ust',
+      }
+    ],
     oldTestamentOriginal: {
       text: 'UHB',
       lexicon: languageId + '_uhal',

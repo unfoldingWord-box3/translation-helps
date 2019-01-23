@@ -1,11 +1,11 @@
-import path from 'path';
+import Path from 'path';
 import * as ApplicationHelpers from '../../../../../../helpers';
 
 const username = 'unfoldingword';
 const languageId = 'en'
-const repositories = ApplicationHelpers.resourceRepositories(languageId);
+const repositories = ApplicationHelpers.resourceRepositories({languageId});
 
-export const parseSenses = (lexiconMarkdown) => {
+export const parseSenses = ({lexiconMarkdown}) => {
   let senses = [];
   const sensesSection = lexiconMarkdown.split(/##\s*Senses/)[1];
   const senseSections = sensesSection.split(/###\s*Sense/).splice(1);
@@ -22,29 +22,33 @@ export const parseSenses = (lexiconMarkdown) => {
     };
     senses.push(sense);
   });
-  const uniqueSenses = unique(senses);
+  const uniqueSenses = unique({array: senses});
   return uniqueSenses;
 };
 
-export const senses = (strong) => new Promise((resolve, reject) => {
-  let repository, filepath;
+export const senses = ({strong}) => new Promise((resolve, reject) => {
+  let repository, path;
   if (/H\d+/.test(strong)) {
     repository = repositories.uhal;
     const _strong = strong.match(/H\d+/)[0];
-    filepath = path.join('content', _strong + '.md');
+    path = Path.join('content', _strong + '.md');
   }
   if (/G\d+/.test(strong)) {
     repository = repositories.ugl;
-    filepath = path.join('content', strong, '01.md');
+    path = Path.join('content', strong, '01.md');
   }
-  ApplicationHelpers.fetchFileFromServer(username, repository, filepath)
-  .then(markdown => {
-    const senses = parseSenses(markdown);
-    resolve(senses);
-  }).catch(reject);
+  if (repository && path) {
+    ApplicationHelpers.fetchFileFromServer({username, repository, path})
+    .then(lexiconMarkdown => {
+      const senses = parseSenses({lexiconMarkdown});
+      resolve(senses);
+    }).catch(reject);
+  } else {
+    reject(`Could not find sense info for: ${strong}`)
+  }
 });
 
-export const unique = (array, response=[]) => {
+export const unique = ({array, response=[]}) => {
   let _array = array;
   array.forEach(object => {
     _array = _array.filter(_object =>

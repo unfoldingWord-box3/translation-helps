@@ -13,7 +13,7 @@ import {
 
 import * as chaptersAndVerses from '../../../chaptersAndVerses';
 
-export const BookComponent = ({
+export const Component = ({
   classes,
   bookMetadata,
   context,
@@ -23,7 +23,7 @@ export const BookComponent = ({
   },
 }) => {
   const bookId = bookMetadata.identifier;
-  const chapterCount = chaptersAndVerses.chaptersInBook(bookId).length;
+  const chapterCount = chaptersAndVerses.chaptersInBook({bookId}).length;
   return (
     <ListItem
       button
@@ -56,7 +56,7 @@ export const BookComponent = ({
   );
 }
 
-BookComponent.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   bookMetadata: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
@@ -74,4 +74,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles, { withTheme: true })(BookComponent);
+export default withStyles(styles, { withTheme: true })(Component);

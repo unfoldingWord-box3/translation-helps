@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TestamentComponent from './TestamentComponent';
+import Component from './Component';
 
-class TestamentContainer extends React.Component {
+class Container extends React.Component {
   state = {
     open: false,
   };
@@ -18,7 +18,7 @@ class TestamentContainer extends React.Component {
     const props = this.props;
     const {open} = this.state;
     return (
-      <TestamentComponent
+      <Component
         {...props}
         open={open}
         toggle={this.toggle.bind(this)}
@@ -27,11 +27,11 @@ class TestamentContainer extends React.Component {
   };
 };
 
-TestamentContainer.propTypes = {
+Container.propTypes = {
   testamentId: PropTypes.string.isRequired,
   books: PropTypes.array.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
 }
 
-export default TestamentContainer;
+export default Container;

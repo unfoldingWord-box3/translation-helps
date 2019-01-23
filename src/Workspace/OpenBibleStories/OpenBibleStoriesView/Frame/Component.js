@@ -53,7 +53,7 @@ export const Frame = ({
 
   let youtubeId;
   if (parseInt(frameKey) === 0) {
-    youtubeId = helpers.youtubeId(storyKey);
+    youtubeId = helpers.youtubeId({storyKey});
   }
 
   return (

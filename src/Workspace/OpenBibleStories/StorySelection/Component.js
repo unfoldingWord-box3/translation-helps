@@ -6,26 +6,29 @@ import {
   List,
 } from '@material-ui/core';
 
-import Context from './Context';
+import Story from './Story';
 
-export const Resources = ({
+export const Component = ({
   classes,
+  stories,
+  context,
   setContext,
-  manifests,
-  contexts,
+  context: {
+    reference,
+  },
 }) => {
-  let contextComponents = [];
-  if (contexts) {
-    contextComponents = contexts
-    .map((context, index) => (
-      <Context
-      key={index + JSON.stringify(context)}
+  const components = Object.keys(stories).map(_storyKey => {
+    const storyKey = parseInt(_storyKey);
+    const frames = stories[storyKey];
+    return (<Story
+      key={storyKey}
       context={context}
       setContext={setContext}
-      manifest={manifests[context.resourceId]}
-      />
-    ));
-  }
+      storyKey={storyKey}
+      frames={frames}
+    />);
+  });
+
   return (
     <Paper className={classes.root}>
       <List
@@ -34,17 +37,18 @@ export const Resources = ({
         dense
       >
         <div className={classes.list}>
-          {contextComponents}
+          {components}
         </div>
       </List>
     </Paper>
   );
 };
 
-Resources.propTypes = {
-  contexts: PropTypes.array.isRequired,
+Component.propTypes = {
+  classes: PropTypes.object.isRequired,
+  context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
-  manifests: PropTypes.object.isRequired,
+  stories: PropTypes.object.isRequired,
 };
 
 const styles = theme => ({
@@ -60,4 +64,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(Resources);
+export default withStyles(styles)(Component);

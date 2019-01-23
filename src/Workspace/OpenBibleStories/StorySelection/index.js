@@ -1,2 +1,2 @@
-import StoriesComponent from './StoriesComponent'
-export default StoriesComponent
+import Component from './Component';
+export default Component;

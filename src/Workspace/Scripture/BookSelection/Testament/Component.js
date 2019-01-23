@@ -13,9 +13,9 @@ import {
   BookmarksOutlined,
 } from '@material-ui/icons';
 
-import BookComponent from './BookComponent';
+import Book from '../Book';
 
-export const TestamentComponent = ({
+export const Component = ({
   classes,
   testamentId,
   books,
@@ -26,7 +26,7 @@ export const TestamentComponent = ({
 }) => {
   const bookComponents = books ?
     books.map((bookMetadata) =>
-      <BookComponent
+      <Book
         key={bookMetadata.identifier}
         bookMetadata={bookMetadata}
         context={context}
@@ -69,7 +69,7 @@ export const TestamentComponent = ({
   );
 }
 
-TestamentComponent.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   testamentId: PropTypes.string.isRequired,
   books: PropTypes.array.isRequired,
@@ -89,4 +89,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles, { withTheme: true })(TestamentComponent);
+export default withStyles(styles, { withTheme: true })(Component);

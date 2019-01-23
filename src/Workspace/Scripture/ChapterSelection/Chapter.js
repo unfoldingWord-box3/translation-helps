@@ -11,7 +11,7 @@ import {
   BookmarkBorder,
 } from '@material-ui/icons';
 
-export const ChapterComponent = ({
+export const Component = ({
   classes,
   chapter,
   verses,
@@ -51,7 +51,7 @@ export const ChapterComponent = ({
     />
   </ListItem>
 
-ChapterComponent.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
@@ -70,4 +70,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(ChapterComponent);
+export default withStyles(styles)(Component);

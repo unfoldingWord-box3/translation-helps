@@ -1,6 +1,5 @@
-import path from 'path';
+import Path from 'path';
 import YAML from 'yaml';
-import {each} from 'async';
 import localforage from 'localforage';
 import { setup } from 'axios-cache-adapter';
 
@@ -12,13 +11,13 @@ const store = localforage.createInstance({
 });
 const api = setup({
   baseURL: baseURL,
-  cache: {store, maxAge: 24 * 60 * 60 * 1000},
+  cache: {store, maxAge: 1 * 24 * 60 * 60 * 1000},
 });
 
 // Purpose: application wide
 // Scope: limited to resource manifests and information
 
-export const resourceRepositories = (languageId) => {
+export const resourceRepositories = ({languageId}) => {
   return {
     ult: languageId + '_ult',
     ust: languageId + '_ust',
@@ -37,45 +36,39 @@ export const resourceRepositories = (languageId) => {
   };
 };
 
-export const fetchResourceManifests = (username, languageId) => new Promise((resolve, reject) => {
+export async function fetchResourceManifests({username, languageId}) {
   let manifests = {};
-  const _resourceRepositories = resourceRepositories(languageId);
+  const _resourceRepositories = resourceRepositories({languageId});
   const resourceIds = Object.keys(_resourceRepositories);
-  each(
-    resourceIds,
-    (resourceId, done) => {
-      const repository = _resourceRepositories[resourceId];
-      fetchManifest(username, repository)
-      .then(manifest => {
-        manifests[resourceId] = manifest;
-        done();
-      }).catch(reject);
-    },
-    (error) => {
-      if (error) reject(error);
-      resolve(manifests);
-    }
-  );
-});
+  const resourceIdsPromises = resourceIds.map(resourceId => {
+    const repository = _resourceRepositories[resourceId];
+    return fetchManifest({username, repository})
+  });
+  const manifestArray = await Promise.all(resourceIdsPromises);
+  resourceIds.forEach((resourceId, index) => {
+    manifests[resourceId] = manifestArray[index];
+  });
+  return manifests;
+};
 
-export const fetchManifest = (username, repository) => new Promise((resolve, reject) => {
-  fetchFileFromServer(username, repository, 'manifest.yaml')
-  .then(yaml => {
-    const json = YAML.parseDocument(yaml).toJSON();
-    resolve(json);
-  }).catch(reject);
-});
+export async function fetchManifest({username, repository}) {
+  const yaml = await fetchFileFromServer({username, repository, path: 'manifest.yaml'});
+  const json = YAML.parseDocument(yaml).toJSON();
+  return json;
+};
 
 // https://git.door43.org/unfoldingword/en_ult/raw/branch/master/manifest.yaml
-export const fetchFileFromServer = (username, repository, filepath, branch='master') => new Promise((resolve, reject) => {
-  const uri = path.join(username, repository, 'raw/branch', branch, filepath);
-  get(uri).then(resolve).catch(reject);
-});
+export async function fetchFileFromServer({username, repository, path, branch='master'}) {
+  try {
+    const uri = Path.join(username, repository, 'raw/branch', branch, path);
+    const data = await get({uri});
+    return data
+  } catch {
+    debugger
+  }
+};
 
-export const get = (uri) => new Promise((resolve, reject) => {
-  api.get(uri).then(response => {
-    resolve(response.data);
-  }).catch(error => {
-    reject(error);
-  });
-});
+async function get({uri}) {
+  const {data} = await api.get(uri);
+  return data;
+};

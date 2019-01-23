@@ -89,7 +89,7 @@ class Container extends React.Component {
         languageId
       },
     } = this.state;
-    helpers.fetchResourceManifests(username, languageId)
+    helpers.fetchResourceManifests({username, languageId})
     .then(manifests => {
       this.setState({
         manifests,

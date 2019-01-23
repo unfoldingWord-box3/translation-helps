@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-const Resource = ({
+const Component = ({
   classes,
   manifest,
   manifest: {
@@ -66,7 +66,7 @@ const Resource = ({
   );
 }
 
-Resource.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   manifest: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
@@ -93,4 +93,4 @@ const styles = {
   },
 };
 
-export default withStyles(styles)(Resource);
+export default withStyles(styles)(Component);

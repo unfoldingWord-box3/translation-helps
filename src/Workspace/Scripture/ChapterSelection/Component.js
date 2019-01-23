@@ -6,22 +6,25 @@ import {
   List,
 } from '@material-ui/core';
 
-import ChapterComponent from './ChapterComponent';
+import Chapter from './Chapter';
 
 import * as chaptersAndVerses from '../../../chaptersAndVerses';
 
-export const ChaptersComponent = ({
+export const Component = ({
   classes,
   bookData,
   context,
   setContext,
   context: {
     reference,
+    reference: {
+      bookId,
+    },
   },
 }) => {
-  const chapters = chaptersAndVerses.chaptersInBook(reference.bookId)
+  const chapters = chaptersAndVerses.chaptersInBook({bookId})
   .map((verses, index) =>
-    <ChapterComponent
+    <Chapter
       key={index}
       chapter={index+1}
       verses={verses}
@@ -45,7 +48,7 @@ export const ChaptersComponent = ({
   );
 };
 
-ChaptersComponent.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
@@ -64,4 +67,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(ChaptersComponent);
+export default withStyles(styles)(Component);

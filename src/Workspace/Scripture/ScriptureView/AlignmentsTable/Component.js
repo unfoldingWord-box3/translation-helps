@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import MUIDataTable from "mui-datatables";
+import MUIDataTable from 'mui-datatables';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
 import * as helpers from './helpers';
@@ -76,7 +76,7 @@ export const AlignmentsTable = ({
           verse,
         },
       } = entry;
-      const {originalTexts, targetTexts} = helpers.textFromVerseObject(alignment);
+      const {originalTexts, targetTexts} = helpers.textFromVerseObject({verseObject: alignment});
       const original = originalTexts.join(' ');
       const target = targetTexts.join(' ');
       const reference = `${chapter}:${verse}`;

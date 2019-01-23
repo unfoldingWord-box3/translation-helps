@@ -1,2 +1,2 @@
-import Resources from './Resources';
-export default Resources;
+import Component from './Component';
+export default Component;

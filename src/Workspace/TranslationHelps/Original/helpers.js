@@ -1,5 +1,6 @@
 
-export const taggedWords = (verseObjects) => {
+export const taggedWords = ({verseObjects}) => {
+  if (!verseObjects) return [];
   const wordLinks = verseObjects
   .filter(verseObject => verseObject.tw)
   .map(verseObject => {

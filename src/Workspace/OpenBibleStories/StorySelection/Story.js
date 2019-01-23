@@ -11,7 +11,7 @@ import {
   BookmarkBorder,
 } from '@material-ui/icons';
 
-export const StoryComponent = ({
+export const Component = ({
   classes,
   storyKey,
   frames,
@@ -51,7 +51,7 @@ export const StoryComponent = ({
     />
   </ListItem>
 
-StoryComponent.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
@@ -70,4 +70,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(StoryComponent);
+export default withStyles(styles)(Component);

@@ -30,7 +30,7 @@ export const Component = ({
   },
   lemmaIndex,
 }) => {
-  let tnObject = helpers.pivotTranslationNotes(tn);
+  let tnObject = helpers.pivotTranslationNotes({tn: tn.data});
   let tabs = [];
 
   const intro = tnObject['front']['intro'][0]['occurrence_note'];
@@ -41,7 +41,7 @@ export const Component = ({
   if (tn) {
     const content = (
       <TranslationNotesTable
-        tn={tn}
+        tn={tn.data}
       />
     );
     tabs.push({ title: 'Search Notes', content });

@@ -1,2 +1,2 @@
-import Contexts from './Contexts';
-export default Contexts;
+import Component from './Component';
+export default Component;

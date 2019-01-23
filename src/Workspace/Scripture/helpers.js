@@ -1,5 +1,4 @@
 import usfmjs from 'usfm-js';
-import {each} from 'async';
 
 // Purpose: application wide
 // Scope: limited to resource files and parsing
@@ -7,98 +6,79 @@ import {each} from 'async';
 
 import * as ApplicationHelpers from '../../helpers';
 
-export const fetchResources = (props) => new Promise((resolve, reject) => {
-  const {context: {username, languageId, reference}, manifests} = props;
+export async function fetchResources({
+  context: {
+    username,
+    languageId,
+    reference: {
+      bookId,
+    },
+  },
+  manifests,
+}) {
   let resources = {
     ult: null,
     ust: null,
     tn: null,
     original: null,
   };
-  const resourceIds = ['ult', 'ust', 'tn', 'original'];
-  each(resourceIds,
-    (resourceId, done) => {
-      let manifest;
-      switch (resourceId) {
-        case 'ult':
-          manifest = manifests[resourceId];
-          fetchBook(username, languageId, resourceId, reference.bookId, manifest)
-          .then(data => {
-            resources[resourceId] = {
-              manifest,
-              data: data.chapters
-            };
-            done();
-          });
-          break;
-        case 'ust':
-          manifest = manifests[resourceId];
-          fetchBook(username, languageId, resourceId, reference.bookId, manifest)
-          .then(data => {
-            resources[resourceId] = {
-              manifest,
-              data: data.chapters
-            };
-            done();
-          });
-          break;
-        case 'tn':
-          translationNotes(username, languageId, reference.bookId, manifests.tn)
-          .then(data => {
-            resources[resourceId] = data;
-            done();
-          });
-          break;
-        case 'original':
-          const testament = whichTestament(reference.bookId, manifests.uhb, manifests.ugnt)
-          manifest = (testament === 'old') ? manifests.uhb : manifests.ugnt;
-          fetchOriginalBook(username, languageId, reference.bookId, manifests.uhb, manifests.ugnt)
-          .then(data => {
-            resources[resourceId] = {
-              manifest,
-              data: data.chapters
-            };
-            done();
-          });
-          break;
-        default:
-          done();
-          break;
-      }
-    },
-    (error) => {
-      resolve(resources);
-    }
-  );
-});
+  const { uhb: uhbManifest, ugnt: ugntManifest} = manifests;
+  const testament = whichTestament({bookId, uhbManifest, ugntManifest})
+  const originalManifest = (testament === 'old') ? uhbManifest : ugntManifest;
 
-export const fetchBook = (username, languageId, resourceId, bookId, manifest) => new Promise((resolve, reject) => {
-  if (!projectByBookId(manifest.projects, bookId)) {
+  const resourceIds = ['ult', 'ust', 'tn', 'original'];
+  const promises = resourceIds.map(async (resourceId) => {
+    let manifest;
+    if (['ult','ust'].includes(resourceId)) {
+      manifest = manifests[resourceId];
+      return fetchBook({username, languageId, resourceId, bookId, manifest});
+    }
+    if (resourceId === 'tn') {
+      manifest = manifests[resourceId];
+      return translationNotes({username, languageId, bookId, manifest});
+    }
+    if (resourceId === 'original') {
+      return fetchOriginalBook({username, languageId, bookId, uhbManifest, ugntManifest});
+    }
+  });
+  const resourcesArray = await Promise.all(promises);
+  resourceIds.forEach((resourceId, index) => {
+    const data = resourcesArray[index];
+    const manifest = (resourceId === 'original') ? originalManifest : manifests[resourceId];
+    resources[resourceId] = {
+      manifest,
+      data
+    };
+  });
+  return resources;
+};
+
+export async function fetchBook({username, languageId, resourceId, bookId, manifest}) {
+  const {projects} = manifest;
+  if (!projectByBookId({projects, bookId})) {
     const error = `book not found in ${resourceId}`;
     console.warn(error);
-    reject(error);
+    throw(error);
   }
-  const repository = ApplicationHelpers.resourceRepositories(languageId)[resourceId];
-  fetchFileByBookId(username, repository, bookId, manifest)
-  .then(usfm => {
-    const json = usfmjs.toJSON(usfm);
-    resolve(json);
-  }).catch(reject);
-});
+  const repository = ApplicationHelpers.resourceRepositories({languageId})[resourceId];
+  const usfm = await fetchFileByBookId({username, repository, bookId, manifest});
+  const json = usfmjs.toJSON(usfm);
+  return json.chapters;
+};
 
-export const whichTestament = (bookId, uhbManifest, ugntManifest) => {
+export const whichTestament = ({bookId, uhbManifest, ugntManifest}) => {
   let testament;
-  const uhbProject = projectByBookId(uhbManifest.projects, bookId);
-  const ugntProject = projectByBookId(ugntManifest.projects, bookId);
+  const uhbProject = projectByBookId({projects: uhbManifest.projects, bookId});
+  const ugntProject = projectByBookId({projects: ugntManifest.projects, bookId});
   if (uhbProject) testament = 'old';
   if (ugntProject) testament = 'new';
   return testament;
 }
 
-export const fetchOriginalBook = (username, languageId, bookId, uhbManifest, ugntManifest) => new Promise((resolve, reject) => {
+export async function fetchOriginalBook({username, languageId, bookId, uhbManifest, ugntManifest}) {
   let manifest, repository;
-  const testament = whichTestament(bookId, uhbManifest, ugntManifest);
-  const repositories = ApplicationHelpers.resourceRepositories(languageId);
+  const testament = whichTestament({bookId, uhbManifest, ugntManifest});
+  const repositories = ApplicationHelpers.resourceRepositories({languageId});
   if (testament === 'old') {
     manifest = uhbManifest;
     repository = repositories.uhb;
@@ -107,36 +87,30 @@ export const fetchOriginalBook = (username, languageId, bookId, uhbManifest, ugn
     manifest = ugntManifest;
     repository = repositories.ugnt;
   };
-  fetchFileByBookId(username, repository, bookId, manifest)
-  .then(usfm => {
-    const json = usfmjs.toJSON(usfm);
-    resolve(json);
-  }).catch(reject);
-});
+  const usfm = await fetchFileByBookId({username, repository, bookId, manifest});
+  const json = usfmjs.toJSON(usfm);
+  return json.chapters;
+};
 
-export const fetchUGNTBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
-  const repository = ApplicationHelpers.resourceRepositories(languageId).ugnt;
-  fetchFileByBookId(username, repository, bookId, manifest)
-  .then(usfm => {
-    const json = usfmjs.toJSON(usfm);
-    resolve(json);
-  }).catch(reject);
-});
+export async function fetchUGNTBook({username, languageId, bookId, manifest}) {
+  const repository = ApplicationHelpers.resourceRepositories({languageId}).ugnt;
+  const usfm = await fetchFileByBookId({username, repository, bookId, manifest});
+  const json = usfmjs.toJSON(usfm);
+  return json;
+};
 
-export const fetchUHBBook = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
-  const repository = ApplicationHelpers.resourceRepositories(languageId).uhb;
-  fetchFileByBookId(username, repository, bookId, manifest)
-  .then(usfm => {
-    const json = usfmjs.toJSON(usfm);
-    resolve(json);
-  }).catch(reject);
-});
+export async function fetchUHBBook({username, languageId, bookId, manifest}) {
+  const repository = ApplicationHelpers.resourceRepositories({languageId}).uhb;
+  const usfm = await fetchFileByBookId({username, repository, bookId, manifest});
+  const json = usfmjs.toJSON(usfm);
+  return json;
+};
 
-export const pivotTranslationNotes = (array) => {
+export const pivotTranslationNotes = ({tn}) => {
   let translationNotesObject = {};
-  let _array = JSON.parse(JSON.stringify(array));
-  _array.shift();
-  _array.forEach(item => {
+  let array = JSON.parse(JSON.stringify(tn));
+  array.shift();
+  array.forEach(item => {
     let [book, chapter, verse, id, support_reference, original_quote, occurrence, gl_quote, occurrence_note] = item;
     if (book && chapter && verse) {
       if (!translationNotesObject[chapter]) translationNotesObject[chapter] = {};
@@ -156,28 +130,27 @@ export const pivotTranslationNotes = (array) => {
   return translationNotesObject
 }
 
-export const translationNotes = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
-  fetchNotes(username, languageId, bookId, manifest)
-  .then(resolve).catch(reject);
-});
+export async function translationNotes({username, languageId, bookId, manifest}) {
+  const data = await fetchNotes({username, languageId, bookId, manifest});
+  return data;
+};
 
-export const fetchNotes = (username, languageId, bookId, manifest) => new Promise((resolve, reject) => {
-  const repository = ApplicationHelpers.resourceRepositories(languageId).tn;
-  fetchFileByBookId(username, repository, bookId, manifest)
-  .then(tsv => {
-    const data = tsvParse(tsv);
-    resolve(data);
-  }).catch(reject);
-});
+export async function fetchNotes({username, languageId, bookId, manifest}) {
+  const repository = ApplicationHelpers.resourceRepositories({languageId}).tn;
+  const tsv = await fetchFileByBookId({username, repository, bookId, manifest});
+  const data = tsvParse({tsv});
+  return data;
+};
 
-export const fetchFileByBookId = (username, repository, bookId, manifest) => new Promise((resolve, reject) => {
-  let {path} = projectByBookId(manifest.projects, bookId);
+export async function fetchFileByBookId({username, repository, bookId, manifest}) {
+  const {projects} = manifest;
+  let {path} = projectByBookId({projects, bookId});
   path = path.replace(/^\.\//, '');
-  ApplicationHelpers.fetchFileFromServer(username, repository, path)
-  .then(resolve).catch(reject);
-});
+  const data = await ApplicationHelpers.fetchFileFromServer({username, repository, path});
+  return data;
+};
 
-export const projectByBookId = (projects, bookId) => {
+export const projectByBookId = ({projects, bookId}) => {
   const _projects = projects.filter(item => item.identifier === bookId);
   let project;
   if (_projects.length > 0) {
@@ -186,5 +159,5 @@ export const projectByBookId = (projects, bookId) => {
   return project;
 }
 
-export const tsvParse = (tsv) =>
+export const tsvParse = ({tsv}) =>
   tsv.split('\n').map(row => row.trim().split('\t'));

@@ -1,24 +1,24 @@
 import data from './chaptersAndVerses.json';
 
-export const chaptersInBook = bookId => {
+export const chaptersInBook = ({bookId}) => {
 try {
   if (!bookId || bookId === 'obs') return [...Array(50).keys()];;
-  const chapters = bookData(bookId).chapters;
+  const chapters = bookData({bookId}).chapters;
   return chapters;
 } catch {debugger}
 };
 
-export const versesInChapter = (bookId, chapter) => {
-  const verses = chaptersInBook([chapter - 1]);
+export const versesInChapter = ({bookId, chapter}) => {
+  const verses = chaptersInBook({bookId})[chapter - 1];
   return verses;
 };
 
-export const bookData = bookId => {
+export const bookData = ({bookId}) => {
   const _bookData = data.filter(row => row.id === bookId)[0];
   return _bookData;
 };
 
-export const testament = bookId => {
-  const _testament = bookData(bookId).testament;
+export const testament = ({bookId}) => {
+  const _testament = bookData({bookId}).testament;
   return _testament;
 }

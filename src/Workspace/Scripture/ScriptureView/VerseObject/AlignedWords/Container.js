@@ -8,7 +8,7 @@ import {
 import Word from '../Word';
 import AlignedWord from './AlignedWord';
 
-class AlignedWords extends React.Component {
+class Container extends React.Component {
   state = {
     anchorEl: null,
   };
@@ -70,7 +70,7 @@ class AlignedWords extends React.Component {
   }
 }
 
-AlignedWords.propTypes = {
+Container.propTypes = {
   classes: PropTypes.object.isRequired,
   children: PropTypes.array.isRequired,
   originalWords: PropTypes.array,
@@ -90,4 +90,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles, { withTheme: true })(AlignedWords);
+export default withStyles(styles, { withTheme: true })(Container);

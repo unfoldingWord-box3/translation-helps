@@ -28,7 +28,7 @@ class Container extends React.Component {
     if (canFetch && needToFetch) {
       helpers.fetchResources(nextProps)
       .then(resources => {
-        const lemmaIndex = AlignmentHelpers.index(resources.ult.data);
+        const lemmaIndex = AlignmentHelpers.index({data: resources.ult.data});
         this.setState({
           lemmaIndex,
           resources,
