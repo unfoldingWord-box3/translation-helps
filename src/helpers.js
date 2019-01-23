@@ -64,7 +64,7 @@ export async function fetchFileFromServer({username, repository, path, branch='m
     const data = await get({uri});
     return data
   } catch {
-    debugger
+    // debugger
   }
 };
 

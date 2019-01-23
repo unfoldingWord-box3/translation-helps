@@ -1,5 +1,3 @@
-import {each} from 'async';
-
 import * as ApplicationHelpers from '../../helpers';
 import youtubeIds from './youtubeIds';
 
@@ -24,34 +22,28 @@ export const frameData = ({frameMarkdown}) => {
   return data;
 }
 
-export const fetchStory = ({username, languageId, storyId}) => new Promise((resolve, reject) => {
+export async function fetchStory({username, languageId, storyId}) {
   const repository = ApplicationHelpers.resourceRepositories({languageId}).obs;
   const numberPadded = (storyId < 10) ? `0${storyId}` : `${storyId}`;
   const path = `content/${numberPadded}.md`;
-  ApplicationHelpers.fetchFileFromServer({username, repository, path})
-  .then(storyMarkdown => {
-    const frames = framesFromStory({storyMarkdown});
-    resolve(frames);
-  }).catch(reject);
-});
+  const storyMarkdown = await ApplicationHelpers.fetchFileFromServer({username, repository, path});
+  const frames = framesFromStory({storyMarkdown});
+  return frames;
+};
 
-export const fetchOpenBibleStories = ({username, languageId}) => new Promise((resolve, reject) => {
+export async function fetchOpenBibleStories({username, languageId}) {
   const storyIds = [...Array(51).keys()].splice(1);
   let stories = {};
-  each(storyIds,
-    (storyId, done) => {
-      fetchStory({username, languageId, storyId})
-      .then(frames => {
-        stories[storyId] = frames;
-        done();
-      })
-    },
-    (error) => {
-      resolve(stories);
-    }
+  const promises = storyIds.map(storyId =>
+    fetchStory({username, languageId, storyId})
   );
-});
+  const storyArray = await Promise.all(promises);
+  storyIds.forEach((storyId, index) => {
+    stories[storyId] = storyArray[index];
+  });
+  return stories;
+};
 
-export const youtubeId = ({storyId}) => {
-  return youtubeIds[storyId - 1];
+export const youtubeId = ({storyKey}) => {
+  return youtubeIds[storyKey - 1];
 };

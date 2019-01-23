@@ -5,24 +5,27 @@ const resourceRepository = ({languageId}) => ApplicationHelpers.resourceReposito
 // title = first line of file
 // markdown = the path + .md
 // rc://en/tw/dict/bible/kt/christ
-export const fetchTitle = ({username, languageId, path}) => new Promise((resolve, reject) => {
+export async function fetchTitle({username, languageId, path}) {
   const repository = resourceRepository({languageId});
   const _path = path.split('/').splice(1).join('/') + '.md';
-  ApplicationHelpers.fetchFileFromServer({username, repository, path: _path})
-  .then(markdown => {
-    const title = markdown.split(/\n/)[0].replace(/#/g, '').trim();
-    resolve(title);
-  }).catch(reject);
-});
+  const markdown = await ApplicationHelpers.fetchFileFromServer({username, repository, path: _path});
+  const title = markdown.split(/\n/)[0].replace(/#/g, '').trim();
+  return title;
+};
 
-export const fetchArticle = ({username, languageId, path}) => new Promise((resolve, reject) => {
+export async function fetchArticle({username, languageId, path}) {
+  let article;
   const repository = resourceRepository({languageId});
-  const _path = path.split('/').splice(1).join('/') + '.md'; // remove "/dict/"
-  ApplicationHelpers.fetchFileFromServer({username, repository, path: _path})
-  .then(article => {
-    const prefix = _path.split('/').splice(0,2).join('/');
-    article = article.split('../').join(`http://${languageId}/tw/${prefix}/`)
-      .split('.md').join('').split('rc://').join('http://');
-    resolve(article);
-  }).catch(reject);
-});
+  const _path = path.split('/').filter(word => word !== 'dict').join('/') + '.md';
+  try {
+    const _article = await ApplicationHelpers.fetchFileFromServer({username, repository, path: _path});
+    const prefix = _path.split('/').splice(0,1).join('/');
+    article = _article
+    .split('../').join(`http://${languageId}/tw/${prefix}/`)
+    .split('.md').join('')
+    .split('rc://').join('http://');
+  } catch {
+    debugger
+  }
+  return article;
+};

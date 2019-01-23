@@ -12,6 +12,10 @@ class Container extends React.Component {
 
   componentDidMount() {
     const {strong} = this.props.verseObject;
+/* TODO:
+  remove hardcoded username and languageId
+  pass directly through components
+*/
     helpers.senses({strong})
     .then(senses => {
       if (!this.unmounted) {

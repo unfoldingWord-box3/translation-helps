@@ -10,7 +10,7 @@ import Frame from '../Frame/';
 import TranslationHelps from '../../../TranslationHelps';
 
 
-export const Story = ({
+export const Component = ({
   classes,
   storyKey,
   story,
@@ -64,7 +64,7 @@ export const Story = ({
   );
 };
 
-Story.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   storyKey: PropTypes.number.isRequired,
   story: PropTypes.object.isRequired,
@@ -73,4 +73,4 @@ Story.propTypes = {
   setContext: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(Story);
+export default withStyles(styles)(Component);

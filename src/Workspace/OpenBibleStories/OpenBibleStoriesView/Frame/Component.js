@@ -8,7 +8,7 @@ import Card from '../Card';
 import TranslationHelps from '../../../TranslationHelps';
 import * as helpers from '../../helpers';
 
-export const Frame = ({
+export const Component = ({
   classes,
   context,
   setContext,
@@ -67,7 +67,7 @@ export const Frame = ({
   );
 }
 
-Frame.propTypes = {
+Component.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
@@ -82,4 +82,4 @@ Frame.propTypes = {
 const styles = {
 };
 
-export default withStyles(styles)(Frame);
+export default withStyles(styles)(Component);

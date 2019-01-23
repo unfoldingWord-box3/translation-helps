@@ -5,7 +5,7 @@ import Component from './Component';
 
 import * as thHelpers from '../../translationHelps/helpers';
 
-class FrameContainer extends React.Component {
+class Container extends React.Component {
   state = {
     open: false,
     id: Math.random(),
@@ -72,11 +72,10 @@ class FrameContainer extends React.Component {
   }
 };
 
-FrameContainer.propTypes = {
-  classes: PropTypes.object.isRequired,
+Container.propTypes = {
   storyKey: PropTypes.number.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
 };
 
-export default FrameContainer;
+export default Container;

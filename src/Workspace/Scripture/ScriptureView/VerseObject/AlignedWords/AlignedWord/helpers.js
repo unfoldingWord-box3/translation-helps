@@ -1,6 +1,10 @@
 import Path from 'path';
 import * as ApplicationHelpers from '../../../../../../helpers';
 
+/* TODO:
+  remove hardcoded username and languageId
+  pass directly through components
+*/
 const username = 'unfoldingword';
 const languageId = 'en'
 const repositories = ApplicationHelpers.resourceRepositories({languageId});
@@ -26,8 +30,8 @@ export const parseSenses = ({lexiconMarkdown}) => {
   return uniqueSenses;
 };
 
-export const senses = ({strong}) => new Promise((resolve, reject) => {
-  let repository, path;
+export async function senses({strong}) {
+  let senses, repository, path;
   if (/H\d+/.test(strong)) {
     repository = repositories.uhal;
     const _strong = strong.match(/H\d+/)[0];
@@ -38,15 +42,12 @@ export const senses = ({strong}) => new Promise((resolve, reject) => {
     path = Path.join('content', strong, '01.md');
   }
   if (repository && path) {
-    ApplicationHelpers.fetchFileFromServer({username, repository, path})
-    .then(lexiconMarkdown => {
-      const senses = parseSenses({lexiconMarkdown});
-      resolve(senses);
-    }).catch(reject);
-  } else {
-    reject(`Could not find sense info for: ${strong}`)
+    const lexiconMarkdown = await ApplicationHelpers.fetchFileFromServer({username, repository, path});
+    senses = parseSenses({lexiconMarkdown});
   }
-});
+  if (!senses) throw(Error(`Could not find sense info for: ${strong}`));
+  return senses;
+};
 
 export const unique = ({array, response=[]}) => {
   let _array = array;

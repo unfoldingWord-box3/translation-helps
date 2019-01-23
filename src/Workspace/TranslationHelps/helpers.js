@@ -1,40 +1,38 @@
 import * as TranslationAcademyHelpers from './TranslationAcademy/helpers';
 import * as TranslationWordsHelpers from './TranslationWords/helpers';
 
-export const fetchTitle = ({username, languageId, resourceId, path}) => new Promise((resolve, reject) => {
+export async function fetchTitle({username, languageId, resourceId, path}) {
+  let title;
   switch (resourceId) {
     case 'ta':
-      TranslationAcademyHelpers.fetchTitle({username, languageId, path})
-      .then(resolve).catch(error => console.log(error));
+      title = await TranslationAcademyHelpers.fetchTitle({username, languageId, path});
       break;
     case 'tw':
-      TranslationWordsHelpers.fetchTitle({username, languageId, path})
-      .then(resolve).catch(error => console.log(error));
+      title = await TranslationWordsHelpers.fetchTitle({username, languageId, path});
       break;
     case 'tn':
       break;
     default:
-      const message = `resourceId not configured: ${languageId} - ${resourceId} - ${path}`;
-      console.log(message);
+      console.log(`resourceId not configured: ${languageId} - ${resourceId} - ${path}`);
       break;
   };
-});
+  return title;
+};
 
-export const fetchArticle = ({username, languageId, resourceId, path}) => new Promise((resolve, reject) => {
+export async function fetchArticle({username, languageId, resourceId, path}) {
+  let article;
   switch (resourceId) {
     case 'ta':
-      TranslationAcademyHelpers.fetchArticle({username, languageId, path})
-      .then(resolve).catch(error => console.log(error));
+      article = await TranslationAcademyHelpers.fetchArticle({username, languageId, path})
       break;
     case 'tw':
-      TranslationWordsHelpers.fetchArticle({username, languageId, path})
-      .then(resolve).catch(error => console.log(error));
+      article = await TranslationWordsHelpers.fetchArticle({username, languageId, path})
       break;
     case 'tn':
       break;
     default:
-      const message = `resourceId not configured: ${languageId} - ${resourceId} - ${path}`;
-      console.log(message);
+      console.log(`resourceId not configured: ${languageId} - ${resourceId} - ${path}`);
       break;
   };
-});
+  return article;
+};

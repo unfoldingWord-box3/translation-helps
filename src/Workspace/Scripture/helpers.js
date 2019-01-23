@@ -55,11 +55,8 @@ export async function fetchResources({
 
 export async function fetchBook({username, languageId, resourceId, bookId, manifest}) {
   const {projects} = manifest;
-  if (!projectByBookId({projects, bookId})) {
-    const error = `book not found in ${resourceId}`;
-    console.warn(error);
-    throw(error);
-  }
+  if (!projectByBookId({projects, bookId}))
+    throw(Error(`book not found in ${resourceId}`));
   const repository = ApplicationHelpers.resourceRepositories({languageId})[resourceId];
   const usfm = await fetchFileByBookId({username, repository, bookId, manifest});
   const json = usfmjs.toJSON(usfm);

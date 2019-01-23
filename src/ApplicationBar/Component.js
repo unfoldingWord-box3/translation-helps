@@ -33,7 +33,7 @@ const Component = ({
     <Headroom>
       <div className={classes.paper}>
         <div className={classes.toolbar}>
-          <img className={classes.logo} src="./logo.png" alt="unfoldingWord Logo" />
+          <img className={classes.logo} src="/logo.png" alt="unfoldingWord" />
           <Typography variant="h6" color="inherit" className={classes.coin} noWrap>
             {referenceComponent}
           </Typography>
