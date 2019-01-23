@@ -75,7 +75,7 @@ Component.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
-  history: PropTypes.array.isRequired,
+  history: PropTypes.array,
   manifests: PropTypes.object,
 };
 

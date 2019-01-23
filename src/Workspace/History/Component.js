@@ -42,7 +42,7 @@ export const Component = ({
 };
 
 Component.propTypes = {
-  contexts: PropTypes.array.isRequired,
+  contexts: PropTypes.array,
   setContext: PropTypes.func.isRequired,
   manifests: PropTypes.object.isRequired,
 };

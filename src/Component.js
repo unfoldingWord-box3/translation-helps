@@ -60,7 +60,7 @@ export const Component = ({
 Component.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
-  history: PropTypes.array.isRequired,
+  history: PropTypes.array,
   setContext: PropTypes.func.isRequired,
   manifests: PropTypes.object,
 };
