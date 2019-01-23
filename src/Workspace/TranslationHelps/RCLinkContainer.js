@@ -158,7 +158,7 @@ const styles = theme => ({
     maxWidth: '95%',
   },
   label: {
-    maxWidth: '94%',
+    maxWidth: '81%',
   }
 });
 
