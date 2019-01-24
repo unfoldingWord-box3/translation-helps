@@ -10,23 +10,26 @@ const languageId = 'en'
 const repositories = ApplicationHelpers.resourceRepositories({languageId});
 
 export const parseSenses = ({lexiconMarkdown}) => {
-  let senses = [];
-  const sensesSection = lexiconMarkdown.split(/##\s*Senses/)[1];
-  const senseSections = sensesSection.split(/###\s*Sense/).splice(1);
-  senseSections.forEach(senseSection => {
-    const definitionRegexp = /####\s*Definitions?.*?[\n\s]+(.*?)\n/;
-    const glossRegexp = /####\s*Glosse?s?.*?[\n\s]+(.*?)\n/;
-    let definition = definitionRegexp.test(senseSection) ? definitionRegexp.exec(senseSection)[1] : null;
-    definition = (!/#/.test(definition)) ? definition : null;
-    let gloss = glossRegexp.test(senseSection) ? glossRegexp.exec(senseSection)[1] : null;
-    gloss = (!/#/.test(gloss)) ? gloss : null;
-    const sense = {
-      definition: definition,
-      gloss: gloss,
-    };
-    senses.push(sense);
-  });
-  const uniqueSenses = unique({array: senses});
+  let uniqueSenses = [];
+  if (lexiconMarkdown) {
+    let senses = [];
+    const sensesSection = lexiconMarkdown.split(/##\s*Senses/)[1];
+    const senseSections = sensesSection.split(/###\s*Sense/).splice(1);
+    senseSections.forEach(senseSection => {
+      const definitionRegexp = /####\s*Definitions?.*?[\n\s]+(.*?)\n/;
+      const glossRegexp = /####\s*Glosse?s?.*?[\n\s]+(.*?)\n/;
+      let definition = definitionRegexp.test(senseSection) ? definitionRegexp.exec(senseSection)[1] : null;
+      definition = (!/#/.test(definition)) ? definition : null;
+      let gloss = glossRegexp.test(senseSection) ? glossRegexp.exec(senseSection)[1] : null;
+      gloss = (!/#/.test(gloss)) ? gloss : null;
+      const sense = {
+        definition: definition,
+        gloss: gloss,
+      };
+      senses.push(sense);
+    });
+    uniqueSenses = unique({array: senses});
+  }
   return uniqueSenses;
 };
 
