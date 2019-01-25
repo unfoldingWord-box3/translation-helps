@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
+import Languages from './Languages';
 import Resource from './Resource';
 import styles from '../styles';
 
@@ -12,10 +13,16 @@ export const Component = ({
   manifests,
 }) => {
   const resources = Object.keys(manifests)
-  .filter(resourceId => ['ult','obs'].includes(resourceId));
+  .filter(resourceId =>
+    ['ult','obs'].includes(resourceId) && manifests[resourceId]
+  );
 
   return (
     <div className={classes.column}>
+      <Languages
+        context={context}
+        setContext={setContext}
+      />
       {resources.map(resourceId => (
         <Resource
           key={resourceId}

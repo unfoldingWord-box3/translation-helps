@@ -21,9 +21,9 @@ export const resourceRepositories = ({languageId}) => {
   return {
     ult: languageId + '_ult',
     ust: languageId + '_ust',
-    tn: languageId + '-tn',
-    ta: languageId + '-ta',
-    tw: languageId + '-tw',
+    tn: languageId + '_tn',
+    ta: languageId + '_ta',
+    tw: languageId + '_tw',
     ugnt: 'UGNT',
     uhb: 'UHB',
     ugl: languageId + '_ugl',
@@ -53,7 +53,7 @@ export async function fetchResourceManifests({username, languageId}) {
 
 export async function fetchManifest({username, repository}) {
   const yaml = await fetchFileFromServer({username, repository, path: 'manifest.yaml'});
-  const json = YAML.parseDocument(yaml).toJSON();
+  const json = (yaml) ? YAML.parseDocument(yaml).toJSON() : null;
   return json;
 };
 

@@ -52,10 +52,10 @@ class Container extends React.Component {
     });
   };
 
-  setContext(_context) {
+  async setContext(_context) {
     window.scrollTo(0,0);
     const context = JSON.parse(JSON.stringify(_context));
-    const {history: _history} = this.state;
+    const {context: oldContext, history: _history} = this.state;
     let history;
     if (_history) {
       history = JSON.parse(JSON.stringify(_history));
@@ -78,22 +78,21 @@ class Container extends React.Component {
       localstorage.set(keyPrefix + 'history', _history);
       newState.history = history;
     }
+    if (
+      (oldContext.languageId !== context.languageId) ||
+      (oldContext.username !== context.username)
+    ) {
+      const manifests = await helpers.fetchResourceManifests(context);
+      newState.manifests = manifests;
+    }
     this.setState(newState);
     localstorage.set(keyPrefix + 'context', context);
   };
 
-  componentDidMount() {
-    const {
-      context: {
-        username,
-        languageId
-      },
-    } = this.state;
-    helpers.fetchResourceManifests({username, languageId})
-    .then(manifests => {
-      this.setState({
-        manifests,
-      });
+  async componentDidMount() {
+    const manifests = await helpers.fetchResourceManifests(this.state.context);
+    this.setState({
+      manifests,
     });
   };
 
