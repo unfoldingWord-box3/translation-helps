@@ -17,12 +17,13 @@ export const Component = ({
   let contextComponents = [];
   if (contexts) {
     contextComponents = contexts
+    .filter(context => (!!manifests[context.resourceId]))
     .map((context, index) => (
       <Context
-      key={index + JSON.stringify(context)}
-      context={context}
-      setContext={setContext}
-      manifest={manifests[context.resourceId]}
+        key={index + JSON.stringify(context)}
+        context={context}
+        setContext={setContext}
+        manifest={manifests[context.resourceId]}
       />
     ));
   }
