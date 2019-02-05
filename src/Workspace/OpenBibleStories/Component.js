@@ -16,6 +16,7 @@ export const OpenBibleStoriesComponent = ({
   },
   setContext,
   stories,
+  title,
 }) => {
 
   const loadingComponent = (
@@ -43,6 +44,7 @@ export const OpenBibleStoriesComponent = ({
         setContext={setContext}
         storyKey={reference.chapter}
         story={stories[reference.chapter]}
+        title={title}
       />
     );
     component = openBibleStoriesView;
@@ -60,6 +62,7 @@ OpenBibleStoriesComponent.propTypes = {
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
   stories: PropTypes.object,
+  title: PropTypes.string.isRequired,
 };
 
 const styles = theme => ({

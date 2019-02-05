@@ -41,7 +41,7 @@ export const Component = ({
       context={context}
       setContext={setContext}
       tabs={tabs}
-    /> : null;
+    /> : <div />;
 
   const options = {
     remarkReactComponents: {
@@ -73,7 +73,7 @@ Component.propTypes = {
   setContext: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   handleToggleOpen: PropTypes.func.isRequired,
-  frameKey: PropTypes.number.isRequired,
+  frameKey: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
   image: PropTypes.string,
   helps: PropTypes.object.isRequired,

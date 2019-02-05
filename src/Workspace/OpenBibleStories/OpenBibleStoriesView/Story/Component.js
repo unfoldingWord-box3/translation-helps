@@ -18,29 +18,31 @@ export const Component = ({
   setContext,
   helps,
   guide,
+  title,
 }) => {
   let intro;
+  const header = `# ${title}`;
+  const content = remark().use(remark2react).processSync(header).contents;
+  let tabs = [];
   if (guide) {
-    const header = "# Open Bible Stories";
-    const content = remark().use(remark2react).processSync(header).contents;
     const title = "Guide"
     const text = guide;
-    const tabs = [{ title, text }];
-    const details = (
-      <TranslationHelps
-        context={context}
-        setContext={setContext}
-        tabs={tabs}
-      />
-    );
-    intro = (
-      <Card
-        context={context}
-        content={content}
-        details={details}
-      />
-    );
+    tabs.push({ title, text });
   }
+  const details = (
+    <TranslationHelps
+    context={context}
+    setContext={setContext}
+    tabs={tabs}
+    />
+  );
+  intro = (
+    <Card
+    context={context}
+    content={content}
+    details={details}
+    />
+  );
   const frames = Object.keys(story).map((frameKey, index) => {
     const {image, text} = story[frameKey];
     return (
@@ -71,6 +73,7 @@ Component.propTypes = {
   helps: PropTypes.object,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(Component);

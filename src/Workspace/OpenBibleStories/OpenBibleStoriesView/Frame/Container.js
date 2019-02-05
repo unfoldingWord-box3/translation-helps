@@ -64,8 +64,8 @@ class Container extends React.Component {
 
 Container.propTypes = {
   storyKey: PropTypes.number.isRequired,
-  frameKey: PropTypes.number.isRequired,
-  helps: PropTypes.object.isRequired,
+  frameKey: PropTypes.string.isRequired,
+  helps: PropTypes.object,
   text: PropTypes.string.isRequired,
   image: PropTypes.string,
   context: PropTypes.object.isRequired,

@@ -1,6 +1,7 @@
 import Path from 'path';
 import YAML from 'yaml';
 import localforage from 'localforage';
+import localstorage from 'local-storage'
 import { setup } from 'axios-cache-adapter';
 
 const baseURL = "https://git.door43.org/";
@@ -72,3 +73,21 @@ async function get({uri}) {
   const {data} = await api.get(uri);
   return data;
 };
+
+export const save = ({key, value}) => {
+ return localstorage.set(key, value);
+};
+
+export const load = ({key, defaultValue}) => {
+  let value;
+  try {
+    value = localstorage.get(key);
+  } catch {
+    value = defaultValue;
+  }
+  return value;
+};
+
+export const copy = (object) => (
+  JSON.parse(JSON.stringify(object))
+);

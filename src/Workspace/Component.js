@@ -18,6 +18,7 @@ export const Component = ({
   history,
   context,
   setContext,
+  title,
 }) => {
   const historyComponent = (
     <History
@@ -45,6 +46,7 @@ export const Component = ({
     <OpenBibleStories
       context={context}
       setContext={setContext}
+      manifests={manifests}
     />
   );
   const loadingComponent = (

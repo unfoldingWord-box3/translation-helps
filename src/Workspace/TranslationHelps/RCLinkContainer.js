@@ -10,6 +10,7 @@ import {
 } from '@material-ui/icons';
 
 import * as helpers from './helpers';
+import * as applicationHelpers from '../../helpers';
 
 class RCLinkContainer extends React.Component {
   state = {
@@ -99,7 +100,8 @@ class RCLinkContainer extends React.Component {
       title,
     } = this.state;
     if (reference) {
-      let {context} = this.props;
+      let {context: _context} = this.props;
+      let context = applicationHelpers.copy(_context);
       if (['ult','obs'].includes(resourceId)) context.resourceId = resourceId;
       context.reference = reference;
       this.props.setContext(context);

@@ -36,10 +36,12 @@ class OpenBibleStoriesContainer extends React.Component {
   render() {
     const {stories} = this.state;
     const {props} = this;
+    const {title} = props.manifests['obs'].dublin_core;
     return (
       <Component
         {...props}
         stories={stories}
+        title={title}
       />
     );
   }
