@@ -60,7 +60,7 @@ export const VerseComponent = ({
 
   if (original.data[chapter][verseKey]) {
     const {verseObjects} = original.data[chapter][verseKey];
-    const wordObjects = originalHelpers.taggedWords(verseObjects);
+    const wordObjects = originalHelpers.taggedWords({verseObjects});
     if (wordObjects.length > 0) {
       const wordsTab = {
         title: 'Words',
