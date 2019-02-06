@@ -10,8 +10,8 @@ import {
 import {
 } from '@material-ui/icons'
 
-import components from './Components';
-import styles from './styles';
+import components from './components';
+import styles from '../styles';
 
 const suggestions = [
   { value: 'en', label: 'en - English' },
