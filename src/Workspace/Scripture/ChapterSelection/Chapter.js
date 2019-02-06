@@ -11,45 +11,51 @@ import {
   BookmarkBorder,
 } from '@material-ui/icons';
 
+import * as applicationHelpers from '../../../helpers';
+
 export const Component = ({
   classes,
   chapter,
   verses,
-  context,
   setContext,
+  context,
   context: {
     reference,
   },
-}) =>
-  <ListItem
-    button
-    selected={reference.chapter === chapter}
-    className={classes.bookListItem}
-    style={{
-      paddingLeft: '2em',
-      paddingRight: '0.7em',
-    }}
-    onClick={() => {
-      context.reference = {
-        bookId: reference.bookId,
-        chapter,
-      };
-      setContext(context);
-    }}
-  >
-    <ListItemIcon className={classes.listItemIcon}>
-      {
-        (reference.chapter === chapter) ?
-        <Bookmark /> :
-        <BookmarkBorder />
-      }
-    </ListItemIcon>
-    <ListItemText
-      className={classes.listItemText}
-      primary={'Chapter ' + chapter}
-      secondary={verses + ' Verses' }
-    />
-  </ListItem>
+}) => {
+  return (
+    <ListItem
+      button
+      selected={reference.chapter === chapter}
+      className={classes.bookListItem}
+      style={{
+        paddingLeft: '2em',
+        paddingRight: '0.7em',
+      }}
+      onClick={() => {
+        let _context = applicationHelpers.copy(context);
+        _context.reference = {
+          bookId: reference.bookId,
+          chapter,
+        };
+        setContext(_context);
+      }}
+    >
+      <ListItemIcon className={classes.listItemIcon}>
+        {
+          (reference.chapter === chapter) ?
+          <Bookmark /> :
+          <BookmarkBorder />
+        }
+      </ListItemIcon>
+      <ListItemText
+        className={classes.listItemText}
+        primary={'Chapter ' + chapter}
+        secondary={verses + ' Verses' }
+      />
+    </ListItem>
+  );
+}
 
 Component.propTypes = {
   classes: PropTypes.object.isRequired,

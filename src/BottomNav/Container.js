@@ -17,23 +17,22 @@ import {
 } from '@material-ui/icons';
 
 import {chaptersInBook} from '../chaptersAndVerses';
+import * as applicationHelpers from '../helpers';
 
 class BottomNavContainer extends React.Component {
   handleChange = (event, value) => {
+    let context = applicationHelpers.copy(this.props.context);
     let {
-      context,
-      context: {
-        username,
-        languageId,
-        reference,
-      }
-    } = this.props;
+      username,
+      languageId,
+      reference,
+    } = context;
     switch (value) {
       case 0:
-        this.previousChapter();
+        context = this.previousChapter();
         break;
       case 1:
-        context = {username, languageId, view: 'history'};
+        context = {username, languageId, view: 'history', reference: {}};
         break;
       case 2:
         context = {username, languageId, reference: {}};
@@ -45,7 +44,7 @@ class BottomNavContainer extends React.Component {
         if (reference) context.reference = {bookId: reference.bookId};
         break;
       case 5:
-        this.nextChapter();
+        context = this.nextChapter();
         break;
       default:
         break;
@@ -54,23 +53,23 @@ class BottomNavContainer extends React.Component {
   };
 
   previousChapter = () => {
-    let {context} = this.props;
+    const context = applicationHelpers.copy(this.props.context);
     let {chapter} = context.reference;
     if (chapter > 1) {
       context.reference.chapter = context.reference.chapter - 1;
       context.reference.verse = undefined;
     }
-    this.props.setContext(context);
+    return context;
   };
 
   nextChapter = () => {
-    let {context} = this.props;
+    const context = applicationHelpers.copy(this.props.context);
     let {bookId, chapter} = context.reference;
     if (chapter < chaptersInBook(bookId).length) {
       context.reference.chapter = context.reference.chapter + 1
       context.reference.verse = undefined;
     }
-    this.props.setContext(context);
+    return context;
   };
 
   render() {

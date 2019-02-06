@@ -3,6 +3,7 @@ import React from 'react';
 import Component from './Component';
 
 import * as helpers from './helpers';
+import * as chapterAndVerses from './chaptersAndVerses';
 
 const keyPrefix = 'ApplicationContainer.state.';
 
@@ -57,6 +58,17 @@ class Container extends React.Component {
     return manifests;
   };
 
+  validateContext({ manifests, context }) {
+    const {
+      resourceId,
+      reference,
+    } = context;
+    const manifestExists = (!!manifests && !!manifests[resourceId]);
+    const validReference = chapterAndVerses.validateReference({reference});
+    const valid = (manifestExists && validReference);
+    return valid;
+  }
+
   async setContext(_context) {
     let newState = {};
     const context = helpers.copy(_context);
@@ -66,14 +78,14 @@ class Container extends React.Component {
       newState.context = context;
       window.scrollTo(0,0);
     }
+    // use 'obs' for bookId if is resourceId
+    if (context.resourceId === 'obs') context.reference.bookId = 'obs';
     // set context and manifests if new ones need to be fetched
-    newState.manifests = await this.refreshManifests({context});
-    // the resource manifest should exist (incomplete translation)
-    const manifestExists = (!!this.state.manifests[context.resourceId]);
-    // TODO: Check to see if book exists as well
-    if (manifestExists) {
-      // use 'obs' for bookId if is resourceId
-      if (context.resourceId === 'obs') context.reference.bookId = 'obs';
+    const manifests = await this.refreshManifests({context});
+    newState.manifests = manifests;
+    const validContext = this.validateContext({manifests, context});
+    // validate context
+    if (validContext) {
       newState.context = context;
       newState.history = this.addHistory({history: this.state.history, context});
       window.scrollTo(0,0);
@@ -103,7 +115,7 @@ class Container extends React.Component {
     let newState = {};
     const {context} = this.state;
     const manifests = await helpers.fetchResourceManifests(context);
-    const validContext = !!(context && manifests && manifests[context.resourceId]);
+    const validContext = this.validateContext({manifests, context});
     newState.manifests = manifests;
     newState.context = validContext ? context : this.defaultContext();
     this.setState(newState);
