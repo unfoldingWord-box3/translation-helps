@@ -60,15 +60,32 @@ export async function fetchManifest({username, repository}) {
 
 // https://git.door43.org/unfoldingword/en_ult/raw/branch/master/manifest.yaml
 export async function fetchFileFromServer({username, repository, path, branch='master'}) {
-  try {
+  const repoExists = await repositoryExists({username, repository});
+  if (repoExists) {
     const uri = Path.join(username, repository, 'raw/branch', branch, path);
     const data = await get({uri});
-    return data
-  } catch {
-    // debugger
+    return data;
+  } else {
+    return null;
   }
 };
+const apiPath = 'api/v1'
 
+export async function getUID({username}) {
+  const uri = Path.join(apiPath, 'users', username);
+  const user = await get({uri});
+  const {id: uid} = user;
+  return uid;
+}
+
+export async function repositoryExists({username, repository}) {
+  const uid = await getUID({username});
+  const query = `q=${repository}&uid=${uid}`;
+  const uri = Path.join(apiPath, 'repos', `search?${query}`);
+  const {data: repos} = await get({uri});
+  const repo = repos.filter(repo => repo.name === repository)[0];
+  return !!repo;
+}
 async function get({uri}) {
   const {data} = await api.get(uri);
   return data;
@@ -85,7 +102,7 @@ export const load = ({key, defaultValue}) => {
   } catch {
     value = defaultValue;
   }
-  return value;
+  return value || defaultValue;
 };
 
 export const copy = (object) => (
