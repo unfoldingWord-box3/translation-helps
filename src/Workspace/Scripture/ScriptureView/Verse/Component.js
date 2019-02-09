@@ -74,7 +74,7 @@ export const VerseComponent = ({
       title: 'Notes',
       notes: tn.data[chapter][verseKey],
     };
-    tabs.push(notesTab)
+    tabs.push(notesTab);
   };
 
   const details = (

@@ -6,7 +6,6 @@ export const Word = ({
   classes,
   verseObject,
 }) => {
-
   return (
     <span>
       {' '}{verseObject.text || verseObject.content}

@@ -48,11 +48,17 @@ export const Component = ({
       component = <span/>;
       break;
     case 'footnote':
-      component = <sup>*</sup>;
+      component = <sup>f</sup>;
       break;
     default:
       debugger
-      component = <span>...</span>;
+      component = (
+        <span>
+          <sup>*</sup>
+          <Text verseObject={verseObject} />
+          <sup>*</sup>
+        </span>
+      );
       break;
   };
 

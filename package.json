@@ -27,7 +27,7 @@
     "remark-parse": "^6.0.3",
     "remark-react": "^5.0.0",
     "request-promise": "^4.2.2",
-    "usfm-js": "^1.0.12",
+    "usfm-js": "^1.0.13",
     "yaml": "^1.0.2"
   },
   "scripts": {

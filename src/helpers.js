@@ -77,7 +77,6 @@ export async function getUID({username}) {
   const {id: uid} = user;
   return uid;
 }
-
 export async function repositoryExists({username, repository}) {
   const uid = await getUID({username});
   const query = `q=${repository}&uid=${uid}`;

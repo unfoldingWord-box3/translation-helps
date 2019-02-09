@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Suspense, lazy} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -7,10 +7,10 @@ import {
 import {
 } from '@material-ui/icons';
 
-import History from './History';
-import Resources from './Resources';
-import Scripture from './Scripture';
-import OpenBibleStories from './OpenBibleStories';
+const History = lazy(() => import('./History'));
+const Resources = lazy(() => import('./Resources'));
+const OpenBibleStories = lazy(() => import('./OpenBibleStories'));
+const Scripture = lazy(() => import('./Scripture'));
 
 export const Component = ({
   classes,
@@ -68,7 +68,9 @@ export const Component = ({
 
   return (
     <div className={classes.root}>
-      {component}
+      <Suspense fallback={loadingComponent}>
+        {component}
+      </Suspense>
     </div>
   );
 }
