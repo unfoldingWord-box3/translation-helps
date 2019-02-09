@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {Suspense, lazy} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import {
+  CircularProgress,
+} from '@material-ui/core';
 
 import Languages from './Languages/index';
-import Resource from './Resource';
 import styles from '../styles';
+
+const Resource = lazy(() => import('./Resource'));
 
 export const Component = ({
   classes,
@@ -13,8 +17,16 @@ export const Component = ({
   manifests,
 }) => {
   const resources = Object.keys(manifests)
-  .filter(resourceId =>
-    ['ult','obs'].includes(resourceId) && manifests[resourceId]
+  .filter(resourceId => {
+    const resourceExists = ['ult','obs'].includes(resourceId);
+    const manifest = manifests[resourceId];
+    let language;
+    if (manifest) language = manifest.dublin_core.language.identifier;
+    const languageMatch = language === context.languageId;
+    return resourceExists && manifest && languageMatch;
+  });
+  const loadingComponent = (
+    <CircularProgress className={classes.progress} color="secondary" disableShrink />
   );
 
   return (
@@ -23,14 +35,16 @@ export const Component = ({
         context={context}
         setContext={setContext}
       />
-      {resources.map(resourceId => (
-        <Resource
-          key={resourceId}
-          context={context}
-          setContext={setContext}
-          manifest={manifests[resourceId]}
-        />
-      ))}
+      <Suspense fallback={loadingComponent}>
+        {resources.map(resourceId => (
+          <Resource
+            key={resourceId}
+            context={context}
+            setContext={setContext}
+            manifest={manifests[resourceId]}
+          />
+        ))}
+      </Suspense>
     </div>
   );
 };
