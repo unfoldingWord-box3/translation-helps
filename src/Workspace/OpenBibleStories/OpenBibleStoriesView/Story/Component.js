@@ -31,23 +31,23 @@ export const Component = ({
   }
   const details = (
     <TranslationHelps
-    context={context}
-    setContext={setContext}
-    tabs={tabs}
+      context={context}
+      setContext={setContext}
+      tabs={tabs}
     />
   );
   intro = (
     <Card
-    context={context}
-    content={content}
-    details={details}
+      context={context}
+      content={content}
+      details={details}
     />
   );
   const frames = Object.keys(story).map((frameKey, index) => {
     const {image, text} = story[frameKey];
     return (
       <Frame
-        key={`${storyKey}-${frameKey}`}
+        key={`${storyKey}:${frameKey}`}
         storyKey={storyKey}
         helps={index === 0 ? helps : {}}
         frameKey={frameKey}

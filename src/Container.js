@@ -97,18 +97,16 @@ class Container extends React.Component {
   };
 
   componentWillMount() {
-    const context = helpers.load({
+    let newState = {};
+    newState.context = helpers.load({
       key: `${keyPrefix}context`,
       defaultValue: this.defaultContext(),
     });
-    const history = helpers.load({
+    newState.history = helpers.load({
       key: `${keyPrefix}history`,
       defaultValue: [],
     });
-    this.setState({
-      context,
-      history,
-    });
+    this.setState(newState);
   };
 
   async componentDidMount() {

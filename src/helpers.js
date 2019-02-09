@@ -63,8 +63,13 @@ export async function fetchFileFromServer({username, repository, path, branch='m
   const repoExists = await repositoryExists({username, repository});
   if (repoExists) {
     const uri = Path.join(username, repository, 'raw/branch', branch, path);
-    const data = await get({uri});
-    return data;
+    try {
+      const data = await get({uri});
+      return data;
+    }
+    catch(error) {
+      return null;
+    }
   } else {
     return null;
   }

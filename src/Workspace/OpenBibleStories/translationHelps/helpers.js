@@ -2,7 +2,11 @@ import * as ApplicationHelpers from '../../../helpers';
 
 export async function fetchHelps({username, languageId, storyKey, frameKey}) {
   let helps = {};
-  const resourceIds = ['obs-tn', 'obs-tq', 'obs-sn'];
+  const resourceIds = [
+    'obs-tn',
+    'obs-tq',
+    'obs-sn',
+  ];
   const promises = resourceIds.map(resourceId => {
     let promise;
     if (resourceId === 'obs-tn')
@@ -31,7 +35,7 @@ export async function fetchStudyQuestions({username, languageId, storyKey}) {
   const repository = ApplicationHelpers.resourceRepositories({languageId})['obs-sq'];
   const file = pad(storyKey) + '.md';
   const path = ['content', file].join('/');
-  const markdown = ApplicationHelpers.fetchFileFromServer({username, repository, path});
+  const markdown = await ApplicationHelpers.fetchFileFromServer({username, repository, path});
   return markdown;
 };
 

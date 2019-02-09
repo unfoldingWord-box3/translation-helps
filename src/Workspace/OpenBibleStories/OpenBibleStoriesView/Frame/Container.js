@@ -26,7 +26,7 @@ class Container extends React.Component {
     }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
       storyKey,
       frameKey,
@@ -36,10 +36,8 @@ class Container extends React.Component {
         reference,
       },
     } = this.props;
-    thHelpers.fetchHelps({username, languageId, storyKey, frameKey})
-    .then(helps => {
-      this.setState({helps});
-    });
+    const helps = await thHelpers.fetchHelps({username, languageId, storyKey, frameKey});
+    this.setState({helps});
     if (parseInt(reference.verse) === parseInt(frameKey)) {
       this.scrollToId();
     }

@@ -2,8 +2,12 @@ import data from './chaptersAndVerses.json';
 
 export const chaptersInBook = ({bookId}) => {
   try {
-    if (!bookId || bookId === 'obs') return [...Array(50).keys()];;
-    const chapters = bookData({bookId}).chapters;
+    let chapters;
+    if (bookId === 'obs') {
+      chapters = [...Array(50).keys()].map(i=>i+1);
+    } else {
+      chapters = bookData({bookId}).chapters;
+    }
     return chapters;
   } catch {
     return null;
@@ -56,7 +60,7 @@ export const validateReference = ({reference}) => {
   const blankReference = (!bookId && !chapter && !verse);
   const validBookId = validateBookId(reference);
   const validChapter = validateChapter(reference);
-  const validVerse = validateVerse(reference);
+  const validVerse = (!!verse) ? validateVerse(reference) : true;
   if (blankReference) {
     valid = true;
   } else if (validBookId && !chapter && !verse) {
