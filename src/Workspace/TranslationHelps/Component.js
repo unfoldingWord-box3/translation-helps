@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Suspense, lazy} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -8,9 +8,9 @@ import {
   Badge,
 } from '@material-ui/core';
 
-import HelpsTab from './HelpsTab';
-
 import styles from './styles';
+
+const HelpsTab = lazy(() => import('./HelpsTab'));
 
 export const Component = ({
   classes,
@@ -50,13 +50,15 @@ export const Component = ({
     const open = (index === tabIndex);
     tabContents.push(
       <div key={tabContents.length} className={ open ? classes.tabContent : classes.hidden }>
-        <HelpsTab
-          tab={tab}
-          addTab={addTab}
-          open={open}
-          context={context}
-          setContext={setContext}
-        />
+        <Suspense fallback={<div />}>
+          <HelpsTab
+            tab={tab}
+            addTab={addTab}
+            open={open}
+            context={context}
+            setContext={setContext}
+          />
+        </Suspense>
       </div>);
   });
 

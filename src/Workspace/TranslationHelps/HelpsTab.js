@@ -1,17 +1,19 @@
-import React from 'react';
+import React, {Suspense, lazy} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Divider,
+  CircularProgress,
 } from '@material-ui/core';
-
-import TextComponentWithRCLinks from './TextComponentWithRCLinks';
-import TranslationNotes from './TranslationNotes';
-import AlignedWord from '../Scripture/ScriptureView/VerseObject/AlignedWords/AlignedWord';
 
 import styles from './styles';
 
+const TextComponentWithRCLinks = lazy(() => import('./TextComponentWithRCLinks'));
+const TranslationNotes = lazy(() => import('./TranslationNotes'));
+const AlignedWord = lazy(() => import('../Scripture/ScriptureView/VerseObject/AlignedWords/AlignedWord'));
+
 export const Component = ({
+  classes,
   tab,
   addTab,
   open,
@@ -77,7 +79,12 @@ export const Component = ({
       content = tab.content;
     }
   }
-  return content;
+
+  return (
+    <Suspense fallback={<div/>}>
+      {content}
+    </Suspense>
+  );
 }
 
 Component.propTypes = {

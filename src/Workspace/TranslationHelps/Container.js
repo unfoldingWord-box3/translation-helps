@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {Suspense, lazy} from 'react';
 import PropTypes from 'prop-types';
 import {
 } from '@material-ui/core';
 
-import Component from './Component';
+const Component = lazy(() => import('./Component'));
 
 class Container extends React.Component {
   state = {
@@ -42,14 +42,16 @@ class Container extends React.Component {
     const {props} = this;
     const {tabs, tabIndex, id} = this.state;
     return (
-      <Component
-        {...props}
-        id={id}
-        tabs={tabs}
-        tabIndex={tabIndex}
-        addTab={this.addTab.bind(this)}
-        handleChangeIndex={this.handleChangeIndex.bind(this)}
-      />
+      <Suspense fallback={<div />}>
+        <Component
+          {...props}
+          id={id}
+          tabs={tabs}
+          tabIndex={tabIndex}
+          addTab={this.addTab.bind(this)}
+          handleChangeIndex={this.handleChangeIndex.bind(this)}
+        />
+      </Suspense>
     )
   }
 }
