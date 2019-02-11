@@ -4,6 +4,7 @@ const resources = ({languageId}) => ({
       text: languageId + '_irv',
       notes: languageId + '-tn',
       words: languageId + '-tw',
+      questions: languageId + '-tq',
     },
     secondary: [
       {
