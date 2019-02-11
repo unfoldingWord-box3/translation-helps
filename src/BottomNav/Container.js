@@ -65,7 +65,8 @@ class BottomNavContainer extends React.Component {
   nextChapter = () => {
     const context = applicationHelpers.copy(this.props.context);
     let {bookId, chapter} = context.reference;
-    if (chapter < chaptersInBook(bookId).length) {
+    const bookChapters = chaptersInBook({bookId}).length
+    if (chapter < bookChapters) {
       context.reference.chapter = context.reference.chapter + 1
       context.reference.verse = undefined;
     }
