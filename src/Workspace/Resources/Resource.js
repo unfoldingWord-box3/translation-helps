@@ -54,8 +54,7 @@ const Component = ({
           color="primary"
           onClick={() => {
             const resourceId = identifier;
-            const reference = (resourceId === 'obs') ? {bookId: resourceId} : {};
-            const context = {username, languageId, resourceId: identifier, reference};
+            const context = {username, languageId, resourceId};
             setContext(context);
           }}
         >

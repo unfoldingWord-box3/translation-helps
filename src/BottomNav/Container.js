@@ -17,11 +17,10 @@ import {
 } from '@material-ui/icons';
 
 import {chaptersInBook} from '../chaptersAndVerses';
-import * as applicationHelpers from '../helpers';
 
 class BottomNavContainer extends React.Component {
   handleChange = (event, value) => {
-    let context = applicationHelpers.copy(this.props.context);
+    let context = {...this.props.context};
     let {
       username,
       languageId,
@@ -53,23 +52,25 @@ class BottomNavContainer extends React.Component {
   };
 
   previousChapter = () => {
-    const context = applicationHelpers.copy(this.props.context);
-    let {chapter} = context.reference;
+    let reference = {...this.props.context.reference}
+    let {chapter} = reference;
     if (chapter > 1) {
-      context.reference.chapter = context.reference.chapter - 1;
-      context.reference.verse = undefined;
+      reference.chapter = chapter - 1;
+      reference.verse = undefined;
     }
+    const context = {...this.props.context, reference};
     return context;
   };
 
   nextChapter = () => {
-    const context = applicationHelpers.copy(this.props.context);
-    let {bookId, chapter} = context.reference;
+    let reference = {...this.props.context.reference}
+    let {bookId, chapter} = reference;
     const bookChapters = chaptersInBook({bookId}).length
     if (chapter < bookChapters) {
-      context.reference.chapter = context.reference.chapter + 1
-      context.reference.verse = undefined;
+      reference.chapter = chapter + 1
+      reference.verse = undefined;
     }
+    const context = {...this.props.context, reference};
     return context;
   };
 

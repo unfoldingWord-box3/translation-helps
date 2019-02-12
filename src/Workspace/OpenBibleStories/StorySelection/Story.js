@@ -30,11 +30,12 @@ export const Component = ({
       paddingRight: '0.7em',
     }}
     onClick={() => {
-      context.reference = {
+      const _reference = {
         bookId: reference.bookId,
         chapter: storyKey,
       };
-      setContext(context);
+      const _context = {...context, reference: _reference};
+      setContext(_context);
     }}
   >
     <ListItemIcon className={classes.listItemIcon}>

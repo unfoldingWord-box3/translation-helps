@@ -11,8 +11,6 @@ import {
   BookmarkBorder,
 } from '@material-ui/icons';
 
-import * as applicationHelpers from '../../../helpers';
-
 export const Component = ({
   classes,
   chapter,
@@ -33,11 +31,11 @@ export const Component = ({
         paddingRight: '0.7em',
       }}
       onClick={() => {
-        let _context = applicationHelpers.copy(context);
-        _context.reference = {
+        const _reference = {
           bookId: reference.bookId,
           chapter,
         };
+        const _context = {...context, reference: _reference};
         setContext(_context);
       }}
     >

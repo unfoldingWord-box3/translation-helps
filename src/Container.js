@@ -25,7 +25,7 @@ class Container extends React.Component {
 
   addToHistoryArray(_context, _history) {
     let history = [];
-    if (_history) history = helpers.copy(_history);
+    if (_history) history = [..._history];
     const newContext = JSON.stringify(_context);
     const oldContext = JSON.stringify(history[0]);
     const isNew = !( newContext === oldContext );
@@ -49,7 +49,7 @@ class Container extends React.Component {
   // load new manifests and update context if language or username changes
   async refreshManifests({context}) {
     const {context: oldContext, manifests: oldManifests} = this.state;
-    let manifests = helpers.copy(oldManifests);
+    let manifests = {...oldManifests};
     const languageChanged = (oldContext.languageId !== context.languageId);
     const usernameChanged = (oldContext.username !== context.username);
     if (languageChanged || usernameChanged) {
@@ -59,10 +59,7 @@ class Container extends React.Component {
   };
 
   validateContext({ manifests, context }) {
-    const {
-      resourceId,
-      reference,
-    } = context;
+    const {resourceId, reference} = context;
     const manifestExists = (!!manifests && !!manifests[resourceId]);
     const validReference = chapterAndVerses.validateReference({reference});
     const valid = (manifestExists && validReference);
@@ -71,7 +68,9 @@ class Container extends React.Component {
 
   async setContext(_context) {
     let newState = {};
-    const context = helpers.copy(_context);
+    const {reference: _reference} = _context;
+    const reference = _reference ? {..._reference} : {};
+    const context = {..._context, reference};
     // allow navigation to Resources selection
     const emptyResourceId = (!context.reference || !context.resourceId);
     if (emptyResourceId) {
@@ -121,12 +120,14 @@ class Container extends React.Component {
 
   render() {
     const {context, history, manifests} = this.state;
+    const _context = context ? helpers.deepFreeze(context) : context;
+    const _manifests = manifests ? helpers.deepFreeze(manifests) : manifests;
     return (
       <Component
-        context={context}
+        context={_context}
         history={history}
         setContext={this.setContext.bind(this)}
-        manifests={manifests}
+        manifests={_manifests}
       />
     );
   };
