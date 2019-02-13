@@ -17,15 +17,13 @@ class Container extends React.Component {
 
   defaultContext() {
     const urlParams = new URLSearchParams(window.location.search);
-    const username = urlParams.get('username') || 'unfoldingword';
-    const languageId = urlParams.get('languageId') || 'en';
-    const resourceId = urlParams.get('resourceId');
-    const bookId = urlParams.get('bookId');
-    const chapter = urlParams.get('chapter');
-    const verse = urlParams.get('verse');
+    const username = urlParams.get('owner') || 'unfoldingword';
+    const rc = urlParams.get('rc') || ''
+    const rcArray = rc.slice(1).split('/').filter(string => string);
+    const [languageId, resourceId, bookId, chapter, verse] = rcArray;
     return {
       username: username,
-      languageId: languageId,
+      languageId: languageId || 'en',
       resourceId: resourceId,
       reference: {
         bookId,
@@ -78,15 +76,17 @@ class Container extends React.Component {
     return valid;
   }
 
-  async setContext(_context) {
+  async setContext(_context, back=false) {
     let newState = {};
-    const {reference: _reference} = _context;
+    const {reference: _reference} = _context || this.defaultContext();
     const reference = _reference ? {..._reference} : {};
     const context = {..._context, reference};
     // allow navigation to Resources selection
     const emptyResourceId = (!context.reference || !context.resourceId);
     if (emptyResourceId) {
       newState.context = context;
+      // only update query if back button is not pressed
+      if (!back) this.updateQuery(newState.context);
       window.scrollTo(0,0);
     }
     // use 'obs' for bookId if is resourceId
@@ -99,25 +99,35 @@ class Container extends React.Component {
     if (validContext) {
       newState.context = context;
       newState.history = this.addHistory({history: this.state.history, context});
+      // only update query if back button is not pressed
+      if (!back) this.updateQuery(newState.context);
       window.scrollTo(0,0);
     }
     // update state
     this.setState(newState);
-    this.updateQuery(context);
-    // persist context
-    helpers.save({ key: `${keyPrefix}context`, value: context });
   };
 
-  updateQuery({username, languageId, resourceId, reference: {bookId, chapter, verse}}) {
-    const _username = username ? `username=${username}&` : '';
-    const _languageId = languageId ? `languageId=${languageId}&` : '';
-    const _resourceId = resourceId ? `resourceId=${resourceId}&` : '';
-    const _bookId = bookId ? `bookId=${bookId}&` : '';
-    const _chapter = chapter ? `chapter=${chapter}&` : '';
-    const _verse = verse ? `verse=${verse}` : '';
+  updateQuery(context) {
+    const {
+      username,
+      languageId,
+      resourceId,
+      reference: {
+        bookId,
+        chapter,
+        verse,
+      },
+    } = context;
+    const _username = username ? `owner=${username}` : '';
+    const _languageId = languageId ? `/${languageId}` : '';
+    const _resourceId = resourceId ? `/${resourceId}` : '';
+    const _bookId = bookId ? `/${bookId}` : '';
+    const _chapter = chapter ? `/${chapter}` : '';
+    const _verse = verse ? `/${verse}` : '';
+    const rc = `&rc=${_languageId}${_resourceId}${_bookId}${_chapter}${_verse}`
     const path = window.location.pathname;
-  	const query = `${path}?${_username}${_languageId}${_resourceId}${_bookId}${_chapter}${_verse}`;
-  	window.history.pushState(null, null, query);
+  	const query = `${path}?${_username}${rc}`;
+  	window.history.pushState(context, null, query);
   }
 
   componentWillMount() {
@@ -138,6 +148,10 @@ class Container extends React.Component {
     newState.manifests = manifests;
     newState.context = validContext ? context : this.defaultContext();
     this.setState(newState);
+    window.addEventListener("popstate", (e) => {
+      const context = e.state;
+      this.setContext(context, true);
+    });
   };
 
   render() {
