@@ -27,6 +27,7 @@ export const VerseComponent = ({
   context,
   setContext,
   context: {
+    resourceId,
     reference: {
       bookId,
       chapter,
@@ -36,20 +37,22 @@ export const VerseComponent = ({
 
   let tabs = [];
 
-  let reference;
-  if (ust.data) reference = (
-    <div>
+  const referenceResources = ['ult','ust','ulb','udb','irv']
+  .filter(_resourceId => _resourceId !== resourceId)
+  .filter(_resourceId => !!(resources[_resourceId] && resources[_resourceId].data))
+  .map(_resourceId => (
+    <div key={_resourceId + verseKey}>
       <Reference
         verseKey={verseKey}
-        resource={ust}
+        resource={resources[_resourceId]}
         context={context}
       />
       <Divider variant="middle" />
     </div>
-  );
+  ));
   const scriptureComponent = (
     <div style={{paddingTop: '1em'}}>
-      {reference}
+      {referenceResources}
       <Reference
         verseKey={verseKey}
         resource={original}

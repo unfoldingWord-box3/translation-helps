@@ -22,6 +22,7 @@ export const resourceRepositories = ({languageId}) => {
   return {
     ult: languageId + '_ult',
     ulb: languageId + '_ulb',
+    udb: languageId + '_udb',
     irv: languageId + '_irv',
     ust: languageId + '_ust',
     tn: languageId + '_tn',

@@ -18,7 +18,7 @@ export const Component = ({
 }) => {
   const resources = Object.keys(manifests)
   .filter(resourceId => {
-    const resourceExists = ['ult','ulb','irv','obs'].includes(resourceId);
+    const resourceExists = ['ult','ust','ulb','udb','irv','obs'].includes(resourceId);
     const manifest = manifests[resourceId];
     let language;
     if (manifest) language = manifest.dublin_core.language.identifier;

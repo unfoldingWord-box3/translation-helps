@@ -20,6 +20,7 @@ export async function fetchResources({
     ult: null,
     ust: null,
     ulb: null,
+    udb: null,
     irv: null,
     tn: null,
     original: null,
@@ -28,10 +29,10 @@ export async function fetchResources({
   const testament = whichTestament({bookId, uhbManifest, ugntManifest})
   const originalManifest = (testament === 'old') ? uhbManifest : ugntManifest;
 
-  const resourceIds = ['ult', 'ust', 'ulb', 'irv', 'tn', 'original'];
+  const resourceIds = ['ult','ust','ulb','udb','irv','tn','original'];
   const promises = resourceIds.map(async (resourceId) => {
     let manifest;
-    if (['ult','ust', 'ulb', 'irv'].includes(resourceId) && manifests[resourceId]) {
+    if (['ult','ust','ulb','udb','irv'].includes(resourceId) && manifests[resourceId]) {
       manifest = manifests[resourceId];
       return fetchBook({username, languageId, resourceId, bookId, manifest});
     }
