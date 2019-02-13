@@ -8,28 +8,28 @@ self.__precacheManifest = [
     "url": "/translation-helps/static/js/1.f7c552ee.chunk.js"
   },
   {
-    "revision": "04782174ccddb05efb98",
+    "revision": "35b243f7afffdb45c0e3",
     "url": "/translation-helps/static/css/main.b425c250.chunk.css"
   },
   {
-    "revision": "04782174ccddb05efb98",
-    "url": "/translation-helps/static/js/main.04782174.chunk.js"
+    "revision": "35b243f7afffdb45c0e3",
+    "url": "/translation-helps/static/js/main.35b243f7.chunk.js"
   },
   {
     "revision": "11038887862d22f77949",
     "url": "/translation-helps/static/js/3.11038887.chunk.js"
   },
   {
-    "revision": "848c52ffcb2927d371ce",
-    "url": "/translation-helps/static/js/4.848c52ff.chunk.js"
+    "revision": "162654507e3806871baa",
+    "url": "/translation-helps/static/js/4.16265450.chunk.js"
   },
   {
     "revision": "776060ff99f09bbb3b9d",
     "url": "/translation-helps/static/js/5.776060ff.chunk.js"
   },
   {
-    "revision": "a5c4b1a2bf45ee05de46",
-    "url": "/translation-helps/static/js/6.a5c4b1a2.chunk.js"
+    "revision": "904ae54b397932a9b98d",
+    "url": "/translation-helps/static/js/6.904ae54b.chunk.js"
   },
   {
     "revision": "a4cd6803a5066a42ec7a",
@@ -72,11 +72,11 @@ self.__precacheManifest = [
     "url": "/translation-helps/static/js/16.411c9c36.chunk.js"
   },
   {
-    "revision": "63d7b8e75be593634580",
-    "url": "/translation-helps/static/js/runtime~main.63d7b8e7.js"
+    "revision": "cb2249eaa5f04cb296a3",
+    "url": "/translation-helps/static/js/runtime~main.cb2249ea.js"
   },
   {
-    "revision": "bc95f89c72804ff96455c0fdc4d18412",
+    "revision": "7d7c4aa8facc85f22243770ff2eebec8",
     "url": "/translation-helps/index.html"
   }
 ];
