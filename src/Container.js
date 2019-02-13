@@ -103,9 +103,21 @@ class Container extends React.Component {
     }
     // update state
     this.setState(newState);
+    this.updateQuery(context);
     // persist context
     helpers.save({ key: `${keyPrefix}context`, value: context });
   };
+
+  updateQuery({username, languageId, resourceId, reference: {bookId, chapter, verse}}) {
+    const _username = username ? `username=${username}&` : '';
+    const _languageId = languageId ? `languageId=${languageId}&` : '';
+    const _resourceId = resourceId ? `resourceId=${resourceId}&` : '';
+    const _bookId = bookId ? `bookId=${bookId}&` : '';
+    const _chapter = chapter ? `chapter=${chapter}&` : '';
+    const _verse = verse ? `verse=${verse}` : '';
+  	const query = `/?${_username}${_languageId}${_resourceId}${_bookId}${_chapter}${_verse}`;
+  	window.history.pushState(null, null, query);
+  }
 
   componentWillMount() {
     let newState = {};
