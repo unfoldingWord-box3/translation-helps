@@ -115,7 +115,8 @@ class Container extends React.Component {
     const _bookId = bookId ? `bookId=${bookId}&` : '';
     const _chapter = chapter ? `chapter=${chapter}&` : '';
     const _verse = verse ? `verse=${verse}` : '';
-  	const query = `/?${_username}${_languageId}${_resourceId}${_bookId}${_chapter}${_verse}`;
+    const path = window.location.pathname;
+  	const query = `${path}?${_username}${_languageId}${_resourceId}${_bookId}${_chapter}${_verse}`;
   	window.history.pushState(null, null, query);
   }
 
