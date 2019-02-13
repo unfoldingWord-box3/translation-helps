@@ -122,15 +122,7 @@ class Container extends React.Component {
 
   componentWillMount() {
     let newState = {};
-    const defaultContext = this.defaultContext();
-    let context = helpers.load({
-      key: `${keyPrefix}context`,
-      defaultValue: defaultContext,
-    });
-    if (defaultContext.username !== context.username) {
-      context = defaultContext;
-    }
-    newState.context = context;
+    newState.context = this.defaultContext();
     newState.history = helpers.load({
       key: `${keyPrefix}history`,
       defaultValue: [],
