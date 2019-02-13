@@ -1,5 +1,6 @@
 
 export const index = ({data}) => {
+  if (!data) return {};
   console.time('indexing');
   let lemmaIndex = {};
   const chapterKeys = Object.keys(data);

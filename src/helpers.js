@@ -21,6 +21,8 @@ const api = setup({
 export const resourceRepositories = ({languageId}) => {
   return {
     ult: languageId + '_ult',
+    ulb: languageId + '_ulb',
+    irv: languageId + '_irv',
     ust: languageId + '_ust',
     tn: languageId + '_tn',
     ta: languageId + '_ta',
@@ -43,7 +45,8 @@ export async function fetchResourceManifests({username, languageId}) {
   const resourceIds = Object.keys(_resourceRepositories);
   const resourceIdsPromises = resourceIds.map(resourceId => {
     const repository = _resourceRepositories[resourceId];
-    return fetchManifest({username, repository})
+    const _username = ['ugnt','uhb'].includes(resourceId) ? 'unfoldingword' : username;
+    return fetchManifest({username: _username, repository})
   });
   const manifestArray = await Promise.all(resourceIdsPromises);
   resourceIds.forEach((resourceId, index) => {

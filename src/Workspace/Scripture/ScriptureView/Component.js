@@ -12,39 +12,46 @@ import AlignmentsTable from './AlignmentsTable';
 import TranslationNotesTable from './TranslationNotesTable';
 
 import * as helpers from '../helpers';
+import * as ScriptureHelpers from '../helpers';
 
 export const Component = ({
   classes,
   context,
   setContext,
   context: {
+    resourceId,
     reference: {
+      bookId,
       chapter,
     },
   },
+  resources,
   resources: {
-    ult,
-    ust,
     original,
     tn,
   },
   lemmaIndex,
 }) => {
-  let tnObject = helpers.pivotTranslationNotes({tn: tn.data});
   let tabs = [];
+  let tnObject = {};
+  let intro;
 
-  const intro = tnObject['front']['intro'][0]['occurrence_note'];
-  const introDetails = intro.split('\n').splice(1).join('\n')
+  if (!!tn.data) {
+    tnObject = helpers.pivotTranslationNotes({tn: tn.data});
+
+    intro = tnObject['front']['intro'][0]['occurrence_note'];
+    const introDetails = intro.split('\n').splice(1).join('\n')
     .replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '');
-  tabs.push({ title: 'Book Notes', text: introDetails});
+    tabs.push({ title: 'Book Notes', text: introDetails});
 
-  if (tn) {
-    const content = (
-      <TranslationNotesTable
-        tn={tn.data}
-      />
-    );
-    tabs.push({ title: 'Search Notes', content });
+    if (!!tn) {
+      const content = (
+        <TranslationNotesTable
+          tn={tn.data}
+        />
+      );
+      tabs.push({ title: 'Search Notes', content });
+    }
   }
 
   if (lemmaIndex && Object.keys(lemmaIndex).length > 0) {
@@ -56,9 +63,7 @@ export const Component = ({
     tabs.push({ title: "Search Words", content });
   }
   const _resources = {
-    ult,
-    ust,
-    original,
+    ...resources,
     tn: {
       manifest: tn.manifest,
       data: tnObject,
@@ -73,13 +78,17 @@ export const Component = ({
       translationNotesChapterData={tnObject[chapter]}
     />
   );
+  const resource = resources[resourceId];
+  const {projects} = resource.manifest;
+  const project = ScriptureHelpers.projectByBookId({projects, bookId});
+  const bookName = project ? project.title : '';
   return (
     <div className={classes.root}>
       <ExpansionPanel
         key={''+context.reference.bookId+'intro'}
         summary={
           <ReactMarkdown
-            source={intro.split('\n')[0]}
+            source={`# ${bookName}`}
             escapeHtml={false}
           />
         }

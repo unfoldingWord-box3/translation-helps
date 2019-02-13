@@ -19,6 +19,8 @@ export async function fetchResources({
   let resources = {
     ult: null,
     ust: null,
+    ulb: null,
+    irv: null,
     tn: null,
     original: null,
   };
@@ -26,14 +28,14 @@ export async function fetchResources({
   const testament = whichTestament({bookId, uhbManifest, ugntManifest})
   const originalManifest = (testament === 'old') ? uhbManifest : ugntManifest;
 
-  const resourceIds = ['ult', 'ust', 'tn', 'original'];
+  const resourceIds = ['ult', 'ust', 'ulb', 'irv', 'tn', 'original'];
   const promises = resourceIds.map(async (resourceId) => {
     let manifest;
-    if (['ult','ust'].includes(resourceId)) {
+    if (['ult','ust', 'ulb', 'irv'].includes(resourceId) && manifests[resourceId]) {
       manifest = manifests[resourceId];
       return fetchBook({username, languageId, resourceId, bookId, manifest});
     }
-    if (resourceId === 'tn') {
+    if (resourceId === 'tn' && manifests[resourceId]) {
       manifest = manifests[resourceId];
       return translationNotes({username, languageId, bookId, manifest});
     }
@@ -55,8 +57,7 @@ export async function fetchResources({
 
 export async function fetchBook({username, languageId, resourceId, bookId, manifest}) {
   const {projects} = manifest;
-  if (!projectByBookId({projects, bookId}))
-    throw(Error(`book not found in ${resourceId}`));
+  if (!projectByBookId({projects, bookId})) return null;
   const repository = ApplicationHelpers.resourceRepositories({languageId})[resourceId];
   const usfm = await fetchFileByBookId({username, repository, bookId, manifest});
   const json = usfmjs.toJSON(usfm);
@@ -84,7 +85,7 @@ export async function fetchOriginalBook({username, languageId, bookId, uhbManife
     manifest = ugntManifest;
     repository = repositories.ugnt;
   };
-  const usfm = await fetchFileByBookId({username, repository, bookId, manifest});
+  const usfm = await fetchFileByBookId({username: 'unfoldingword', repository, bookId, manifest});
   const json = usfmjs.toJSON(usfm);
   return json.chapters;
 };
@@ -104,6 +105,7 @@ export async function fetchUHBBook({username, languageId, bookId, manifest}) {
 };
 
 export const pivotTranslationNotes = ({tn}) => {
+  if (!tn) return {};
   let translationNotesObject = {};
   let array = JSON.parse(JSON.stringify(tn));
   array.shift();
@@ -154,7 +156,12 @@ export const projectByBookId = ({projects, bookId}) => {
     project = _projects[0];
   }
   return project;
-}
+};
 
-export const tsvParse = ({tsv}) =>
-  tsv.split('\n').map(row => row.trim().split('\t'));
+export const tsvParse = ({tsv}) => {
+  try {
+    return tsv.split('\n').map(row => row.trim().split('\t'));
+  } catch {
+    return null;
+  }
+};

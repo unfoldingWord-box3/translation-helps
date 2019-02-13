@@ -1,4 +1,5 @@
 import React from 'react';
+import queryString from 'query-string';
 
 import Component from './Component';
 
@@ -15,11 +16,22 @@ class Container extends React.Component {
   };
 
   defaultContext() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const username = urlParams.get('username') || 'unfoldingword';
+    const languageId = urlParams.get('languageId') || 'en';
+    const resourceId = urlParams.get('resourceId');
+    const bookId = urlParams.get('bookId');
+    const chapter = urlParams.get('chapter');
+    const verse = urlParams.get('verse');
     return {
-      username: 'unfoldingWord',
-      languageId: 'en',
-      resourceId: null,
-      reference: {},
+      username: username,
+      languageId: languageId,
+      resourceId: resourceId,
+      reference: {
+        bookId,
+        chapter,
+        verse,
+      },
     }
   };
 
@@ -97,10 +109,15 @@ class Container extends React.Component {
 
   componentWillMount() {
     let newState = {};
-    newState.context = helpers.load({
+    const defaultContext = this.defaultContext();
+    let context = helpers.load({
       key: `${keyPrefix}context`,
-      defaultValue: this.defaultContext(),
+      defaultValue: defaultContext,
     });
+    if (defaultContext.username !== context.username) {
+      context = defaultContext;
+    }
+    newState.context = context;
     newState.history = helpers.load({
       key: `${keyPrefix}history`,
       defaultValue: [],

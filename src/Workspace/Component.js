@@ -57,7 +57,7 @@ export const Component = ({
   const shouldShowHistory = (context.view === 'history');
   if (Object.keys(manifests).length > 0) {
     const shouldShowResources = (!context.resourceId);
-    const shouldShowScripture = (['ult','ust','uhb','ugnt'].includes(context.resourceId));
+    const shouldShowScripture = (['ult','ulb','irv'].includes(context.resourceId));
     const shouldShowOpenBibleStories = (context.resourceId === 'obs');
 
     if (shouldShowHistory) component = historyComponent;

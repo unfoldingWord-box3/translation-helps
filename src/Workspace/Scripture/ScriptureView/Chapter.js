@@ -12,6 +12,7 @@ export const Chapter = ({
   classes,
   context,
   context: {
+    resourceId,
     reference,
     reference: {
       chapter,
@@ -21,11 +22,11 @@ export const Chapter = ({
   lemmaIndex,
   resources,
   resources: {
-    ult,
     tn,
   }
 }) => {
-  const verses = Object.keys(ult.data[chapter])
+  const resource = resources[resourceId];
+  const verses = Object.keys(resource.data[chapter])
   .filter(verseKey => {
     return /\d+/g.test(verseKey); // don't show front/intro
   })
@@ -39,14 +40,18 @@ export const Chapter = ({
       resources={resources}
     />
   );
-  const intro = (tn.data[chapter]['intro'] && tn.data[chapter]['intro'][0]) ?
+  let intro;
+  let tabs = [];
+  if (!!tn.data && tn.data[chapter]) {
+    intro = (tn.data[chapter]['intro'] && tn.data[chapter]['intro'][0]) ?
     tn.data[chapter]['intro'][0]['occurrence_note']
     .replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '')
     : '';
-  const tabs = [{
-    title: 'Chapter Notes',
-    text: intro,
-  }];
+    tabs = [{
+      title: 'Chapter Notes',
+      text: intro,
+    }];
+  }
   const introPanel = (
     <ExpansionPanel
       key={'chapter'+reference.chapter}

@@ -10,9 +10,11 @@ import Testament from './Testament';
 
 export const Component = ({classes, manifests, context, setContext}) => {
   let bible = {};
-  const {ult} = manifests;
-  if (ult) {
-    ult.projects.forEach(project => {
+  const bibleManifest = manifests[context.resourceId];
+  if (bibleManifest) {
+    let projects = bibleManifest.projects.slice(0);
+    projects.sort((a,b) => { return a.sort - b.sort });
+    projects.forEach(project => {
       const testamentId = project.categories.includes('bible-ot') ? 'Old Testament': 'New Testament';
       if (!bible[testamentId]) bible[testamentId] = [];
       bible[testamentId].push(project);

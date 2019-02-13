@@ -18,8 +18,8 @@ export const VerseComponent = ({
   classes,
   languageId,
   verseKey,
+  resources,
   resources: {
-    ult,
     ust,
     original,
     tn,
@@ -36,14 +36,20 @@ export const VerseComponent = ({
 
   let tabs = [];
 
-  const scriptureComponent = (
-    <div style={{paddingTop: '1em'}}>
+  let reference;
+  if (ust.data) reference = (
+    <div>
       <Reference
         verseKey={verseKey}
         resource={ust}
         context={context}
       />
       <Divider variant="middle" />
+    </div>
+  );
+  const scriptureComponent = (
+    <div style={{paddingTop: '1em'}}>
+      {reference}
       <Reference
         verseKey={verseKey}
         resource={original}
@@ -69,19 +75,19 @@ export const VerseComponent = ({
       tabs.push(wordsTab);
     }
   }
-  if (tn.data[chapter][verseKey]) {
+  if (tn.data && tn.data[chapter] && tn.data[chapter][verseKey]) {
     const notesTab = {
       title: 'Notes',
       notes: tn.data[chapter][verseKey],
     };
     tabs.push(notesTab);
   };
-
+  const resource = resources[context.resourceId];
   const details = (
     <div>
       <div style={{paddingRight: '24px'}}>
         <Title
-          manifest={ult.manifest}
+          manifest={resource.manifest}
         />
       </div>
       {
@@ -104,7 +110,7 @@ export const VerseComponent = ({
           <div className={classes.verse}>
             <Reference
               verseKey={verseKey}
-              resource={ult}
+              resource={resource}
               context={context}
               noTitle
             />

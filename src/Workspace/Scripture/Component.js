@@ -57,7 +57,6 @@ export const Scripture = ({
   if (shouldShowBookSelection) component = bookSelection;
   else if (shouldShowChapterSelection) component = chapterSelection;
   else if (shouldShowScriptureView) component = scriptureView;
-
   return (
     <div className={classes.root}>
       {component}

@@ -15,7 +15,10 @@ import styles from '../styles';
 
 const suggestions = [
   { value: 'en', label: 'en - English' },
+  { value: 'es-419', label: 'es-419 - Spanish' },
   { value: 'fr', label: 'fr - French' },
+  { value: 'hi', label: 'hi - Hindi' },
+  { value: 'pt-br', label: 'pt-br - Brazilian Portuguese'},
 ];
 
 class Container extends React.Component {
