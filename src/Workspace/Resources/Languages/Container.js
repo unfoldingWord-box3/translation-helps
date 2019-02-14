@@ -59,10 +59,11 @@ class Container extends React.Component {
     };
 
     const suggestions = this.state.languages
-    .map(({languageId, languageName, localized, gateway}) => {
+    .map(({languageId, languageName, localized, region, gateway}) => {
       const value = languageId;
-      const gatewayLabel = gateway ? '(GL)' : '(OL)';
-      const label = `${languageId} - ${languageName} - ${localized} ${gatewayLabel}`;
+      const name = `${languageId} - ${languageName} - ${localized}`;
+      const gatewayLabel = `(${region} ${gateway ? 'Gateway' : 'Other'})`;
+      const label = `${name} ${gatewayLabel}`;
       return {value, label};
     });
 
