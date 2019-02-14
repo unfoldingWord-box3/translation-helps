@@ -1,9 +1,9 @@
 import React from 'react';
-import queryString from 'query-string';
 
 import Component from './Component';
 
 import * as helpers from './helpers';
+import * as gitApi from './gitApi';
 import * as chapterAndVerses from './chaptersAndVerses';
 
 const keyPrefix = 'ApplicationContainer.state.';
@@ -63,7 +63,7 @@ class Container extends React.Component {
     const languageChanged = (oldContext.languageId !== context.languageId);
     const usernameChanged = (oldContext.username !== context.username);
     if (languageChanged || usernameChanged) {
-      manifests = await helpers.fetchResourceManifests(context);
+      manifests = await gitApi.fetchResourceManifests(context);
     }
     return manifests;
   };
@@ -143,7 +143,7 @@ class Container extends React.Component {
   async componentDidMount() {
     let newState = {};
     const {context} = this.state;
-    const manifests = await helpers.fetchResourceManifests(context);
+    const manifests = await gitApi.fetchResourceManifests(context);
     const validContext = this.validateContext({manifests, context});
     newState.manifests = manifests;
     newState.context = validContext ? context : this.defaultContext();

@@ -1,5 +1,5 @@
 import Path from 'path';
-import * as ApplicationHelpers from '../../../../../../helpers';
+import * as gitApi from '../../../../../../gitApi';
 
 /* TODO:
   remove hardcoded username and languageId
@@ -7,7 +7,7 @@ import * as ApplicationHelpers from '../../../../../../helpers';
 */
 const username = 'unfoldingword';
 const languageId = 'en'
-const repositories = ApplicationHelpers.resourceRepositories({languageId});
+const repositories = gitApi.resourceRepositories({languageId});
 
 export const parseSenses = ({lexiconMarkdown}) => {
   let uniqueSenses = [];
@@ -45,7 +45,7 @@ export async function senses({strong}) {
     path = Path.join('content', strong, '01.md');
   }
   if (repository && path) {
-    const lexiconMarkdown = await ApplicationHelpers.fetchFileFromServer({username, repository, path});
+    const lexiconMarkdown = await gitApi.fetchFileFromServer({username, repository, path});
     senses = parseSenses({lexiconMarkdown});
   }
   if (!senses) throw(Error(`Could not find sense info for: ${strong}`));

@@ -1,4 +1,4 @@
-import * as ApplicationHelpers from '../../helpers';
+import * as gitApi from '../../gitApi';
 import youtubeIds from './youtubeIds';
 
 export const framesFromStory = ({storyMarkdown}) => {
@@ -23,10 +23,10 @@ export const frameData = ({frameMarkdown}) => {
 }
 
 export async function fetchStory({username, languageId, storyId}) {
-  const repository = ApplicationHelpers.resourceRepositories({languageId}).obs;
+  const repository = gitApi.resourceRepositories({languageId}).obs;
   const numberPadded = (storyId < 10) ? `0${storyId}` : `${storyId}`;
   const path = `content/${numberPadded}.md`;
-  const storyMarkdown = await ApplicationHelpers.fetchFileFromServer({username, repository, path});
+  const storyMarkdown = await gitApi.fetchFileFromServer({username, repository, path});
   const frames = framesFromStory({storyMarkdown});
   return frames;
 };

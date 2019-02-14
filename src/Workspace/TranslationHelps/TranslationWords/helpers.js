@@ -1,6 +1,6 @@
-import * as ApplicationHelpers from '../../../helpers';
+import * as gitApi from '../../../gitApi';
 
-const resourceRepository = ({languageId}) => ApplicationHelpers.resourceRepositories({languageId}).tw;
+const resourceRepository = ({languageId}) => gitApi.resourceRepositories({languageId}).tw;
 // https://git.door43.org/[username]/[languageId]_ta/src/branch/master/bible/kt/abomination.md
 // title = first line of file
 // markdown = the path + .md
@@ -9,7 +9,7 @@ export async function fetchTitle({username, languageId, path}) {
   let title;
   const repository = resourceRepository({languageId});
   const _path = path.split('/').splice(1).join('/') + '.md';
-  const markdown = await ApplicationHelpers.fetchFileFromServer({username, repository, path: _path});
+  const markdown = await gitApi.fetchFileFromServer({username, repository, path: _path});
   if (markdown) {
     title = markdown.split(/\n/)[0].replace(/#/g, '').trim();
   }
@@ -20,7 +20,7 @@ export async function fetchArticle({username, languageId, path}) {
   let article;
   const repository = resourceRepository({languageId});
   const _path = path.split('/').filter(word => word !== 'dict').join('/') + '.md';
-  const _article = await ApplicationHelpers.fetchFileFromServer({username, repository, path: _path});
+  const _article = await gitApi.fetchFileFromServer({username, repository, path: _path});
   if (_article) {
     const prefix = _path.split('/').splice(0,1).join('/');
     article = _article

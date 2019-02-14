@@ -4,7 +4,7 @@ import usfmjs from 'usfm-js';
 // Scope: limited to resource files and parsing
 // Notes: pass in manifests don't fetch them
 
-import * as ApplicationHelpers from '../../helpers';
+import * as gitApi from '../../gitApi';
 
 export async function fetchResources({
   context: {
@@ -59,7 +59,7 @@ export async function fetchResources({
 export async function fetchBook({username, languageId, resourceId, bookId, manifest}) {
   const {projects} = manifest;
   if (!projectByBookId({projects, bookId})) return null;
-  const repository = ApplicationHelpers.resourceRepositories({languageId})[resourceId];
+  const repository = gitApi.resourceRepositories({languageId})[resourceId];
   const usfm = await fetchFileByBookId({username, repository, bookId, manifest});
   const json = usfmjs.toJSON(usfm);
   return json.chapters;
@@ -77,7 +77,7 @@ export const whichTestament = ({bookId, uhbManifest, ugntManifest}) => {
 export async function fetchOriginalBook({username, languageId, bookId, uhbManifest, ugntManifest}) {
   let manifest, repository;
   const testament = whichTestament({bookId, uhbManifest, ugntManifest});
-  const repositories = ApplicationHelpers.resourceRepositories({languageId});
+  const repositories = gitApi.resourceRepositories({languageId});
   if (testament === 'old') {
     manifest = uhbManifest;
     repository = repositories.uhb;
@@ -92,14 +92,14 @@ export async function fetchOriginalBook({username, languageId, bookId, uhbManife
 };
 
 export async function fetchUGNTBook({username, languageId, bookId, manifest}) {
-  const repository = ApplicationHelpers.resourceRepositories({languageId}).ugnt;
+  const repository = gitApi.resourceRepositories({languageId}).ugnt;
   const usfm = await fetchFileByBookId({username, repository, bookId, manifest});
   const json = usfmjs.toJSON(usfm);
   return json;
 };
 
 export async function fetchUHBBook({username, languageId, bookId, manifest}) {
-  const repository = ApplicationHelpers.resourceRepositories({languageId}).uhb;
+  const repository = gitApi.resourceRepositories({languageId}).uhb;
   const usfm = await fetchFileByBookId({username, repository, bookId, manifest});
   const json = usfmjs.toJSON(usfm);
   return json;
@@ -136,7 +136,7 @@ export async function translationNotes({username, languageId, bookId, manifest})
 };
 
 export async function fetchNotes({username, languageId, bookId, manifest}) {
-  const repository = ApplicationHelpers.resourceRepositories({languageId}).tn;
+  const repository = gitApi.resourceRepositories({languageId}).tn;
   const tsv = await fetchFileByBookId({username, repository, bookId, manifest});
   const data = tsvParse({tsv});
   return data;
@@ -146,7 +146,7 @@ export async function fetchFileByBookId({username, repository, bookId, manifest}
   const {projects} = manifest;
   let {path} = projectByBookId({projects, bookId});
   path = path.replace(/^\.\//, '');
-  const data = await ApplicationHelpers.fetchFileFromServer({username, repository, path});
+  const data = await gitApi.fetchFileFromServer({username, repository, path});
   return data;
 };
 

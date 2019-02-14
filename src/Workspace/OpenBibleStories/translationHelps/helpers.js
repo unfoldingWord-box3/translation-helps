@@ -1,4 +1,4 @@
-import * as ApplicationHelpers from '../../../helpers';
+import * as gitApi from '../../../gitApi';
 
 export async function fetchHelps({username, languageId, storyKey, frameKey}) {
   let helps = {};
@@ -32,36 +32,36 @@ export async function fetchHelps({username, languageId, storyKey, frameKey}) {
 };
 
 export async function fetchStudyQuestions({username, languageId, storyKey}) {
-  const repository = ApplicationHelpers.resourceRepositories({languageId})['obs-sq'];
+  const repository = gitApi.resourceRepositories({languageId})['obs-sq'];
   const file = pad(storyKey) + '.md';
   const path = ['content', file].join('/');
-  const markdown = await ApplicationHelpers.fetchFileFromServer({username, repository, path});
+  const markdown = await gitApi.fetchFileFromServer({username, repository, path});
   return markdown;
 };
 
 export async function fetchStudyNotes({username, languageId, storyKey, frameKey}) {
-  const repository = ApplicationHelpers.resourceRepositories({languageId})['obs-sn'];
+  const repository = gitApi.resourceRepositories({languageId})['obs-sn'];
   const file = pad(frameKey) + '.md';
   const path = ['content', pad(storyKey), file].join('/');
-  const markdown = await ApplicationHelpers.fetchFileFromServer({username, repository, path});
+  const markdown = await gitApi.fetchFileFromServer({username, repository, path});
   const data = parseStudyNotes({markdown});
   return data;
 };
 
 export async function fetchQuestions({username, languageId, storyKey, frameKey}) {
-  const repository = ApplicationHelpers.resourceRepositories({languageId})['obs-tq'];
+  const repository = gitApi.resourceRepositories({languageId})['obs-tq'];
   const file = pad(frameKey) + '.md';
   const path = ['content', pad(storyKey), file].join('/');
-  const markdown = await ApplicationHelpers.fetchFileFromServer({username, repository, path});
+  const markdown = await gitApi.fetchFileFromServer({username, repository, path});
   const questions = parseQuestions({markdown});
   return questions;
 };
 
 export async function fetchNotesAndWords({username, languageId, storyKey, frameKey}) {
-  const repository = ApplicationHelpers.resourceRepositories({languageId})['obs-tn'];
+  const repository = gitApi.resourceRepositories({languageId})['obs-tn'];
   const file = pad(frameKey) + '.md';
   const path = ['content', pad(storyKey), file].join('/');
-  const markdown = await ApplicationHelpers.fetchFileFromServer({username, repository, path});
+  const markdown = await gitApi.fetchFileFromServer({username, repository, path});
   const helps = parseNotes({markdown});
   return helps;
 };
