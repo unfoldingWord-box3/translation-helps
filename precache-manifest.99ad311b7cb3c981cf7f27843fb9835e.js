@@ -8,24 +8,24 @@ self.__precacheManifest = [
     "url": "/translation-helps/static/js/1.f11516db.chunk.js"
   },
   {
-    "revision": "fd1483ca269d63295682",
+    "revision": "c35af1163201efaa971c",
     "url": "/translation-helps/static/css/main.5c598cee.chunk.css"
   },
   {
-    "revision": "fd1483ca269d63295682",
-    "url": "/translation-helps/static/js/main.fd1483ca.chunk.js"
+    "revision": "c35af1163201efaa971c",
+    "url": "/translation-helps/static/js/main.c35af116.chunk.js"
   },
   {
     "revision": "1417c39c643023067947",
     "url": "/translation-helps/static/js/3.1417c39c.chunk.js"
   },
   {
-    "revision": "a86c5a7a205f127353a0",
-    "url": "/translation-helps/static/js/4.a86c5a7a.chunk.js"
+    "revision": "d2e11f8065da750c8e5f",
+    "url": "/translation-helps/static/js/4.d2e11f80.chunk.js"
   },
   {
-    "revision": "ca8e19a8bb5938106f03",
-    "url": "/translation-helps/static/js/5.ca8e19a8.chunk.js"
+    "revision": "6dccf351ceca1c0fe0d9",
+    "url": "/translation-helps/static/js/5.6dccf351.chunk.js"
   },
   {
     "revision": "76105b346378457e4341",
@@ -40,8 +40,8 @@ self.__precacheManifest = [
     "url": "/translation-helps/static/js/8.65001a2d.chunk.js"
   },
   {
-    "revision": "b42baa6710cc86eeeb64",
-    "url": "/translation-helps/static/js/9.b42baa67.chunk.js"
+    "revision": "a37eea11c8fab2d2ee23",
+    "url": "/translation-helps/static/js/9.a37eea11.chunk.js"
   },
   {
     "revision": "1d4901c9c2d79760bcd9",
@@ -72,11 +72,11 @@ self.__precacheManifest = [
     "url": "/translation-helps/static/js/16.e74c7869.chunk.js"
   },
   {
-    "revision": "e5e3780e8e6d8ec41783",
-    "url": "/translation-helps/static/js/runtime~main.e5e3780e.js"
+    "revision": "3e1c37209d1dc639aa0f",
+    "url": "/translation-helps/static/js/runtime~main.3e1c3720.js"
   },
   {
-    "revision": "e834b8300817f8b65fef0c5635a2355f",
+    "revision": "7c04d3463cf8802bbe40a56eb7a6c8fc",
     "url": "/translation-helps/index.html"
   }
 ];
