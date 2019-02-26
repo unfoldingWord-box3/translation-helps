@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Divider,
-  CircularProgress,
 } from '@material-ui/core';
 
 import styles from './styles';

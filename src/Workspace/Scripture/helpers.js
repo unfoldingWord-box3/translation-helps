@@ -143,11 +143,15 @@ export async function fetchNotes({username, languageId, bookId, manifest}) {
 };
 
 export async function fetchFileByBookId({username, repository, bookId, manifest}) {
+  let file;
   const {projects} = manifest;
-  let {path} = projectByBookId({projects, bookId});
-  path = path.replace(/^\.\//, '');
-  const data = await gitApi.fetchFileFromServer({username, repository, path});
-  return data;
+  let project = projectByBookId({projects, bookId});
+  if (project) {
+    let {path} = project;
+    path = path.replace(/^\.\//, '');
+    file = await gitApi.fetchFileFromServer({username, repository, path});
+  }
+  return file;
 };
 
 export const projectByBookId = ({projects, bookId}) => {

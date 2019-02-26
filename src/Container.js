@@ -17,12 +17,12 @@ class Container extends React.Component {
 
   defaultContext() {
     const urlParams = new URLSearchParams(window.location.search);
-    const username = urlParams.get('owner') || 'unfoldingword';
+    const username = urlParams.get('owner');
     const rc = urlParams.get('rc') || ''
     const rcArray = rc.slice(1).split('/').filter(string => string);
     const [languageId, resourceId, bookId, chapter, verse] = rcArray;
-    return {
-      username: username,
+    const context = {
+      username: username || 'unfoldingword',
       languageId: languageId || 'en',
       resourceId: resourceId,
       reference: {
@@ -30,7 +30,8 @@ class Container extends React.Component {
         chapter,
         verse,
       },
-    }
+    };
+    return context;
   };
 
   addToHistoryArray(_context, _history) {
@@ -126,9 +127,9 @@ class Container extends React.Component {
     const _verse = verse ? `/${verse}` : '';
     const rc = `&rc=${_languageId}${_resourceId}${_bookId}${_chapter}${_verse}`
     const path = window.location.pathname;
-  	const query = `${path}?${_username}${rc}`;
-  	window.history.pushState(context, null, query);
-  }
+    const query = `${path}?${_username}${rc}`;
+    window.history.pushState(context, null, query);
+  };
 
   componentWillMount() {
     let newState = {};
