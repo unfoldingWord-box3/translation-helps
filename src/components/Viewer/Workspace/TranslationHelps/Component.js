@@ -10,7 +10,7 @@ import {
 
 import styles from './styles';
 
-const HelpsTab = lazy(() => import('./HelpsTab'));
+const HelpsTab = lazy(() => Promise.resolve().then(() => require('./HelpsTab')));
 
 export const Component = ({
   classes,

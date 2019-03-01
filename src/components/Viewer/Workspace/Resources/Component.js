@@ -8,7 +8,7 @@ import {
 import Languages from './Languages/index';
 import styles from '../styles';
 
-const Resource = lazy(() => import('./Resource'));
+const Resource = lazy(() => Promise.resolve().then(() => require('./Resource')));
 
 export const Component = ({
   classes,

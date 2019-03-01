@@ -1,5 +1,5 @@
 import Path from 'path';
-import YAML from 'yaml';
+import YAML from 'js-yaml-parser';
 import localforage from 'localforage';
 import { setup } from 'axios-cache-adapter';
 
@@ -106,7 +106,7 @@ export async function getLanguageIdsByResource({username, resourceId}) {
 
 export async function fetchManifest({username, repository}) {
   const yaml = await fetchFileFromServer({username, repository, path: 'manifest.yaml'});
-  const json = (yaml) ? YAML.parseDocument(yaml).toJSON() : null;
+  const json = (yaml) ? YAML.safeLoad(yaml) : null;
   return json;
 };
 
@@ -154,7 +154,7 @@ export async function fetchTree({username, repository, sha='master'}) {
     const data = await get({uri});
     const tree = JSON.parse(data);
     return tree;
-  } catch {
+  } catch(error) {
     return null;
   }
 };

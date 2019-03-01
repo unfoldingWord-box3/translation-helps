@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
 } from '@material-ui/core';
 
-const Component = lazy(() => import('./Component'));
+const Component = lazy(() => Promise.resolve().then(() => require('./Component')));
 
 class Container extends React.Component {
   state = {

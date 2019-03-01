@@ -43,7 +43,6 @@ function App({classes}) {
                 context={context}
                 setContext={setContext}
                 history={history}
-                onManifestChange={()=>{}}
               />
             </div>
           </main>

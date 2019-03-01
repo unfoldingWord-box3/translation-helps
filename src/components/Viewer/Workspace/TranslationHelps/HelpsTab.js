@@ -7,9 +7,9 @@ import {
 
 import styles from './styles';
 
-const TextComponentWithRCLinks = lazy(() => import('./TextComponentWithRCLinks'));
-const TranslationNotes = lazy(() => import('./TranslationNotes'));
-const AlignedWord = lazy(() => import('../Scripture/ScriptureView/VerseObject/AlignedWords/AlignedWord'));
+const TextComponentWithRCLinks = lazy(() => Promise.resolve().then(() => require('./TextComponentWithRCLinks')));
+const TranslationNotes = lazy(() => Promise.resolve().then(() => require('./TranslationNotes')));
+const AlignedWord = lazy(() => Promise.resolve().then(() => require('../Scripture/ScriptureView/VerseObject/AlignedWords/AlignedWord')));
 
 export const Component = ({
   classes,

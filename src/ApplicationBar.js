@@ -6,7 +6,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import * as ScriptureHelpers from './Viewer/Workspace/Scripture/helpers';
+import * as ScriptureHelpers from './components/Viewer/Workspace/Scripture/helpers';
 
 const ApplicationBar = ({
   classes,

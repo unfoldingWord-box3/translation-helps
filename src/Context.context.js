@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 
 import { updateQueryFromContext, contextFromQuery } from './helpers';
-import * as chapterAndVerses from './Viewer/chaptersAndVerses';
+import * as chapterAndVerses from './components/Viewer/chaptersAndVerses';
 import * as helpers from './helpers';
 
 export const ContextContext = createContext();

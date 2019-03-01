@@ -22,7 +22,7 @@ export async function fetchArticle({username, languageId, path}) {
     .split('../').join(`http://${languageId}/ta/${prefix}/`)
     .split('/01.md').join('')
     .split('rc://').join('http://');
-  } catch {
+  } catch(error) {
     debugger
   }
   return article;

@@ -7,10 +7,10 @@ import {
 import {
 } from '@material-ui/icons';
 
-const History = lazy(() => import('./History'));
-const Resources = lazy(() => import('./Resources'));
-const OpenBibleStories = lazy(() => import('./OpenBibleStories'));
-const Scripture = lazy(() => import('./Scripture'));
+const History = lazy(() => Promise.resolve().then(() => require('./History')));
+const Resources = lazy(() => Promise.resolve().then(() => require('./Resources')));
+const OpenBibleStories = lazy(() => Promise.resolve().then(() => require('./OpenBibleStories')));
+const Scripture = lazy(() => Promise.resolve().then(() => require('./Scripture')));
 
 export const Component = ({
   classes,

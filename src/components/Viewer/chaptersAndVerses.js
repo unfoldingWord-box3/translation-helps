@@ -9,7 +9,7 @@ export const chaptersInBook = ({bookId}) => {
       chapters = bookData({bookId}).chapters;
     }
     return chapters;
-  } catch {
+  } catch(error) {
     return null;
   }
 };

@@ -51,7 +51,7 @@ export const load = ({key, defaultValue}) => {
   let value;
   try {
     value = localstorage.get(key);
-  } catch {
+  } catch(error) {
     value = defaultValue;
   }
   return value || defaultValue;
