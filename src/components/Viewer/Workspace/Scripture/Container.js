@@ -23,10 +23,13 @@ class Container extends React.Component {
   fetchResourcesConditionally(nextProps) {
     const {manifests, context: {reference}} = nextProps;
     const {ult, ust, ulb, irv, obs} = this.state;
-    const referenceChanged = (reference.bookId !== this.props.context.reference.bookId);
+    const referenceChanged = (
+      (reference && !this.props.context.reference) ||
+      (reference && (reference.bookId !== this.props.context.reference.bookId))
+    );
     const emptyBookData = (!(ult || ust || ulb || irv || obs));
     const needToFetch = (emptyBookData || referenceChanged)
-    const canFetch = (reference.bookId && Object.keys(manifests).length > 0);
+    const canFetch = (reference && reference.bookId && Object.keys(manifests).length > 0);
     if (canFetch && needToFetch) {
       helpers.fetchResources(nextProps)
       .then(resources => {
@@ -49,14 +52,17 @@ class Container extends React.Component {
   };
 
   componentDidUpdate() {
-    const {reference: {bookId, chapter, verse}} = this.props.context;
-    const id = `${bookId}_${chapter}_${verse}`;
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
+    const {reference} = this.props.context;
+    if (reference) {
+      const {bookId, chapter, verse} = reference;
+      const id = `${bookId}_${chapter}_${verse}`;
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
     }
   };
 

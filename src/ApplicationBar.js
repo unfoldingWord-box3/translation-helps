@@ -6,9 +6,9 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import * as ScriptureHelpers from '../Workspace/Scripture/helpers';
+import * as ScriptureHelpers from './Viewer/Workspace/Scripture/helpers';
 
-const Component = ({
+const ApplicationBar = ({
   classes,
   applicationName,
   manifests,
@@ -43,7 +43,7 @@ const Component = ({
   );
 }
 
-Component.propTypes = {
+ApplicationBar.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   manifests: PropTypes.object.isRequired,
@@ -71,4 +71,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles, { withTheme: true })(Component);
+export default withStyles(styles, { withTheme: true })(ApplicationBar);

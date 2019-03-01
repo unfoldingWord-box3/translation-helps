@@ -50,9 +50,9 @@ export const Scripture = ({
   );
 
   let component = loadingComponent;
-  const shouldShowBookSelection = (!reference.bookId);
-  const shouldShowChapterSelection = (reference.bookId && !reference.chapter);
-  const shouldShowScriptureView = (referenceLoaded && reference.bookId === referenceLoaded.bookId);
+  const shouldShowBookSelection = (!reference || !reference.bookId);
+  const shouldShowChapterSelection = (reference && reference.bookId && !reference.chapter);
+  const shouldShowScriptureView = (reference && referenceLoaded && reference.bookId === referenceLoaded.bookId);
 
   if (shouldShowBookSelection) component = bookSelection;
   else if (shouldShowChapterSelection) component = chapterSelection;

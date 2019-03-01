@@ -15,7 +15,7 @@ import {
   KeyboardArrowRight,
 } from '@material-ui/icons';
 
-import {chaptersInBook} from '../chaptersAndVerses';
+import {chaptersInBook} from './Viewer/chaptersAndVerses';
 
 class BottomNavContainer extends React.Component {
   handleChange = (event, value) => {

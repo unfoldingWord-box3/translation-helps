@@ -15,7 +15,17 @@ const store = localforage.createInstance({
 
 const api = setup({
   baseURL: baseURL,
-  cache: {store, maxAge: 1 * 24 * 60 * 60 * 1000},
+  cache: {
+    store,
+    maxAge: 1 * 24 * 60 * 60 * 1000,
+    exclude: { query: false },
+    key: req => {
+      // if (req.params) debugger
+      let serialized = req.params instanceof URLSearchParams ?
+      req.params.toString() : JSON.stringify(req.params) || '';
+      return req.url + serialized;
+    },
+  },
 });
 
 export const resourceRepositories = ({languageId}) => {
@@ -85,9 +95,9 @@ export async function getLanguageIds({username, resourceIds}) {
 export async function getLanguageIdsByResource({username, resourceId}) {
   let languageIds = [];
   const uid = await getUID({username});
-  const query = `q=${resourceId}&uid=${uid}&limit=50&exclusive=true`;
-  const uri = Path.join(apiPath, `repos/search?${query}`);
-  const repos = await get({uri});
+  const params = {q: resourceId, uid, limit: 50, exclusive: true};
+  const uri = Path.join(apiPath, `repos/search`);
+  const repos = await get({uri, params});
   if (repos && repos.data) {
     languageIds = repos.data.map(repo => repo.name.split('_')[0]);
   }
@@ -125,15 +135,15 @@ export async function getUID({username}) {
 }
 export async function repositoryExists({username, repository}) {
   const uid = await getUID({username});
-  const query = `q=${repository}&uid=${uid}`;
-  const uri = Path.join(apiPath, 'repos', `search?${query}`);
-  const {data: repos} = await get({uri});
+  const params = { q: repository, uid };
+  const uri = Path.join(apiPath, 'repos', `search`);
+  const {data: repos} = await get({uri, params});
   const repo = repos.filter(repo => repo.name === repository)[0];
   return !!repo;
 };
 
-async function get({uri}) {
-  const {data} = await api.get(uri);
+async function get({uri, params}) {
+  const {data} = await api.get(uri, { params });
   return data;
 };
 

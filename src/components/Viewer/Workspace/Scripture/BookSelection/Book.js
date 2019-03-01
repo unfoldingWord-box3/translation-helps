@@ -27,7 +27,7 @@ export const Component = ({
   return (
     <ListItem
       button
-      selected={reference.bookId === bookMetadata.identifier}
+      selected={reference && reference.bookId === bookMetadata.identifier}
       className={classes.bookListItem}
       style={{
         paddingLeft: '2.2em',
@@ -43,7 +43,7 @@ export const Component = ({
     >
       <ListItemIcon className={classes.listItemIcon}>
         {
-          (reference.bookId === bookMetadata.identifier) ?
+          (reference && reference.bookId === bookMetadata.identifier) ?
           <Book /> :
           <BookOutlined />
         }
