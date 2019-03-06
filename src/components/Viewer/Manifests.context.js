@@ -2,9 +2,8 @@ import React, {
   createContext,
   useState
 } from 'react';
-
+import deepFreeze from 'deep-freeze';
 import * as gitApi from './gitApi';
-import * as helpers from './helpers';
 
 export const ManifestsContext = createContext();
 
@@ -29,7 +28,7 @@ export function ManifestsContextProvider({children}) {
     return _manifests;
   };
 
-  const _manifests = helpers.deepFreeze(manifests);
+  const _manifests = deepFreeze(manifests);
 
   const value = {
     manifests: _manifests,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -11,18 +11,21 @@ import BookSelection from './BookSelection';
 import ChapterSelection from './ChapterSelection';
 import ScriptureView from './ScriptureView';
 
+import {ResourcesContext} from './Resources.context';
+
 export const Scripture = ({
   classes,
-  resources,
   manifests,
   context,
   setContext,
   context: {
     reference
   },
-  referenceLoaded,
   lemmaIndex,
 }) => {
+  const {populateResources, contextLoaded} = useContext(ResourcesContext);
+  populateResources({manifests, context});
+
   const bookSelection = (
     <BookSelection
       context={context}
@@ -41,8 +44,6 @@ export const Scripture = ({
     <ScriptureView
       context={context}
       setContext={setContext}
-      resources={resources}
-      lemmaIndex={lemmaIndex}
     />
   );
   const loadingComponent = (
@@ -52,7 +53,7 @@ export const Scripture = ({
   let component = loadingComponent;
   const shouldShowBookSelection = (!reference || !reference.bookId);
   const shouldShowChapterSelection = (reference && reference.bookId && !reference.chapter);
-  const shouldShowScriptureView = (reference && referenceLoaded && reference.bookId === referenceLoaded.bookId);
+  const shouldShowScriptureView = (contextLoaded.reference && contextLoaded.reference.bookId);
 
   if (shouldShowBookSelection) component = bookSelection;
   else if (shouldShowChapterSelection) component = chapterSelection;
@@ -68,7 +69,6 @@ Scripture.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
-  lemmaIndex: PropTypes.object,
   manifests: PropTypes.object,
 };
 

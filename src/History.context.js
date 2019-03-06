@@ -2,6 +2,7 @@ import React, {
   createContext,
   useState
 } from 'react';
+import deepFreeze from 'deep-freeze';
 
 import * as helpers from './helpers';
 
@@ -48,7 +49,7 @@ export function HistoryContextProvider({children}) {
     helpers.save({ key: `${keyPrefix}history`, value: history });
   };
 
-  const _history = history ? helpers.deepFreeze(history) : null;
+  const _history = history ? deepFreeze(history) : null;
 
   const value = {
     history: _history,

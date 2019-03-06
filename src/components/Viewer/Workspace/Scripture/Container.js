@@ -1,56 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Component from './Component';
+import Scripture from './Scripture';
 
-import * as helpers from './helpers';
-import * as AlignmentHelpers from './Alignment/helpers';
+import {ResourcesContextProvider} from './Resources.context';
+import {LemmaIndexContextProvider} from './LemmaIndex.context';
 
 class Container extends React.Component {
-  state = {
-    lemmaIndex: null,
-    referenceLoaded: null,
-    resources: {
-      ult: null,
-      ulb: null,
-      irv: null,
-      ust: null,
-      tn: null,
-      original: null,
-    },
-  };
-
-  fetchResourcesConditionally(nextProps) {
-    const {manifests, context: {reference}} = nextProps;
-    const {ult, ust, ulb, irv, obs} = this.state;
-    const referenceChanged = (
-      (reference && !this.props.context.reference) ||
-      (reference && (reference.bookId !== this.props.context.reference.bookId))
-    );
-    const emptyBookData = (!(ult || ust || ulb || irv || obs));
-    const needToFetch = (emptyBookData || referenceChanged)
-    const canFetch = (reference && reference.bookId && Object.keys(manifests).length > 0);
-    if (canFetch && needToFetch) {
-      helpers.fetchResources(nextProps)
-      .then(resources => {
-        const lemmaIndex = AlignmentHelpers.index({data: resources.ult.data});
-        this.setState({
-          lemmaIndex,
-          resources,
-          referenceLoaded: reference,
-        });
-      });
-    }
-  };
-
-  componentWillReceiveProps(nextProps) {
-    this.fetchResourcesConditionally(nextProps);
-  };
-
-  componentDidMount() {
-    this.fetchResourcesConditionally(this.props);
-  };
-
   componentDidUpdate() {
     const {reference} = this.props.context;
     if (reference) {
@@ -68,14 +24,14 @@ class Container extends React.Component {
 
   render() {
     const props = this.props;
-    const {lemmaIndex, resources, referenceLoaded} = this.state;
     return (
-      <Component
-        {...props}
-        lemmaIndex={lemmaIndex}
-        referenceLoaded={referenceLoaded}
-        resources={resources}
-      />
+      <ResourcesContextProvider>
+        <LemmaIndexContextProvider>
+          <Scripture
+            {...props}
+          />
+        </LemmaIndexContextProvider>
+      </ResourcesContextProvider>
     );
   };
 };

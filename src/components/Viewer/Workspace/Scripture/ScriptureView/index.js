@@ -1,2 +1,2 @@
-import Component from './Component';
-export default Component;
+import ScriptureView from './ScriptureView';
+export default ScriptureView;

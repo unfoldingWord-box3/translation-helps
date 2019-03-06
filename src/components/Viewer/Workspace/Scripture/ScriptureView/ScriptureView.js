@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import { withStyles } from '@material-ui/core/styles';
@@ -14,7 +14,10 @@ import TranslationNotesTable from './TranslationNotesTable';
 import * as helpers from '../helpers';
 import * as ScriptureHelpers from '../helpers';
 
-export const Component = ({
+import {ResourcesContext} from '../Resources.context';
+import {LemmaIndexContext} from '../LemmaIndex.context';
+
+export const ScriptureView = ({
   classes,
   context,
   setContext,
@@ -25,18 +28,19 @@ export const Component = ({
       chapter,
     },
   },
-  resources,
-  resources: {
-    original,
-    tn,
-  },
-  lemmaIndex,
 }) => {
+  const {resources} = useContext(ResourcesContext);
+  const {lemmaIndex, populateLemmaIndex} = useContext(LemmaIndexContext);
+  const {data} = resources[resourceId];
+  if (data && Object.keys(lemmaIndex).length === 0)
+    populateLemmaIndex({data});
+
   let tabs = [];
   let tnObject = {};
   let intro;
 
-  if (!!tn.data) {
+  if (resources && resources.tn && resources.tn.data) {
+    const { tn } = resources;
     tnObject = helpers.pivotTranslationNotes({tn: tn.data});
 
     intro = tnObject['front']['intro'][0]['occurrence_note'];
@@ -62,10 +66,11 @@ export const Component = ({
     );
     tabs.push({ title: "Search Words", content });
   }
+  const tnManifest = resources.tn ? resources.tn.manifest : {};
   const _resources = {
     ...resources,
     tn: {
-      manifest: tn.manifest,
+      manifest: tnManifest,
       data: tnObject,
     },
   };
@@ -73,7 +78,6 @@ export const Component = ({
     <Chapter
       context={context}
       setContext={setContext}
-      lemmaIndex={lemmaIndex}
       resources={_resources}
       translationNotesChapterData={tnObject[chapter]}
     />
@@ -105,12 +109,10 @@ export const Component = ({
   );
 };
 
-Component.propTypes = {
+ScriptureView.propTypes = {
   classes: PropTypes.object.isRequired,
-  resources: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
   context: PropTypes.object.isRequired,
-  lemmaIndex: PropTypes.object,
 };
 
-export default withStyles(styles)(Component);
+export default withStyles(styles)(ScriptureView);

@@ -2,10 +2,10 @@ import React, {
   createContext,
   useState
 } from 'react';
+import deepFreeze from 'deep-freeze';
 
 import { updateQueryFromContext, contextFromQuery } from './helpers';
 import * as chapterAndVerses from './components/Viewer/chaptersAndVerses';
-import * as helpers from './helpers';
 
 export const ContextContext = createContext();
 
@@ -52,7 +52,7 @@ export function ContextContextProvider({children}) {
     }
   };
 
-  const _context = helpers.deepFreeze(context);
+  const _context = deepFreeze(context);
 
   const value = {
     context: _context,
