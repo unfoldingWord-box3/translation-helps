@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {useContext} from 'react';
 import MUIDataTable from "mui-datatables";
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import {
@@ -7,10 +6,22 @@ import {
 
 import getMuiTheme from './theme';
 
-export const VerseCountTable = ({
-  columns,
-  data,
-}) => {
+import {ResourcesContext} from '../Resources.context';
+
+export const VerseCountTable = () => {
+  let columns, data = [];
+  const {
+    contextLoaded,
+    verseCountTableData,
+    populateVerseCountTableData,
+  } = useContext(ResourcesContext);
+  if (contextLoaded.reference && !verseCountTableData) {
+    populateVerseCountTableData();
+  } else {
+    columns = verseCountTableData.columns;
+    data = verseCountTableData.data;
+  }
+
   const options = {
     filterType: 'checkbox',
     selectableRows: false,
@@ -31,11 +42,6 @@ export const VerseCountTable = ({
       />
     </MuiThemeProvider>
   );
-};
-
-VerseCountTable.propTypes = {
-  columns: PropTypes.array.isRequired,
-  data: PropTypes.array.isRequired,
 };
 
 export default VerseCountTable;

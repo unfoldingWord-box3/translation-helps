@@ -1,5 +1,4 @@
 import React, {useContext} from 'react';
-import PropTypes from 'prop-types';
 import MUIDataTable from 'mui-datatables';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 
@@ -101,9 +100,6 @@ export const AlignmentsTable = () => {
       />
     </MuiThemeProvider>
   );
-};
-
-AlignmentsTable.propTypes = {
 };
 
 export default AlignmentsTable;

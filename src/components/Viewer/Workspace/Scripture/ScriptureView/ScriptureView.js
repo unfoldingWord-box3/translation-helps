@@ -32,14 +32,7 @@ export const ScriptureView = ({
 }) => {
   const {
     resources,
-    contextLoaded,
-    verseCountTableData,
-    populateVerseCountTableData,
   } = useContext(ResourcesContext);
-  const {data} = resources[resourceId];
-  if (contextLoaded.reference && data && !verseCountTableData) {
-    populateVerseCountTableData();
-  }
 
   let tabs = [];
   let tnObject = {};
@@ -64,22 +57,17 @@ export const ScriptureView = ({
     }
   }
 
-  if (verseCountTableData && Object.keys(verseCountTableData).length > 0) {
-    const content = (
-      <VerseCountTable
-        columns={verseCountTableData.columns}
-        data={verseCountTableData.data}
-      />
-    );
-    tabs.push({ title: "Verse Counts", content });
-  }
+  const verseCountTable = (
+    <VerseCountTable />
+  );
+  tabs.push({ title: "Verse Counts", content: verseCountTable });
 
-  const content = (
+  const alignmentsTable = (
     <LemmaIndexContextProvider>
       <AlignmentsTable />
     </LemmaIndexContextProvider>
   );
-  tabs.push({ title: "Search Words", content });
+  tabs.push({ title: "Search Words", content: alignmentsTable });
 
   const tnManifest = resources.tn ? resources.tn.manifest : {};
   const _resources = {
