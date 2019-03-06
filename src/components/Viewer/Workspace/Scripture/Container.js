@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Scripture from './Scripture';
 
 import {ResourcesContextProvider} from './Resources.context';
-import {LemmaIndexContextProvider} from './LemmaIndex.context';
 
 class Container extends React.Component {
   componentDidUpdate() {
@@ -26,11 +25,9 @@ class Container extends React.Component {
     const props = this.props;
     return (
       <ResourcesContextProvider>
-        <LemmaIndexContextProvider>
-          <Scripture
-            {...props}
-          />
-        </LemmaIndexContextProvider>
+        <Scripture
+          {...props}
+        />
       </ResourcesContextProvider>
     );
   };

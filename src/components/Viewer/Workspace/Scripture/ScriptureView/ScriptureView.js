@@ -16,7 +16,7 @@ import * as helpers from '../helpers';
 import * as ScriptureHelpers from '../helpers';
 
 import {ResourcesContext} from '../Resources.context';
-import {LemmaIndexContext} from '../LemmaIndex.context';
+import {LemmaIndexContextProvider} from './AlignmentsTable/LemmaIndex.context';
 
 export const ScriptureView = ({
   classes,
@@ -36,11 +36,7 @@ export const ScriptureView = ({
     verseCountTableData,
     populateVerseCountTableData,
   } = useContext(ResourcesContext);
-  const {lemmaIndex, populateLemmaIndex} = useContext(LemmaIndexContext);
   const {data} = resources[resourceId];
-  if (!lemmaIndex && contextLoaded.reference && data) {
-    populateLemmaIndex({data});
-  }
   if (contextLoaded.reference && data && !verseCountTableData) {
     populateVerseCountTableData();
   }
@@ -78,14 +74,13 @@ export const ScriptureView = ({
     tabs.push({ title: "Verse Counts", content });
   }
 
-  if (lemmaIndex && Object.keys(lemmaIndex).length > 0) {
-    const content = (
-      <AlignmentsTable
-        lemmaIndex={lemmaIndex}
-      />
-    );
-    tabs.push({ title: "Search Words", content });
-  }
+  const content = (
+    <LemmaIndexContextProvider>
+      <AlignmentsTable />
+    </LemmaIndexContextProvider>
+  );
+  tabs.push({ title: "Search Words", content });
+
   const tnManifest = resources.tn ? resources.tn.manifest : {};
   const _resources = {
     ...resources,

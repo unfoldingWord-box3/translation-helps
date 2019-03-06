@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import deepFreeze from 'deep-freeze';
 
-import * as AlignmentHelpers from './Alignment/helpers';
+import * as helpers from './helpers';
 
 export const LemmaIndexContext = createContext();
 
@@ -12,7 +12,7 @@ export function LemmaIndexContextProvider({children}) {
   const [lemmaIndex, setLemmaIndex] = useState();
 
   const populateLemmaIndex = ({data}) => {
-    const _lemmaIndex = AlignmentHelpers.index({data});
+    const _lemmaIndex = helpers.index({data});
     setLemmaIndex(_lemmaIndex);
   }
 

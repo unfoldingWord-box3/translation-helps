@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import MUIDataTable from 'mui-datatables';
 import { MuiThemeProvider } from '@material-ui/core/styles';
@@ -6,9 +6,23 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import * as helpers from './helpers';
 import getMuiTheme from '../theme';
 
-export const AlignmentsTable = ({
-  lemmaIndex,
-}) => {
+import {ResourcesContext} from '../../Resources.context';
+import {LemmaIndexContext} from './LemmaIndex.context';
+
+export const AlignmentsTable = () => {
+  const {
+    resources,
+    contextLoaded,
+    contextLoaded: {
+      resourceId,
+    }
+  } = useContext(ResourcesContext);
+
+  const {lemmaIndex, populateLemmaIndex} = useContext(LemmaIndexContext);
+  if (!lemmaIndex && contextLoaded.reference && resources[resourceId]) {
+    populateLemmaIndex({data: resources[resourceId].data});
+  }
+
   const columns = [
     {
       name: "Strong's: Lemma",
@@ -41,29 +55,31 @@ export const AlignmentsTable = ({
   ];
 
   let data = [];
-  Object.keys(lemmaIndex).forEach(lemma => {
-    const lemmaRows = lemmaIndex[lemma].map(entry => {
-      const {
-        strong,
-        alignment,
-        reference: {
-          chapter,
-          verse,
-        },
-      } = entry;
-      const {originalTexts, targetTexts} = helpers.textFromVerseObject({verseObject: alignment});
-      const original = originalTexts.join(' ');
-      const target = targetTexts.join(' ');
-      const reference = `${chapter}:${verse}`;
-      return [
-        `${strong}: ${lemma}`,
-        original,
-        target,
-        reference
-      ];
+  if (lemmaIndex) {
+    Object.keys(lemmaIndex).forEach(lemma => {
+      const lemmaRows = lemmaIndex[lemma].map(entry => {
+        const {
+          strong,
+          alignment,
+          reference: {
+            chapter,
+            verse,
+          },
+        } = entry;
+        const {originalTexts, targetTexts} = helpers.textFromVerseObject({verseObject: alignment});
+        const original = originalTexts.join(' ');
+        const target = targetTexts.join(' ');
+        const reference = `${chapter}:${verse}`;
+        return [
+          `${strong}: ${lemma}`,
+          original,
+          target,
+          reference
+        ];
+      });
+      data = data.concat(lemmaRows);
     });
-    data = data.concat(lemmaRows);
-  });
+  }
 
   const options = {
     filterType: 'checkbox',
@@ -88,7 +104,6 @@ export const AlignmentsTable = ({
 };
 
 AlignmentsTable.propTypes = {
-  lemmaIndex: PropTypes.object.isRequired,
 };
 
 export default AlignmentsTable;
