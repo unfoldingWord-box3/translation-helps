@@ -1,35 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import MUIDataTable from 'mui-datatables';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 import * as helpers from './helpers';
-
-const getMuiTheme = () => createMuiTheme({
-  overrides: {
-    MuiPaper: {
-      elevation4: {
-        boxShadow: 'none',
-      },
-      rounded: {
-        borderRadius: 'unset',
-      },
-      root: {
-        backgroundColor: 'unset',
-      }
-    },
-    MuiTableCell: {
-      root: {
-        padding: "0 8px 0 8px",
-      }
-    },
-    MuiTableRow: {
-      root: {
-        height: 'unset',
-      }
-    },
-  }
-});
+import getMuiTheme from '../theme';
 
 export const AlignmentsTable = ({
   lemmaIndex,

@@ -11,6 +11,7 @@ export const ResourcesContext = createContext();
 export function ResourcesContextProvider({children}) {
   const [resources, setResources] = useState({});
   const [contextLoaded, setContextLoaded] = useState({});
+  const [verseCountTableData, setVerseCountTableData] = useState();
 
   const populateResources = async ({
     manifests,
@@ -34,12 +35,48 @@ export function ResourcesContextProvider({children}) {
     }
   };
 
+  const populateVerseCountTableData = () => {
+    let columns = ['bookId', 'chapter'];
+    let data = [];
+    let index = {};
+    const {reference: {bookId}} = contextLoaded;
+    const resourceIds = Object.keys(resources);
+    resourceIds.forEach(resourceId => {
+      const resource = resources[resourceId];
+      if (resource.data && /usfm/.test(resource.manifest.dublin_core.format)) {
+        columns.push(resourceId);
+        const chapterKeys = Object.keys(resource.data);
+        chapterKeys.forEach(chapterKey => {
+          index[chapterKey] = index[chapterKey] || {};
+          const chapterData = resource.data[chapterKey];
+          const verseCount = Object.keys(chapterData).length;
+          index[chapterKey][resourceId] = verseCount;
+        });
+      }
+    });
+    const chapterKeys = Object.keys(index);
+    chapterKeys.forEach(chapterKey => {
+      const chapterIndex = index[chapterKey];
+      const resourceIds = Object.keys(chapterIndex);
+      let row = [bookId, chapterKey];
+      resourceIds.forEach(resourceId => {
+        const verseCount = chapterIndex[resourceId];
+        row.push(verseCount);
+      });
+      data.push(row);
+    });
+    const _verseCountTableData = {columns, data};
+    setVerseCountTableData(_verseCountTableData);
+  };
+
   const _resources = deepFreeze(resources);
 
   const value = {
     resources: _resources,
     populateResources,
     contextLoaded,
+    verseCountTableData,
+    populateVerseCountTableData,
   };
 
   return (

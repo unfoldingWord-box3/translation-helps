@@ -5,7 +5,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import {
 } from '@material-ui/core';
 
-import getMuiTheme from './theme';
+import getMuiTheme from '../theme';
 
 export const AlignmentsTable = ({
   tn,

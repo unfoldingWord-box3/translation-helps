@@ -10,6 +10,7 @@ import Chapter from './Chapter';
 import TranslationHelps from '../../TranslationHelps';
 import AlignmentsTable from './AlignmentsTable';
 import TranslationNotesTable from './TranslationNotesTable';
+import VerseCountTable from './VerseCountTable';
 
 import * as helpers from '../helpers';
 import * as ScriptureHelpers from '../helpers';
@@ -29,11 +30,20 @@ export const ScriptureView = ({
     },
   },
 }) => {
-  const {resources} = useContext(ResourcesContext);
+  const {
+    resources,
+    contextLoaded,
+    verseCountTableData,
+    populateVerseCountTableData,
+  } = useContext(ResourcesContext);
   const {lemmaIndex, populateLemmaIndex} = useContext(LemmaIndexContext);
   const {data} = resources[resourceId];
-  if (data && Object.keys(lemmaIndex).length === 0)
+  if (contextLoaded.reference && data && Object.keys(lemmaIndex).length === 0) {
     populateLemmaIndex({data});
+  }
+  if (contextLoaded.reference && data && !verseCountTableData) {
+    populateVerseCountTableData();
+  }
 
   let tabs = [];
   let tnObject = {};
@@ -56,6 +66,16 @@ export const ScriptureView = ({
       );
       tabs.push({ title: 'Search Notes', content });
     }
+  }
+
+  if (verseCountTableData && Object.keys(verseCountTableData).length > 0) {
+    const content = (
+      <VerseCountTable
+        columns={verseCountTableData.columns}
+        data={verseCountTableData.data}
+      />
+    );
+    tabs.push({ title: "Verse Counts", content });
   }
 
   if (lemmaIndex && Object.keys(lemmaIndex).length > 0) {
