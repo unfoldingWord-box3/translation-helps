@@ -30,7 +30,7 @@ export const Reference = ({
 }) => {
 
   let verse = <span />;
-  if (data[chapter][verseKey].verseObjects) {
+  if (data[chapter][verseKey] && data[chapter][verseKey].verseObjects) {
     verse = data[chapter][verseKey].verseObjects.map((verseObject, index) =>
       <VerseObject
         key={index}
