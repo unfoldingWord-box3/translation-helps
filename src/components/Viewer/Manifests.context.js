@@ -14,16 +14,19 @@ export function ManifestsContextProvider({children}) {
   // load new manifests and update context if language or username changes
   const populateManifests = async ({context}) => {
     const _manifests = await gitApi.fetchResourceManifests(context);
-    return setManifests(_manifests);
+    setManifests(_manifests);
+    return _manifests;
   };
 
   // load new manifests and update context if language or username changes
   const refreshManifests = async ({context, oldContext}) => {
+    let _manifests = {...manifests};
     const languageChanged = (oldContext.languageId !== context.languageId);
     const usernameChanged = (oldContext.username !== context.username);
     if (languageChanged || usernameChanged) {
-      populateManifests({context});
+      _manifests = await populateManifests({context});
     };
+    return _manifests;
   };
 
   const _manifests = helpers.deepFreeze(manifests);

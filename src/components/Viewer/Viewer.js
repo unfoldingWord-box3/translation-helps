@@ -13,14 +13,17 @@ function Viewer({
   context,
   setContext,
   history,
+  handleManifestsChange,
 }) {
   const [oldContext, setOldContext] = useState(context);
   const {manifests, populateManifests, refreshManifests} = useContext(ManifestsContext);
   if (Object.keys(manifests).length === 0) {
-    populateManifests({context});
+    populateManifests({context})
+    .then(handleManifestsChange);
   }
   if (JSON.stringify(context) !== JSON.stringify(oldContext)) {
-    refreshManifests({context, oldContext});
+    refreshManifests({context, oldContext})
+    .then(handleManifestsChange);
     setOldContext(context);
   }
 

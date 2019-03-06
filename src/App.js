@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 
@@ -15,8 +15,7 @@ import { HistoryContext, HistoryContextProvider } from './History.context';
 function App({classes}) {
   const {context, updateContext} = useContext(ContextContext);
   const {history, addHistory} = useContext(HistoryContext);
-
-  const manifests = {};
+  const [manifests, setManifests] = useState({});
 
   // window.addEventListener("popstate", (e) => {
   //   const context = e.state;
@@ -43,6 +42,7 @@ function App({classes}) {
                 context={context}
                 setContext={setContext}
                 history={history}
+                handleManifestsChange={setManifests}
               />
             </div>
           </main>
