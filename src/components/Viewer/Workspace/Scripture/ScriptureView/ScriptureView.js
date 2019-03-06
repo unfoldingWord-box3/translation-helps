@@ -38,7 +38,7 @@ export const ScriptureView = ({
   } = useContext(ResourcesContext);
   const {lemmaIndex, populateLemmaIndex} = useContext(LemmaIndexContext);
   const {data} = resources[resourceId];
-  if (contextLoaded.reference && data && Object.keys(lemmaIndex).length === 0) {
+  if (!lemmaIndex && contextLoaded.reference && data) {
     populateLemmaIndex({data});
   }
   if (contextLoaded.reference && data && !verseCountTableData) {

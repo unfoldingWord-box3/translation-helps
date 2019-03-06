@@ -34,7 +34,8 @@ export const VerseCountTable = ({
 };
 
 VerseCountTable.propTypes = {
-  tn: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired,
 };
 
 export default VerseCountTable;
