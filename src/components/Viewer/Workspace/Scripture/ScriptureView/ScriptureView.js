@@ -40,7 +40,10 @@ export const ScriptureView = ({
     intro = resources.tn.data.front.intro[0]['occurrence_note'];
     const introDetails = intro.split('\n').splice(1).join('\n')
     .replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '');
-    tabs.push({ title: 'Book Notes', text: introDetails});
+    tabs.push({
+      title: resources.tn.manifest.dublin_core.title,
+      text: introDetails
+    });
   }
 
   const translationNotesTable = (

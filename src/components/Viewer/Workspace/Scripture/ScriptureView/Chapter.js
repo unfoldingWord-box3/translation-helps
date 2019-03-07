@@ -50,7 +50,7 @@ export const Chapter = ({
     .replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '')
     : '';
     tabs = [{
-      title: 'Chapter Notes',
+      title: tn.manifest.dublin_core.title,
       text: intro,
     }];
   }

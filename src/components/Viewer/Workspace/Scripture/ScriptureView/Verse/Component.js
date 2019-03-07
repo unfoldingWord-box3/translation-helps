@@ -83,7 +83,7 @@ export const VerseComponent = ({
   }
   if (tn.data && tn.data[chapter] && tn.data[chapter][verseKey]) {
     const notesTab = {
-      title: 'Notes',
+      title: tn.manifest.dublin_core.title,
       notes: tn.data[chapter][verseKey],
     };
     tabs.push(notesTab);
