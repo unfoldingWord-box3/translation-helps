@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "b86bfb6ae790a716da12",
+    "revision": "96f9568e58142dd002c6",
     "url": "/translation-helps/static/css/main.251c9ed6.chunk.css"
   },
   {
-    "revision": "b86bfb6ae790a716da12",
-    "url": "/translation-helps/static/js/main.b86bfb6a.chunk.js"
+    "revision": "96f9568e58142dd002c6",
+    "url": "/translation-helps/static/js/main.96f9568e.chunk.js"
   },
   {
     "revision": "2639ee40e7f929ec2950",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/translation-helps/static/js/2.4cfb57ea.chunk.js"
   },
   {
-    "revision": "e3c8b2fe99ea2adaa0bcaeaa408ad883",
+    "revision": "21422a3ff5224d0c6193f9806e682dcc",
     "url": "/translation-helps/index.html"
   }
 ];
