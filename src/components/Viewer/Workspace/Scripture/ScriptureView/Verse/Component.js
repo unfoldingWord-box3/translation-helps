@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -14,16 +14,12 @@ import Title from './Title';
 
 import * as originalHelpers from '../../../TranslationHelps/Original/helpers';
 
+import {ResourcesContext} from '../../Resources.context';
+
 export const VerseComponent = ({
   classes,
   languageId,
   verseKey,
-  resources,
-  resources: {
-    ust,
-    original,
-    tn,
-  },
   context,
   setContext,
   context: {
@@ -34,6 +30,13 @@ export const VerseComponent = ({
     },
   },
 }) => {
+  const {
+    resources,
+    resources: {
+      tn,
+      original,
+    },
+  } = useContext(ResourcesContext);
 
   let tabs = [];
 
@@ -130,7 +133,6 @@ VerseComponent.propTypes = {
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
   verseKey: PropTypes.string.isRequired,
-  resources: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(VerseComponent);

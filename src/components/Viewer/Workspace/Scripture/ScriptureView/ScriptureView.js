@@ -9,10 +9,9 @@ import ExpansionPanel from './ExpansionPanel';
 import Chapter from './Chapter';
 import TranslationHelps from '../../TranslationHelps';
 import AlignmentsTable from './AlignmentsTable';
-import TranslationNotesTable from './TranslationNotesTable';
+import TranslationNotesTable from './TranslationNotesTable.js';
 import VerseCountTable from './VerseCountTable';
 
-import * as helpers from '../helpers';
 import * as ScriptureHelpers from '../helpers';
 
 import {ResourcesContext} from '../Resources.context';
@@ -35,27 +34,19 @@ export const ScriptureView = ({
   } = useContext(ResourcesContext);
 
   let tabs = [];
-  let tnObject = {};
   let intro;
 
-  if (resources && resources.tn && resources.tn.data) {
-    const { tn } = resources;
-    tnObject = helpers.pivotTranslationNotes({tn: tn.data});
-
-    intro = tnObject['front']['intro'][0]['occurrence_note'];
+  if (resources && resources.tn && resources.tn.data && resources.tn.data.front) {
+    intro = resources.tn.data.front.intro[0]['occurrence_note'];
     const introDetails = intro.split('\n').splice(1).join('\n')
     .replace(/\[\[rc:\/\//g, 'http://').replace(/\]\]?/g, '');
     tabs.push({ title: 'Book Notes', text: introDetails});
-
-    if (!!tn) {
-      const content = (
-        <TranslationNotesTable
-          tn={tn.data}
-        />
-      );
-      tabs.push({ title: 'Search Notes', content });
-    }
   }
+
+  const translationNotesTable = (
+    <TranslationNotesTable />
+  );
+  tabs.push({ title: 'Search Notes', content: translationNotesTable });
 
   const verseCountTable = (
     <VerseCountTable />
@@ -69,20 +60,10 @@ export const ScriptureView = ({
   );
   tabs.push({ title: "Search Words", content: alignmentsTable });
 
-  const tnManifest = resources.tn ? resources.tn.manifest : {};
-  const _resources = {
-    ...resources,
-    tn: {
-      manifest: tnManifest,
-      data: tnObject,
-    },
-  };
   const chapterComponent = (
     <Chapter
       context={context}
       setContext={setContext}
-      resources={_resources}
-      translationNotesChapterData={tnObject[chapter]}
     />
   );
   const resource = resources[resourceId];

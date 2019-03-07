@@ -29,11 +29,19 @@ export function ResourcesContextProvider({children}) {
     const needToFetch = (emptyBookData || referenceChanged)
     const canFetch = (reference && reference.bookId && Object.keys(manifests).length > 0);
     if (canFetch && needToFetch) {
-      const _resources = await helpers.fetchResources({manifests, context});
+      let _resources = await helpers.fetchResources({manifests, context});
+      _resources.tn = pivotTranslationNotes(_resources.tn);
       setResources(_resources);
       setContextLoaded(context);
     }
   };
+
+  const pivotTranslationNotes = (tn) => {
+    const rows = tn.data;
+    const data = helpers.pivotTranslationNotes({tn: rows});
+    const _tn = {...tn, data, rows};
+    return _tn;
+  }
 
   const populateVerseCountTableData = () => {
     let columns = ['bookId', 'chapter'];
@@ -43,7 +51,7 @@ export function ResourcesContextProvider({children}) {
     const resourceIds = Object.keys(resources);
     resourceIds.forEach(resourceId => {
       const resource = resources[resourceId];
-      if (resource.data && /usfm/.test(resource.manifest.dublin_core.format)) {
+      if (resource.data && resource.manifest && /usfm/.test(resource.manifest.dublin_core.format)) {
         columns.push(resourceId);
         const chapterKeys = Object.keys(resource.data);
         chapterKeys.forEach(chapterKey => {

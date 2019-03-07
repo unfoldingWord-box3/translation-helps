@@ -1,15 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {useContext} from 'react';
 import MUIDataTable from "mui-datatables";
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import {
 } from '@material-ui/core';
 
-import getMuiTheme from '../theme';
+import getMuiTheme from './theme';
 
-export const AlignmentsTable = ({
-  tn,
-}) => {
+import {ResourcesContext} from '../Resources.context';
+
+export const AlignmentsTable = () => {
+  const {
+    resources: {
+      tn,
+    },
+  } = useContext(ResourcesContext);
   const columns = [
     {
       name: "C:V",
@@ -74,22 +78,27 @@ export const AlignmentsTable = ({
       }
     },
   ];
-  tn.shift();
-  tn.pop();
-  let data = tn.map(row => {
-    const [book, chapter, verse, id, supportReference, origQuote, occurrence, glQuote, note] = row;
-    if (book) {/* book not used, this bypasses linter warning */}
-    const type = (!supportReference) ? 'general' : supportReference;
-    return [
-      `${chapter}:${verse}`,
-      id,
-      type,
-      origQuote,
-      occurrence,
-      glQuote,
-      note,
-    ];
-  });
+
+  let data = [];
+  if (tn.rows) {
+    const rows = tn.rows.slice(0);
+    rows.shift();
+    rows.pop();
+    data = rows.map(row => {
+      const [book, chapter, verse, id, supportReference, origQuote, occurrence, glQuote, note] = row;
+      if (book) {/* book not used, this bypasses linter warning */}
+      const type = (!supportReference) ? 'general' : supportReference;
+      return [
+        `${chapter}:${verse}`,
+        id,
+        type,
+        origQuote,
+        occurrence,
+        glQuote,
+        note,
+      ];
+    });
+  }
 
   const options = {
     filterType: 'checkbox',
@@ -111,10 +120,6 @@ export const AlignmentsTable = ({
       />
     </MuiThemeProvider>
   );
-};
-
-AlignmentsTable.propTypes = {
-  tn: PropTypes.array.isRequired,
 };
 
 export default AlignmentsTable;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -7,6 +7,8 @@ import styles from '../../styles';
 import TranslationHelps from '../../TranslationHelps';
 import ExpansionPanel from './ExpansionPanel';
 import Verse from './Verse';
+
+import {ResourcesContext} from '../Resources.context';
 
 export const Chapter = ({
   classes,
@@ -19,25 +21,25 @@ export const Chapter = ({
     }
   },
   setContext,
-  lemmaIndex,
-  resources,
-  resources: {
-    tn,
-  }
 }) => {
+  const {
+    resources,
+    resources: {
+      tn,
+    },
+  } = useContext(ResourcesContext);
+
   const resource = resources[resourceId];
   const verses = Object.keys(resource.data[chapter])
-  .filter(verseKey => {
-    return /\d+/g.test(verseKey); // don't show front/intro
-  })
+  // .filter(verseKey => {
+  //   return /\d+/g.test(verseKey); // don't show front/intro
+  // })
   .map(verseKey =>
     <Verse
       key={`${reference.chapter}-${verseKey}`}
       context={context}
       setContext={setContext}
-      lemmaIndex={lemmaIndex}
       verseKey={verseKey}
-      resources={resources}
     />
   );
   let intro;
@@ -74,8 +76,6 @@ Chapter.propTypes = {
   classes: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
   setContext: PropTypes.func.isRequired,
-  lemmaIndex: PropTypes.object,
-  resources: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Chapter);

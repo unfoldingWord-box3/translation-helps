@@ -1,6 +1,9 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
 const getMuiTheme = () => createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
   overrides: {
     MuiPaper: {
       elevation4: {
