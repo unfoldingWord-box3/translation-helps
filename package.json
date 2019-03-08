@@ -13,7 +13,7 @@
     "js-yaml-parser": "^1.0.0",
     "local-storage": "^1.4.2",
     "localforage": "^1.7.3",
-    "mui-datatables": "^2.0.0-beta-50",
+    "mui-datatables": "2.0.0-beta.56",
     "query-string": "^6.2.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
