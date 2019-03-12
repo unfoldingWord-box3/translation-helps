@@ -7,7 +7,7 @@ const resourceRepository = ({languageId}) => gitApi.resourceRepositories({langua
 export async function fetchTitle({username, languageId, path}) {
   const repository = resourceRepository({languageId});
   const _path = path.split('/').splice(1).join('/') + '/title.md';
-  const title = await gitApi.fetchFileFromServer({username, repository, path: _path});
+  const title = await gitApi.getFile({username, repository, path: _path});
   return title;
 };
 
@@ -16,7 +16,7 @@ export async function fetchArticle({username, languageId, path}) {
   const repository = resourceRepository({languageId});
   const _path = path.split('/').filter(word => word !== 'man').join('/') + '/01.md';
   try {
-    const _article = await gitApi.fetchFileFromServer({username, repository, path: _path})
+    const _article = await gitApi.getFile({username, repository, path: _path})
     const prefix = _path.split('/').splice(0,1).join('/');
     article = _article
     .split('../').join(`http://${languageId}/ta/${prefix}/`)

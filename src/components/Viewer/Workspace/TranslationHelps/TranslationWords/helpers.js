@@ -9,7 +9,7 @@ export async function fetchTitle({username, languageId, path}) {
   let title;
   const repository = resourceRepository({languageId});
   const _path = path.split('/').splice(1).join('/') + '.md';
-  const markdown = await gitApi.fetchFileFromServer({username, repository, path: _path});
+  const markdown = await gitApi.getFile({username, repository, path: _path});
   if (markdown) {
     title = markdown.split(/\n/)[0].replace(/#/g, '').trim();
   }
@@ -20,7 +20,7 @@ export async function fetchArticle({username, languageId, path}) {
   let article;
   const repository = resourceRepository({languageId});
   const _path = path.split('/').filter(word => word !== 'dict').join('/') + '.md';
-  const _article = await gitApi.fetchFileFromServer({username, repository, path: _path});
+  const _article = await gitApi.getFile({username, repository, path: _path});
   if (_article) {
     const prefix = _path.split('/').splice(0,1).join('/');
     article = _article

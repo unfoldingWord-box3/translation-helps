@@ -5,7 +5,8 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 
-import Languages from './Languages/index';
+import Download from './Download';
+import Languages from './Languages';
 import styles from '../styles';
 
 const Resource = lazy(() => Promise.resolve().then(() => require('./Resource')));
@@ -13,6 +14,10 @@ const Resource = lazy(() => Promise.resolve().then(() => require('./Resource')))
 export const Component = ({
   classes,
   context,
+  context: {
+    username,
+    languageId,
+  },
   setContext,
   manifests,
 }) => {
@@ -35,6 +40,7 @@ export const Component = ({
         context={context}
         setContext={setContext}
       />
+      <Download context={context} />
       <Suspense fallback={loadingComponent}>
         {resources.map(resourceId => (
           <Resource

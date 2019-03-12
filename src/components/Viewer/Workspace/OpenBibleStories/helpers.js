@@ -26,7 +26,7 @@ export async function fetchStory({username, languageId, storyId}) {
   const repository = gitApi.resourceRepositories({languageId}).obs;
   const numberPadded = (storyId < 10) ? `0${storyId}` : `${storyId}`;
   const path = `content/${numberPadded}.md`;
-  const storyMarkdown = await gitApi.fetchFileFromServer({username, repository, path});
+  const storyMarkdown = await gitApi.getFile({username, repository, path});
   const frames = framesFromStory({storyMarkdown});
   return frames;
 };

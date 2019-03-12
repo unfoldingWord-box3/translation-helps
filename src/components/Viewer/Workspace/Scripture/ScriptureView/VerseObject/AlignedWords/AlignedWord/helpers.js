@@ -45,7 +45,7 @@ export async function senses({strong}) {
     path = Path.join('content', strong, '01.md');
   }
   if (repository && path) {
-    const lexiconMarkdown = await gitApi.fetchFileFromServer({username, repository, path});
+    const lexiconMarkdown = await gitApi.getFile({username, repository, path});
     senses = parseSenses({lexiconMarkdown});
   }
   if (!senses) throw(Error(`Could not find sense info for: ${strong}`));
