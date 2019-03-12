@@ -2,21 +2,27 @@ import Path from 'path';
 import YAML from 'js-yaml-parser';
 import localforage from 'localforage';
 import { setup } from 'axios-cache-adapter';
+import JSZip from 'jszip';
 
 import * as langnames from './langnames';
 
 const baseURL = 'https://git.door43.org/';
 const apiPath = 'api/v1';
 
-const store = localforage.createInstance({
+const cacheStore = localforage.createInstance({
   driver: [localforage.INDEXEDDB],
   name: 'web-cache',
+});
+
+const zipStore = localforage.createInstance({
+  driver: [localforage.INDEXEDDB],
+  name: 'zip-store',
 });
 
 const api = setup({
   baseURL: baseURL,
   cache: {
-    store,
+    store: cacheStore,
     maxAge: 1 * 24 * 60 * 60 * 1000,
     exclude: { query: false },
     key: req => {
@@ -105,7 +111,7 @@ export async function getLanguageIdsByResource({username, resourceId}) {
 };
 
 export async function fetchManifest({username, repository}) {
-  const yaml = await fetchFileFromServer({username, repository, path: 'manifest.yaml'});
+  const yaml = await getFile({username, repository, path: 'manifest.yaml'});
   const json = (yaml) ? YAML.safeLoad(yaml) : null;
   return json;
 };
@@ -127,6 +133,15 @@ export async function fetchFileFromServer({username, repository, path, branch='m
   }
 };
 
+export async function getFile({username, repository, path, branch}) {
+  let file;
+  file = await getFileFromZip({username, repository, path, branch});
+  if (!file) {
+    file = await fetchFileFromServer({username, repository, path, branch});
+  }
+  return file;
+}
+
 export async function getUID({username}) {
   const uri = Path.join(apiPath, 'users', username);
   const user = await get({uri});
@@ -145,6 +160,54 @@ export async function repositoryExists({username, repository}) {
 async function get({uri, params}) {
   const {data} = await api.get(uri, { params });
   return data;
+};
+
+export async function fetchRepositoriesZipFiles({username, languageId, branch}) {
+  const repositories = resourceRepositories({languageId});
+  const promises = Object.values(repositories).map(repository => {
+    return fetchRepositoryZipFile({username, repository, branch});
+  });
+  const zipArray = await Promise.all(promises);
+  return zipArray;
+};
+
+// https://git.door43.org/unfoldingWord/en_ult/archive/master.zip
+async function fetchRepositoryZipFile({username, repository, branch}) {
+  const repoExists = await repositoryExists({username, repository});
+  if (!repoExists) {
+    return null;
+  }
+  const uri = zipUri({username, repository, branch});
+  const response = await fetch(uri);
+  if (response.status === 200 || response.status === 0) {
+    const zipBlob = response.blob();
+    await zipStore.setItem(uri, zipBlob);
+    return true;
+  } else {
+    return false;
+  }
+};
+
+async function getFileFromZip({username, repository, path, branch}) {
+  let file;
+  const uri = zipUri({username, repository, branch});
+  const zipBlob = await zipStore.getItem(uri);
+  try {
+    if (zipBlob) {
+      const zip = await JSZip.loadAsync(zipBlob);
+      const zipPath = Path.join(repository.toLowerCase(), path);
+      file = await zip.file(zipPath).async("string");
+    }
+  } catch(error) {
+    file = null;
+  }
+  return file;
+};
+
+function zipUri({username, repository, branch='master'}) {
+  const zipPath = Path.join(username, repository, 'archive', `${branch}.zip`);
+  const zipUri = baseURL + zipPath;
+  return zipUri;
 };
 
 // http://bg.door43.org/api/v1/repos/unfoldingword/en_ugl/git/trees/master
