@@ -27,13 +27,20 @@ const ApplicationBar = ({
     const project = ScriptureHelpers.projectByBookId({projects, bookId});
     bookName = project ? project.title : '';
   }
+  const logoWordMark = (
+    <img className={classes.logo} src='./uw-logo-wordmark.png' alt="unfoldingWord" />
+  );
+  const logoIcon = (
+    <img className={classes.logo} src='./uw-logo-icon.png' alt="unfoldingWord" />
+  );
+  const logo = (bookName) ? logoIcon : logoWordMark;
   const referenceComponent = (bookName ? <span>&nbsp;&nbsp;{bookName} {chapter}</span> : <span />);
 
   return (
     <Headroom>
       <div className={classes.paper}>
         <div className={classes.toolbar}>
-          <img className={classes.logo} src="./logo.png" alt="unfoldingWord" />
+          {logo}
           <Typography variant="h6" color="inherit" className={classes.coin} noWrap>
             {referenceComponent}
           </Typography>
