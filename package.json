@@ -1,6 +1,6 @@
 {
   "name": "translation-helps",
-  "homepage": "https://klappy.github.io/translation-helps",
+  "homepage": ".",
   "version": "0.1.5",
   "private": true,
   "dependencies": {
