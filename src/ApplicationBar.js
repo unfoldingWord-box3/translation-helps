@@ -41,7 +41,7 @@ const ApplicationBar = ({
       <div className={classes.paper}>
         <div className={classes.root}>
           {logo}
-          <Typography variant="h6" color="inherit" className={classes.title} noWrap>
+          <Typography variant="h6" color="inherit" className={classes.title} inline noWrap>
             {referenceComponent}
           </Typography>
         </div>
@@ -68,6 +68,7 @@ const styles = theme => ({
                '0px 3px 1px -2px rgba(0, 0, 0, 0.12)',
   },
   root: {
+    paddingTop: 'calc(env(safe-area-inset-top) * 0.75)',
     margin: 'auto',
     display: 'inline-flex',
     maxWidth: '40em',
@@ -80,7 +81,9 @@ const styles = theme => ({
     lineHeight: '200%',
     fontSize: 'calc(0.6vw + 1em)',
     paddingTop: 'calc(0.5em - 0.8vw)',
-  }
+    overflow: 'unset',
+    textOverflow: 'unset',
+  },
 });
 
 export default withStyles(styles, { withTheme: true })(ApplicationBar);

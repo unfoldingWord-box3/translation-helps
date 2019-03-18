@@ -29,7 +29,7 @@ const Component = ({
         <Typography className={classes.title} color="textSecondary" gutterBottom>
           {subject}
         </Typography>
-        <Typography variant="h5" component="h2">
+        <Typography variant="h6" component="h3">
           {title}
         </Typography>
       </CardContent>
