@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Bible</string>
+    <string name="title_activity_main">Bible</string>
+    <string name="package_name">org.unfoldingword.bible</string>
+    <string name="fileprovider_authority">org.unfoldingword.bible.fileprovider</string>
+    <string name="custom_url_scheme">org.unfoldingword.bible</string>
+</resources>

@@ -1,9 +1,10 @@
 {
   "name": "translation-helps",
-  "homepage": ".",
+  "homepage": "https://klappy.github.io/translation-helps",
   "version": "0.1.5",
   "private": true,
   "dependencies": {
+    "@capacitor/android": "^1.0.0-beta.19",
     "@capacitor/cli": "^1.0.0-beta.19",
     "@capacitor/core": "^1.0.0-beta.19",
     "@capacitor/ios": "^1.0.0-beta.19",
