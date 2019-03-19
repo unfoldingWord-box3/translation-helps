@@ -27,7 +27,7 @@ export const updateQueryFromContext = (context) => {
 
 export const contextFromQuery = () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const username = urlParams.get('owner') || 'unfoldingword';
+  const username = urlParams.get('owner') || 'door43-catalog';
   const rc = urlParams.get('rc') || ''
   const rcArray = rc.slice(1).split('/').filter(string => string);
   const [languageId, resourceId, bookId, chapter, verse] = rcArray;
