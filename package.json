@@ -1,9 +1,10 @@
 {
   "name": "translation-helps",
-  "homepage": ".",
+  "homepage": "https://unfoldingword-box3.github.io/translation-helps/",
   "version": "0.1.5",
   "private": true,
   "dependencies": {
+    "@capacitor/android": "^1.0.0-beta.19",
     "@capacitor/cli": "^1.0.0-beta.19",
     "@capacitor/core": "^1.0.0-beta.19",
     "@capacitor/ios": "^1.0.0-beta.19",
@@ -34,7 +35,7 @@
     "remark-parse": "^6.0.3",
     "remark-react": "^5.0.0",
     "request-promise": "^4.2.2",
-    "usfm-js": "^1.0.13"
+    "usfm-js": "^2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

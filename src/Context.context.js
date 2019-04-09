@@ -12,7 +12,7 @@ export const ContextContext = createContext();
 export function ContextContextProvider({children}) {
   const defaultContext = () => {
     return {
-      username: 'unfoldingword',
+      username: 'door43-catalog',
       languageId: 'en',
     }
   };
