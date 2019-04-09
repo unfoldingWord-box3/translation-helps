@@ -8,7 +8,7 @@ export const Word = ({
 }) => {
   return (
     <span>
-      {' '}{verseObject.text || verseObject.content}
+      {verseObject.text || verseObject.content}
     </span>
   );
 };

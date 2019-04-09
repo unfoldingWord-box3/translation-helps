@@ -1,6 +1,6 @@
 {
   "name": "translation-helps",
-  "homepage": "https://klappy.github.io/translation-helps",
+  "homepage": ".",
   "version": "0.1.5",
   "private": true,
   "dependencies": {
@@ -35,7 +35,7 @@
     "remark-parse": "^6.0.3",
     "remark-react": "^5.0.0",
     "request-promise": "^4.2.2",
-    "usfm-js": "^1.0.13"
+    "usfm-js": "^2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
