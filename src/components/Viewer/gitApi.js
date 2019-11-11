@@ -150,8 +150,8 @@ export async function getUID({username}) {
 }
 export async function repositoryExists({username, repository}) {
   const uid = await getUID({username});
-  const params = { q: repository, uid };
-  const uri = Path.join(apiPath, 'repos', `search`);
+  const params = { q: repository, uid, limit: 100 };
+  const uri = Path.join(apiPath, 'repos', 'search');
   const {data: repos} = await get({uri, params});
   const repo = repos.filter(repo => repo.name === repository)[0];
   return !!repo;
