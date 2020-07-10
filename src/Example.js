@@ -7,6 +7,7 @@ function Component() {
 
   const context = {
     username: "str",
+    uid: '6221',
     languageId: "hi",
     resourceId: "ulb",
     reference: {

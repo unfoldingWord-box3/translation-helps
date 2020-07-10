@@ -72,8 +72,8 @@ export async function fetchResourceManifests({username, languageId}) {
   return manifests;
 };
 
-export async function getLanguages({username, resourceIds}) {
-  const languageIds = await getLanguageIds({username, resourceIds});
+export async function getLanguages({uid, resourceIds}) {
+  const languageIds = await getLanguageIds({uid, resourceIds});
   const languages = languageIds.map(languageId =>
     langnames.getLanguage({languageId})
   ).filter(language => !!language);
@@ -83,10 +83,10 @@ export async function getLanguages({username, resourceIds}) {
   return languages;
 };
 
-export async function getLanguageIds({username, resourceIds}) {
+export async function getLanguageIds({uid, resourceIds}) {
   let languageIds = [];
   const promises = resourceIds.map(resourceId => {
-    return getLanguageIdsByResource({username, resourceId});
+    return getLanguageIdsByResource({uid, resourceId});
   });
   const languageIdsArray = await Promise.all(promises);
   const _languageIds = languageIdsArray.flat();
@@ -98,9 +98,8 @@ export async function getLanguageIds({username, resourceIds}) {
 }
 
 // /repos/search?q=ulb&uid=4598&limit=50&exclusive=true
-export async function getLanguageIdsByResource({username, resourceId}) {
+export async function getLanguageIdsByResource({uid, resourceId}) {
   let languageIds = [];
-  const uid = await getUID({username});
   const params = {q: resourceId, uid, limit: 50, exclusive: true};
   const uri = Path.join(apiPath, `repos/search`);
   const repos = await get({uri, params});
@@ -142,14 +141,15 @@ export async function getFile({username, repository, path, branch}) {
   return file;
 }
 
-export async function getUID({username}) {
-  const uri = Path.join(apiPath, 'users', username);
-  const user = await get({uri});
-  const {id: uid} = user;
-  return uid;
-}
-export async function repositoryExists({username, repository}) {
-  const uid = await getUID({username});
+// This does not work with latest Gitea since auth is required to get real uid other than 0
+// export async function getUID({username}) {
+//   const uri = Path.join(apiPath, 'users', username);
+//   const user = await get({uri});
+//   const {id: uid} = user;
+//   return uid;
+// }
+
+export async function repositoryExists({uid, repository}) {
   const params = { q: repository, uid, limit: 100 };
   const uri = Path.join(apiPath, 'repos', 'search');
   const {data: repos} = await get({uri, params});

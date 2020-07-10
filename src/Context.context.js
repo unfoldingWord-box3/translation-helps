@@ -1,38 +1,29 @@
-import React, {
-  createContext,
-  useState
-} from 'react';
+import React, { createContext, useState } from 'react';
+import useEffect from 'use-deep-compare-effect';
 import deepFreeze from 'deep-freeze';
 
-import { updateQueryFromContext, contextFromQuery } from './helpers';
-import * as chapterAndVerses from './components/Viewer/chaptersAndVerses';
+import { updateQueryFromContext, contextFromQuery, validateContext } from './helpers';
 
 export const ContextContext = createContext();
 
+const defaultContext = {
+  username: 'door43-catalog',
+  uid: '4598',
+  languageId: 'en',
+};
+
 export function ContextContextProvider({children}) {
-  const defaultContext = () => {
-    return {
-      username: 'door43-catalog',
-      languageId: 'en',
-    }
-  };
   const queryContext = contextFromQuery();
   const _defaultContext = queryContext || defaultContext();
 
   const [context, setContext] = useState(_defaultContext);
 
-  const validateContext = (_context) => {
-    const {resourceId, reference} = _context;
-    let valid;
-    valid = (!resourceId && !reference); // valid if neither is set
-    if (resourceId && reference) {
-      const validReference = chapterAndVerses.validateReference({reference});
-      valid = (resourceId && validReference);
-    }
-    return valid;
-  };
+  useEffect(() => {
+    updateQueryFromContext(context);
+    window.scrollTo(0,0);
+  }, [context]);
 
-  const updateContext = async (_context, back=false) => {
+  const updateContext = async (_context) => {
     // allow navigation to Resources selection
     const emptyResourceId = (!_context.reference || !_context.resourceId);
     let shouldSetContext;
@@ -47,8 +38,6 @@ export function ContextContextProvider({children}) {
     if (validContext) shouldSetContext = true;
     if (shouldSetContext) {
       setContext(_context);
-      updateQueryFromContext(_context);
-      window.scrollTo(0,0);
     }
   };
 
