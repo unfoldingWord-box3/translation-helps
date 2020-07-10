@@ -19,7 +19,7 @@ import * as gitApi from '../../gitApi';
 const Component = ({
   classes,
   context: {
-    username,
+    organization,
     languageId,
   },
 }) => {
@@ -63,7 +63,7 @@ const Component = ({
           color="primary"
           onClick={()=>{
             setDownloading(true);
-            gitApi.fetchRepositoriesZipFiles({username, languageId, onProgress: (progress)=>{
+            gitApi.fetchRepositoriesZipFiles({organization, languageId, onProgress: (progress)=>{
 
             }})
             .then(response => {

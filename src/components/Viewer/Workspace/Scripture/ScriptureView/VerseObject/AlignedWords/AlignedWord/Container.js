@@ -13,7 +13,7 @@ class Container extends React.Component {
   componentDidMount() {
     const {strong} = this.props.verseObject;
 /* TODO:
-  remove hardcoded username and languageId
+  remove hardcoded organization and languageId
   pass directly through components
 */
     helpers.senses({strong})

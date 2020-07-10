@@ -21,7 +21,7 @@ class BottomNavContainer extends React.Component {
   handleChange = (event, value) => {
     let context = {...this.props.context};
     let {
-      username,
+      organization,
       languageId,
       reference,
     } = context;
@@ -30,10 +30,10 @@ class BottomNavContainer extends React.Component {
         context = this.previousChapter();
         break;
       case 1:
-        context = {username, languageId, view: 'history', reference: {}};
+        context = {organization, languageId, view: 'history', reference: {}};
         break;
       case 2:
-        context = {username, languageId, reference: {}};
+        context = {organization, languageId, reference: {}};
         break;
       case 3:
         context.reference = {};

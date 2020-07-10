@@ -25,7 +25,7 @@ const Component = ({
     }
   },
   context: {
-    username,
+    organization,
     languageId,
   },
   setContext,
@@ -54,7 +54,7 @@ const Component = ({
           color="primary"
           onClick={() => {
             const resourceId = identifier;
-            const context = {username, languageId, resourceId};
+            const context = {organization, languageId, resourceId};
             setContext(context);
           }}
         >

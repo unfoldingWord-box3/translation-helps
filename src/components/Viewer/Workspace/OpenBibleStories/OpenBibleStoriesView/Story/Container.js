@@ -30,13 +30,13 @@ class Container extends React.Component {
   fetchStudyQuestions({
     storyKey,
     context: {
-      username,
+      organization,
       languageId,
     },
   }) {
-    thHelpers.fetchStudyQuestions({username, languageId, storyKey: 0})
+    thHelpers.fetchStudyQuestions({organization, languageId, storyKey: 0})
     .then(guide => {
-      thHelpers.fetchStudyQuestions({username, languageId, storyKey})
+      thHelpers.fetchStudyQuestions({organization, languageId, storyKey})
       .then(studyQuestions => {
         const helps = { studyQuestions: studyQuestions };
         this.setState({

@@ -1,6 +1,6 @@
 import * as gitApi from '../../../gitApi';
 
-export async function fetchHelps({username, languageId, storyKey, frameKey}) {
+export async function fetchHelps({organization, languageId, storyKey, frameKey}) {
   let helps = {};
   const resourceIds = [
     'obs-tn',
@@ -10,11 +10,11 @@ export async function fetchHelps({username, languageId, storyKey, frameKey}) {
   const promises = resourceIds.map(resourceId => {
     let promise;
     if (resourceId === 'obs-tn')
-      promise = fetchNotesAndWords({username, languageId, storyKey, frameKey});
+      promise = fetchNotesAndWords({organization, languageId, storyKey, frameKey});
     if (resourceId === 'obs-tq')
-      promise = fetchQuestions({username, languageId, storyKey, frameKey});
+      promise = fetchQuestions({organization, languageId, storyKey, frameKey});
     if (resourceId === 'obs-sn')
-      promise = fetchStudyNotes({username, languageId, storyKey, frameKey});
+      promise = fetchStudyNotes({organization, languageId, storyKey, frameKey});
     return promise;
   });
   const helpsArray = await Promise.all(promises);
@@ -31,37 +31,37 @@ export async function fetchHelps({username, languageId, storyKey, frameKey}) {
   return helps;
 };
 
-export async function fetchStudyQuestions({username, languageId, storyKey}) {
+export async function fetchStudyQuestions({organization, languageId, storyKey}) {
   const repository = gitApi.resourceRepositories({languageId})['obs-sq'];
   const file = pad(storyKey) + '.md';
   const path = ['content', file].join('/');
-  const markdown = await gitApi.getFile({username, repository, path});
+  const markdown = await gitApi.getFile({organization, repository, path});
   return markdown;
 };
 
-export async function fetchStudyNotes({username, languageId, storyKey, frameKey}) {
+export async function fetchStudyNotes({organization, languageId, storyKey, frameKey}) {
   const repository = gitApi.resourceRepositories({languageId})['obs-sn'];
   const file = pad(frameKey) + '.md';
   const path = ['content', pad(storyKey), file].join('/');
-  const markdown = await gitApi.getFile({username, repository, path});
+  const markdown = await gitApi.getFile({organization, repository, path});
   const data = parseStudyNotes({markdown});
   return data;
 };
 
-export async function fetchQuestions({username, languageId, storyKey, frameKey}) {
+export async function fetchQuestions({organization, languageId, storyKey, frameKey}) {
   const repository = gitApi.resourceRepositories({languageId})['obs-tq'];
   const file = pad(frameKey) + '.md';
   const path = ['content', pad(storyKey), file].join('/');
-  const markdown = await gitApi.getFile({username, repository, path});
+  const markdown = await gitApi.getFile({organization, repository, path});
   const questions = parseQuestions({markdown});
   return questions;
 };
 
-export async function fetchNotesAndWords({username, languageId, storyKey, frameKey}) {
+export async function fetchNotesAndWords({organization, languageId, storyKey, frameKey}) {
   const repository = gitApi.resourceRepositories({languageId})['obs-tn'];
   const file = pad(frameKey) + '.md';
   const path = ['content', pad(storyKey), file].join('/');
-  const markdown = await gitApi.getFile({username, repository, path});
+  const markdown = await gitApi.getFile({organization, repository, path});
   const helps = parseNotes({markdown});
   return helps;
 };

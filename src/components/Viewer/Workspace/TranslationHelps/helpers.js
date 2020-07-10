@@ -1,14 +1,14 @@
 import * as TranslationAcademyHelpers from './TranslationAcademy/helpers';
 import * as TranslationWordsHelpers from './TranslationWords/helpers';
 
-export async function fetchTitle({username, languageId, resourceId, path}) {
+export async function fetchTitle({organization, languageId, resourceId, path}) {
   let title;
   switch (resourceId) {
     case 'ta':
-      title = await TranslationAcademyHelpers.fetchTitle({username, languageId, path});
+      title = await TranslationAcademyHelpers.fetchTitle({organization, languageId, path});
       break;
     case 'tw':
-      title = await TranslationWordsHelpers.fetchTitle({username, languageId, path});
+      title = await TranslationWordsHelpers.fetchTitle({organization, languageId, path});
       break;
     case 'tn':
       break;
@@ -19,14 +19,14 @@ export async function fetchTitle({username, languageId, resourceId, path}) {
   return title;
 };
 
-export async function fetchArticle({username, languageId, resourceId, path}) {
+export async function fetchArticle({organization, languageId, resourceId, path}) {
   let article;
   switch (resourceId) {
     case 'ta':
-      article = await TranslationAcademyHelpers.fetchArticle({username, languageId, path})
+      article = await TranslationAcademyHelpers.fetchArticle({organization, languageId, path})
       break;
     case 'tw':
-      article = await TranslationWordsHelpers.fetchArticle({username, languageId, path})
+      article = await TranslationWordsHelpers.fetchArticle({organization, languageId, path})
       break;
     case 'tn':
       break;

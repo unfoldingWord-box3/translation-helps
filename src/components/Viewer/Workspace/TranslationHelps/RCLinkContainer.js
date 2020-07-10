@@ -21,7 +21,7 @@ class RCLinkContainer extends React.Component {
   };
 
   parseHref({href}) {
-    const {username} = this.props.context;
+    const {organization} = this.props.context;
     let _match, languageId, resourceId, path, reference, linkedResourceId;
     if (_match && linkedResourceId) {/* not used, this bypasses linter warning */}
     const regexpLanguageIdResourcePath = /http:\/\/([\w-_]+)\/([\w-_]+)\/(.+)/;
@@ -48,7 +48,7 @@ class RCLinkContainer extends React.Component {
     }
     return {
       context: {
-        username,
+        organization,
         languageId,
         resourceId,
         reference,
@@ -70,7 +70,7 @@ class RCLinkContainer extends React.Component {
   componentDidMount() {
     const {
       context: {
-        username,
+        organization,
         languageId,
         resourceId,
       },
@@ -78,7 +78,7 @@ class RCLinkContainer extends React.Component {
       path,
     } = this.state;
     if (!title && languageId && resourceId && path) {
-      helpers.fetchTitle({username, languageId, resourceId, path})
+      helpers.fetchTitle({organization, languageId, resourceId, path})
       .then(title => {
         this.setState({
           title: title,
@@ -90,7 +90,7 @@ class RCLinkContainer extends React.Component {
   handleOpen = () => {
     const {
       context: {
-        username,
+        organization,
         languageId,
         resourceId,
         reference,
@@ -104,7 +104,7 @@ class RCLinkContainer extends React.Component {
       context.reference = reference;
       this.props.setContext(context);
     } else {
-      helpers.fetchArticle({username, languageId, resourceId, path})
+      helpers.fetchArticle({organization, languageId, resourceId, path})
       .then(article => {
         const tab = {
           title: title || path,

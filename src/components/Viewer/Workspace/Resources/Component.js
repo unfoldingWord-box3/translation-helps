@@ -15,7 +15,7 @@ export const Component = ({
   classes,
   context,
   context: {
-    username,
+    organization,
     languageId,
   },
   setContext,

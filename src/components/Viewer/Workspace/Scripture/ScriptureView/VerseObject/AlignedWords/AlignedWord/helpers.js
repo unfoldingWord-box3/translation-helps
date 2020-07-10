@@ -2,10 +2,10 @@ import Path from 'path';
 import * as gitApi from '../../../../../../gitApi';
 
 /* TODO:
-  remove hardcoded username and languageId
+  remove hardcoded organization and languageId
   pass directly through components
 */
-const username = 'unfoldingword';
+const organization = 'unfoldingword';
 const languageId = 'en'
 const repositories = gitApi.resourceRepositories({languageId});
 
@@ -45,7 +45,7 @@ export async function senses({strong}) {
     path = Path.join('content', strong, '01.md');
   }
   if (repository && path) {
-    const lexiconMarkdown = await gitApi.getFile({username, repository, path});
+    const lexiconMarkdown = await gitApi.getFile({organization, repository, path});
     senses = parseSenses({lexiconMarkdown});
   }
   if (!senses) throw(Error(`Could not find sense info for: ${strong}`));

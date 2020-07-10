@@ -6,8 +6,7 @@ import {
 function Component() {
 
   const context = {
-    username: "str",
-    uid: '6221',
+    organization: "str",
     languageId: "hi",
     resourceId: "ulb",
     reference: {

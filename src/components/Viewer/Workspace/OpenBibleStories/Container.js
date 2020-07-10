@@ -14,8 +14,8 @@ class OpenBibleStoriesContainer extends React.Component {
   };
 
   componentDidMount() {
-    const {username, languageId} = this.props.context;
-    helpers.fetchOpenBibleStories({username, languageId})
+    const {organization, languageId} = this.props.context;
+    helpers.fetchOpenBibleStories({organization, languageId})
     .then(stories => {
       this.setState({ stories });
     });

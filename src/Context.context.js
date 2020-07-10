@@ -7,8 +7,7 @@ import { updateQueryFromContext, contextFromQuery, validateContext } from './hel
 export const ContextContext = createContext();
 
 const defaultContext = {
-  username: 'door43-catalog',
-  uid: '4598',
+  organization: 'door43-catalog',
   languageId: 'en',
 };
 
