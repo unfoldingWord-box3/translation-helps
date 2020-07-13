@@ -26,7 +26,6 @@ const api = setup({
     maxAge: 1 * 24 * 60 * 60 * 1000,
     exclude: { query: false },
     key: req => {
-      // if (req.params) debugger
       let serialized = req.params instanceof URLSearchParams ?
       req.params.toString() : JSON.stringify(req.params) || '';
       return req.url + serialized;
@@ -100,7 +99,7 @@ export async function getLanguageIds({organization, resourceIds}) {
 // /repos/search?q=ulb&uid=4598&limit=50&exclusive=true
 export async function getLanguageIdsByResource({organization, resourceId}) {
   let languageIds = [];
-  const uid = getOrganizationUID({organization});
+  const uid = await getOrganizationUID({organization});
   const params = {q: resourceId, uid, limit: 50, exclusive: true};
   const uri = Path.join(apiPath, `repos/search`);
   const repos = await get({uri, params});
@@ -150,7 +149,7 @@ export async function getOrganizationUID({organization}) {
 }
 
 export async function repositoryExists({organization, repository}) {
-  const uid = getOrganizationUID({organization});
+  const uid = await getOrganizationUID({organization});
   const params = { q: repository, uid, limit: 100 };
   const uri = Path.join(apiPath, 'repos', 'search');
   const {data: repos} = await get({uri, params});
