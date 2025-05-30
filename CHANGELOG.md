@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.7] - 2025-06-03
+
+### Added
+
+- Created `src-new/utils/parseTsv.js` and its unit tests.
+- Created `src-new/services/twlService.js` and its unit tests.
+- Added `src-new/context/ResourcesContext.js` for loading resource data.
+- Added `src-new/components/ScripturePanel.jsx` and `TranslationWordsPanel.jsx`.
+- Closed and resolved the rewrite-core-implementation issue (`docs/issues/closed/rewrite-core-implementation.md`).
+
 ## [0.2.6] - 2025-06-02
 
 ### Added
