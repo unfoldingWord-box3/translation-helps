@@ -14,7 +14,12 @@ description: An application for viewing unfoldingWord Bible translation resource
 ## 📘 Key Docs (in ./docs)
 
 - `ARCHITECTURE.md`: High-level component and data layer overview
+- `app-overview.md`: Defines application purpose, target audience, and supported resources
+- `ui-map.md`: UI layout, screen regions, and component interactions
+- `lifecycle.md`: Startup process, context flow, resource fetching, and offline behavior
+- `component-map.md`: Key React components with paths and descriptions
 - `TWL_Integration_Documentation.md`: Guide for the new TWL resource
+- `Translation_Notes_Implementation.md`: Implementation details for Translation Notes (tN)
 - `DCS_Integration_Documentation.md`: Explains access patterns to Door43 Content Service
 - `Resource_Integration_Overview.md`: Outlines all supported translation resource types
 
