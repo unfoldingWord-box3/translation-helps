@@ -1,5 +1,6 @@
 <!--
 status: open
+Resolved: true
 priority: high
 created: 2025-05-30
 tags: [migration, TWL, translationWords]

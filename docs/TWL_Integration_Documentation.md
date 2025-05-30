@@ -48,6 +48,29 @@ A component such as `TranslationWordsPanel.js` displays these TWLinks:
 - Renders clickable links or previews of tW articles
 - Allows readers to explore definitions and context while translating
 
+Example integration in `VerseComponent` (ScriptureView > Verse > Component.js):
+```js
+import React, {useState, useEffect} from 'react';
+import { getLinksForVerse } from '../services/twlService';
+
+const [twlLinks, setTwlLinks] = useState([]);
+useEffect(() => {
+  getLinksForVerse(bookId, chapter, verseKey)
+    .then(links =>
+      setTwlLinks(
+        links.map(link =>
+          link.replace(/^rc:\/\//, `http://${languageId}/`)
+        )
+      )
+    )
+    .catch(console.error);
+}, [bookId, chapter, verseKey, languageId]);
+
+if (twlLinks.length > 0) {
+  tabs.push({ title: 'Translation Words', words: twlLinks });
+}
+```
+
 ## ✅ Benefits of TWL
 
 - Replaces unreliable in-text tagging
