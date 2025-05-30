@@ -1,6 +1,0 @@
-{
-  "appId": "org.unfoldingword.bible",
-  "appName": "Bible",
-  "bundledWebRuntime": false,
-  "webDir": "build"
-}
