@@ -29,6 +29,43 @@ Outside of using tS, tC or downloading PDF files of the resources, there is a ne
 - tQ - translationQuestions
 - UGL - unfoldingWord Greek Lexicon
 
+## Development Environment
+
+This project requires **Node.js 12.x–16.x**. To manage multiple Node versions easily, use [nvm](https://github.com/nvm-sh/nvm). A `.nvmrc` file is included to automatically select the correct version:
+
+```bash
+# Install and switch to the version specified in .nvmrc
+nvm install
+nvm use
+```
+
+After switching Node.js versions, reinstall dependencies. If you previously installed modules under a different Node version, remove your `node_modules` directory and run:
+
+```bash
+rm -rf node_modules
+npm install
+```
+
+If you prefer not to use nvm and are running Node 17 or above, you can fall back to the legacy OpenSSL provider:
+
+```bash
+export NODE_OPTIONS=--openssl-legacy-provider
+```
+
+### Running the development server
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Start the dev server:
+
+   ```bash
+   npm start
+   ```
+
 ## Technical Overview
 All resources are managed in Git repositories on (DCS)[https://git.door43.org]. Each repository is organized in a Resource Container Spec (RC). Each RC has a manifest that contains metadata about included resource projects. Each project has metadata including information such as the book id and relative paths to included project files. By fetching the project file it can then be parsed by file type. Each resource project's data can then be integrated based on the relevant alignments and tags that link the resources together.
 
