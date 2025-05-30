@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2] - 2025-05-30
+
+### Added
+
+- Introduce refactoring plan and documentation (`docs/refactor/plan.md`, `docs/refactor/impact-analysis.md`, `docs/refactor/decision-log.md`)
+- Close create-refactor-plan issue under `docs/issues/closed` with resolution metadata
+
 ## [0.2.1] - 2025-05-30
 
 ### Changed

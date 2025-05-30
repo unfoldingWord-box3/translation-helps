@@ -13,6 +13,13 @@ This refactor aims to:
 - Enable AI agents (e.g., Codex CLI) to support rewriting and ongoing development
 - Prepare the codebase for future scalability and offline-first support
 
+## 🛠 Current Pain Points
+
+- Tight coupling between UI and business logic
+- Untested logic buried in presentation components
+- Outdated dependencies and lack of type safety
+- Monolithic modules with unclear boundaries
+
 ---
 
 ## 🧩 Proposed Architecture
@@ -34,6 +41,13 @@ This refactor aims to:
 - Optional TypeScript for stricter types
 - Jest + React Testing Library
 - Modular file structure with `src/components`, `src/services`, `src/context`
+
+## 🗂️ Modules to Keep, Break Apart, or Remove
+
+- **Keep:** `src/helpers.js`, shared utility functions
+- **Keep:** `src/services/twlService.js`, `src/services/tnService.js`, `src/services/dcsClient.js`
+- **Break Apart:** Monolithic `Viewer` and `Workspace` modules into focused sub-components (e.g., ScriptureView, TranslationHelps)
+- **Remove:** Legacy `src/serviceWorker.js` and any deprecated context/provider stubs
 
 ---
 
