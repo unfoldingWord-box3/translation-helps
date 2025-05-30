@@ -93,6 +93,7 @@
 - `docs/component-map.md`
 - `docs/lifecycle.md`
 - `docs/separation-of-concerns.md`
+- `docs/rewrite/dependency-review.md`
 
  ---
 

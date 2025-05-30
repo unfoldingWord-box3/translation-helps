@@ -19,6 +19,9 @@ description: An application for viewing unfoldingWord Bible translation resource
 - `lifecycle.md`: Startup process, context flow, resource fetching, and offline behavior
 - `component-map.md`: Key React components with paths and descriptions
 - `rewrite/plan.md`: Clean-slate rewrite roadmap and architecture plan
+- `rewrite/decision-log.md`: Architectural decision log for the rewrite execution
+- `rewrite/module-checklist.md`: Module checklist for the clean-slate rewrite
+- `rewrite/dependency-review.md`: Audit of legacy dependencies and proposed modern dependency list
 - `TWL_Integration_Documentation.md`: Guide for the new TWL resource
 - `Translation_Notes_Implementation.md`: Implementation details for Translation Notes (tN)
 - `DCS_Integration_Documentation.md`: Explains access patterns to Door43 Content Service

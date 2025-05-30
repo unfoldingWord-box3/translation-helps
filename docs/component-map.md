@@ -15,6 +15,17 @@ This document lists and describes the major components in the viewer and their r
 
 ---
 
+## 🔨 Modules (Vertical Slices)
+
+| Module | Path | Description |
+|--------|------|-------------|
+| `TWL`  | `/src/modules/twl` | Translation Words Links module (data, hooks, types, tests) |
+| `tN`   | `/src/modules/tn`  | Translation Notes module |
+| `tQ`   | `/src/modules/tq`  | Translation Questions module |
+| `tW`   | `/src/modules/tw`  | Translation Words module |
+
+---
+
 ## 📖 Scripture Panel
 
 | Component | Path | Description |

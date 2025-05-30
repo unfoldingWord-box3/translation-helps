@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.2.6] - 2025-06-02
+
+### Added
+
+- Added `docs/rewrite/dependency-review.md` to audit legacy dependencies and propose bootstrap list.
+- Updated `docs/rewrite/plan.md` Input References to include dependency-review.md.
+- Updated `codex.md` to reference `rewrite/dependency-review.md` in Key Docs.
+- Finalized initial `package.json` dependency and devDependency list for bootstrap and switched scripts to Vite/Vitest/ESLint.
+- Moved and resolved evaluate-dependency-stack issue (`docs/issues/closed/evaluate-dependency-stack.md`).
+
+## [0.2.5] - 2025-06-01
+
+### Added
+
+- Scaffolded `src/modules` folder structure for TWL, tN, tQ, and tW modules.
+- Updated `docs/component-map.md` to include module mappings under `src/modules`.
+- Updated `codex.md` to reference `rewrite/decision-log.md` and `rewrite/module-checklist.md` in Key Docs.
+- Added decision-log entry for splitting the rewrite plan and scaffolding modules in `docs/rewrite/decision-log.md`.
+- Closed and resolved the Execute the Rewrite Plan issue (`docs/issues/closed/execute-rewrite-plan.md`).
+
 ## [0.2.4] - 2025-05-30
 
 ### Added

@@ -21,3 +21,13 @@
  ---
 
  ## Log
+### [2025-06-01] Split rewrite plan and scaffold modules
+
+**Decision:** Initiate implementation by splitting the clean-slate rewrite plan into focused module execution tasks and scaffolding the module folder structure under `src/modules`.
+
+**Context:** Following the Execute the Rewrite Plan issue acceptance criteria.
+
+**Rationale:**
+- Enables vertical-slice development and independent verification of each module.
+- Aligns with test-first and clean-slate architectural principles.
+- Provides clear execution tasks and folder structure for contributors.
