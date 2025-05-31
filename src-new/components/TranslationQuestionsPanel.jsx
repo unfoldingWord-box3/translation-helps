@@ -5,13 +5,16 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { ManifestsContext } from "../context/MultiManifestsContext";
+import { RcLinkContext } from "./MainView";
 import { getQuestionsForVerse } from "../services/tqService";
+import { processRcLinks } from "../utils/rcLinkUtils.jsx";
 
 export function TranslationQuestionsPanel({ reference }) {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { manifests } = useContext(ManifestsContext);
+  const { handleRcLinkClick } = useContext(RcLinkContext) || {};
 
   useEffect(() => {
     async function loadQuestions() {
@@ -106,9 +109,11 @@ export function TranslationQuestionsPanel({ reference }) {
               }}
             >
               <p style={{ fontWeight: "bold", marginBottom: "8px", color: "#1976d2" }}>
-                Q: {qa.question}
+                Q: {processRcLinks(qa.question, handleRcLinkClick)}
               </p>
-              <p style={{ marginLeft: "16px" }}>A: {qa.answer}</p>
+              <p style={{ marginLeft: "16px" }}>
+                A: {processRcLinks(qa.answer, handleRcLinkClick)}
+              </p>
             </div>
           ))}
         </div>

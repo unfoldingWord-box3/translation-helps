@@ -8,10 +8,33 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { TranslationWordsPanel } from "./TranslationWordsPanel";
 import * as twlService from "../services/twlService";
 import * as twService from "../services/twService";
+import { ManifestsContext } from "../context/MultiManifestsContext";
 
 // Mock the services
 vi.mock("../services/twlService");
 vi.mock("../services/twService");
+
+// Mock manifest data
+const mockTwlManifest = {
+  projects: [
+    {
+      identifier: "gen",
+      path: "./gen.tsv",
+      title: "Genesis",
+    },
+  ],
+};
+
+const mockManifests = {
+  twl: mockTwlManifest,
+  ult: { projects: [] },
+  tN: { projects: [] },
+};
+
+// Wrapper component with context
+const TestWrapper = ({ children, manifests = mockManifests }) => (
+  <ManifestsContext.Provider value={{ manifests }}>{children}</ManifestsContext.Provider>
+);
 
 describe("TranslationWordsPanel", () => {
   beforeEach(() => {
@@ -23,13 +46,21 @@ describe("TranslationWordsPanel", () => {
   });
 
   it("should show select verse message when no reference provided", () => {
-    render(<TranslationWordsPanel reference={null} />);
+    render(
+      <TestWrapper>
+        <TranslationWordsPanel reference={null} />
+      </TestWrapper>
+    );
 
     expect(screen.getByText("Select a verse to view translation words.")).toBeInTheDocument();
   });
 
   it("should show select verse message when reference is incomplete", () => {
-    render(<TranslationWordsPanel reference={{ bookId: "gen" }} />);
+    render(
+      <TestWrapper>
+        <TranslationWordsPanel reference={{ bookId: "gen" }} />
+      </TestWrapper>
+    );
 
     expect(screen.getByText("Select a verse to view translation words.")).toBeInTheDocument();
   });
@@ -39,7 +70,11 @@ describe("TranslationWordsPanel", () => {
     const mockGetLinksForVerse = vi.mocked(twlService.getLinksForVerse);
     mockGetLinksForVerse.mockImplementation(() => new Promise(() => {})); // Never resolves
 
-    render(<TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />);
+    render(
+      <TestWrapper>
+        <TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />
+      </TestWrapper>
+    );
 
     expect(screen.getByText("Loading translation words...")).toBeInTheDocument();
   });
@@ -51,7 +86,11 @@ describe("TranslationWordsPanel", () => {
     mockGetLinksForVerse.mockResolvedValue([]);
     mockGetArticlesForLinks.mockResolvedValue([]);
 
-    render(<TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />);
+    render(
+      <TestWrapper>
+        <TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />
+      </TestWrapper>
+    );
 
     await waitFor(() => {
       expect(
@@ -59,7 +98,7 @@ describe("TranslationWordsPanel", () => {
       ).toBeInTheDocument();
     });
 
-    expect(mockGetLinksForVerse).toHaveBeenCalledWith("gen", 1, 1);
+    expect(mockGetLinksForVerse).toHaveBeenCalledWith("gen", 1, 1, mockTwlManifest);
   });
 
   it("should display translation words when data is available", async () => {
@@ -92,7 +131,11 @@ describe("TranslationWordsPanel", () => {
     mockGetLinksForVerse.mockResolvedValue(mockLinks);
     mockGetArticlesForLinks.mockResolvedValue(mockArticles);
 
-    render(<TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />);
+    render(
+      <TestWrapper>
+        <TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />
+      </TestWrapper>
+    );
 
     await waitFor(() => {
       expect(screen.getByText("Translation Words")).toBeInTheDocument();
@@ -108,7 +151,7 @@ describe("TranslationWordsPanel", () => {
     expect(screen.getByText("rc://en/tw/dict/bible/kt/create")).toBeInTheDocument();
     expect(screen.getByText("rc://en/tw/dict/bible/kt/heaven")).toBeInTheDocument();
 
-    expect(mockGetLinksForVerse).toHaveBeenCalledWith("gen", 1, 1);
+    expect(mockGetLinksForVerse).toHaveBeenCalledWith("gen", 1, 1, mockTwlManifest);
     expect(mockGetArticlesForLinks).toHaveBeenCalledWith(mockLinks);
   });
 
@@ -120,7 +163,11 @@ describe("TranslationWordsPanel", () => {
     // Mock console.error to avoid noise in test output
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    render(<TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />);
+    render(
+      <TestWrapper>
+        <TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />
+      </TestWrapper>
+    );
 
     await waitFor(() => {
       expect(screen.getByText("Failed to load translation words")).toBeInTheDocument();
@@ -141,7 +188,11 @@ describe("TranslationWordsPanel", () => {
     // Mock console.error to avoid noise in test output
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    render(<TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />);
+    render(
+      <TestWrapper>
+        <TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />
+      </TestWrapper>
+    );
 
     await waitFor(() => {
       expect(screen.getByText("Failed to load translation words")).toBeInTheDocument();
@@ -162,7 +213,11 @@ describe("TranslationWordsPanel", () => {
     mockGetLinksForVerse.mockResolvedValue(mockLinks);
     mockGetArticlesForLinks.mockResolvedValue([]); // No articles successfully loaded
 
-    render(<TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />);
+    render(
+      <TestWrapper>
+        <TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />
+      </TestWrapper>
+    );
 
     await waitFor(() => {
       expect(
@@ -195,10 +250,12 @@ describe("TranslationWordsPanel", () => {
     mockGetArticlesForLinks.mockResolvedValue(mockArticles);
 
     render(
-      <TranslationWordsPanel
-        reference={{ bookId: "gen", chapter: 1, verse: 1 }}
-        onWordClick={mockOnWordClick}
-      />
+      <TestWrapper>
+        <TranslationWordsPanel
+          reference={{ bookId: "gen", chapter: 1, verse: 1 }}
+          onWordClick={mockOnWordClick}
+        />
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -242,7 +299,11 @@ describe("TranslationWordsPanel", () => {
     mockGetLinksForVerse.mockResolvedValue(mockLinks);
     mockGetArticlesForLinks.mockResolvedValue(mockArticles);
 
-    render(<TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />);
+    render(
+      <TestWrapper>
+        <TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />
+      </TestWrapper>
+    );
 
     await waitFor(() => {
       expect(
@@ -261,7 +322,9 @@ describe("TranslationWordsPanel", () => {
     mockGetArticlesForLinks.mockResolvedValue([]);
 
     const { rerender } = render(
-      <TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />
+      <TestWrapper>
+        <TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 1 }} />
+      </TestWrapper>
     );
 
     await waitFor(() => {
@@ -270,13 +333,17 @@ describe("TranslationWordsPanel", () => {
       ).toBeInTheDocument();
     });
 
-    expect(mockGetLinksForVerse).toHaveBeenCalledWith("gen", 1, 1);
+    expect(mockGetLinksForVerse).toHaveBeenCalledWith("gen", 1, 1, mockTwlManifest);
 
     // Change reference
-    rerender(<TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 2 }} />);
+    rerender(
+      <TestWrapper>
+        <TranslationWordsPanel reference={{ bookId: "gen", chapter: 1, verse: 2 }} />
+      </TestWrapper>
+    );
 
     await waitFor(() => {
-      expect(mockGetLinksForVerse).toHaveBeenCalledWith("gen", 1, 2);
+      expect(mockGetLinksForVerse).toHaveBeenCalledWith("gen", 1, 2, mockTwlManifest);
     });
 
     expect(mockGetLinksForVerse).toHaveBeenCalledTimes(2);

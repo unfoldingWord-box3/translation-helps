@@ -5,14 +5,17 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { ManifestsContext } from "../context/MultiManifestsContext";
+import { RcLinkContext } from "./MainView";
 import { fetchResourceFile } from "../services/dcsClient";
 import { parseTsv } from "../utils/parseTsv";
+import { processRcLinks } from "../utils/rcLinkUtils.jsx";
 
 export function TranslationNotesPanel({ reference }) {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { manifests } = useContext(ManifestsContext);
+  const { handleRcLinkClick } = useContext(RcLinkContext) || {};
 
   useEffect(() => {
     async function loadNotes() {
@@ -162,7 +165,9 @@ export function TranslationNotesPanel({ reference }) {
                   )}
                 </div>
               )}
-              <div style={{ lineHeight: "1.5", color: "#333" }}>{note.text}</div>
+              <div style={{ lineHeight: "1.5", color: "#333" }}>
+                {processRcLinks(note.text, handleRcLinkClick)}
+              </div>
               {note.tags && (
                 <div
                   style={{
@@ -183,7 +188,7 @@ export function TranslationNotesPanel({ reference }) {
                     color: "#666",
                   }}
                 >
-                  See also: {note.supportReference}
+                  See also: {processRcLinks(note.supportReference, handleRcLinkClick)}
                 </div>
               )}
             </li>

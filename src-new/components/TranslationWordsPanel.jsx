@@ -4,8 +4,10 @@
  */
 import React, { useContext, useEffect, useState } from "react";
 import { ManifestsContext } from "../context/MultiManifestsContext";
+import { RcLinkContext } from "./MainView";
 import { getLinksForVerse } from "../services/twlService";
 import { getArticlesForLinks } from "../services/twService";
+import { processRcLinks, RcLink } from "../utils/rcLinkUtils.jsx";
 
 /**
  * Extracts a summary from article content (first sentence or paragraph)
@@ -42,6 +44,7 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
   const [error, setError] = useState(null);
   const [twlLinks, setTwlLinks] = useState([]);
   const { manifests } = useContext(ManifestsContext);
+  const { handleRcLinkClick } = useContext(RcLinkContext) || {};
 
   useEffect(() => {
     async function loadWords() {
@@ -102,8 +105,15 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
   }, [reference, manifests.twl]);
 
   const handleWordClick = (word) => {
+    // First try the provided callback
     if (onWordClick) {
       onWordClick(word);
+      return;
+    }
+
+    // If no callback provided, and we have the rc link context, open as new tab
+    if (handleRcLinkClick && word.rcUri) {
+      handleRcLinkClick(word.rcUri);
     }
   };
 
@@ -168,7 +178,7 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
                 backgroundColor: "#f9f9f9",
                 borderRadius: "4px",
                 border: "1px solid #e0e0e0",
-                cursor: onWordClick ? "pointer" : "default",
+                cursor: onWordClick || (handleRcLinkClick && word.rcUri) ? "pointer" : "default",
               }}
               onClick={() => handleWordClick(word)}
             >
@@ -182,7 +192,7 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
                 }}
               >
                 {word.title}
-                {onWordClick && (
+                {(onWordClick || (handleRcLinkClick && word.rcUri)) && (
                   <span
                     style={{
                       fontSize: "0.8em",
@@ -202,7 +212,7 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
                   lineHeight: "1.4",
                 }}
               >
-                {word.summary}
+                {processRcLinks(word.summary, handleRcLinkClick)}
               </p>
 
               {word.rcUri && (
@@ -211,10 +221,11 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
                     margin: 0,
                     fontSize: "0.8em",
                     color: "#666",
-                    fontFamily: "monospace",
                   }}
                 >
-                  {word.rcUri}
+                  <RcLink rcUri={word.rcUri} onRcLinkClick={handleRcLinkClick}>
+                    {word.rcUri}
+                  </RcLink>
                 </p>
               )}
             </div>
@@ -232,7 +243,8 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
             <p style={{ margin: 0, color: "#0066cc" }}>
               💡 <strong>Tip:</strong> These words are linked to this verse through Translation
               Words Links (TWL).
-              {onWordClick && " Click any word above to view the complete article."}
+              {(onWordClick || handleRcLinkClick) &&
+                " Click any word above to view the complete article."}
             </p>
           </div>
         </div>

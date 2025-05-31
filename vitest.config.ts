@@ -9,7 +9,7 @@ export default defineConfig({
     include: [
       "src/utils/**/*.{test,spec}.{ts,tsx}",
       "src/modules/**/tests/**/*.{test,spec}.ts",
-      "src-new/utils/**/*.{test,spec}.js",
+      "src-new/utils/**/*.{test,spec}.{js,jsx}",
       "src-new/hooks/**/*.{test,spec}.{js,jsx}",
       "src-new/services/**/*.{test,spec}.js",
       "src-new/components/**/*.{test,spec}.{js,jsx,ts,tsx}",

@@ -1,9 +1,13 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { getLinksForVerse, clearCache } from './twlService';
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { getLinksForVerse, clearCache } from "./twlService";
+import * as dcsClient from "./dcsClient";
+
+// Mock the dcsClient
+vi.mock("./dcsClient");
 
 beforeEach(() => {
   clearCache();
-  global.fetch = vi.fn();
+  vi.clearAllMocks();
 });
 
 afterEach(() => {
@@ -11,31 +15,50 @@ afterEach(() => {
 });
 
 const sampleTsv = [
-  'Reference\tTWLink',
-  'gen/1/1\trc://en/tw/dict/bible/kt/create',
-  'gen/1/2\trc://en/tw/dict/bible/kt/begin',
-].join('\n');
+  "Reference\tTWLink",
+  "1:1\trc://en/tw/dict/bible/kt/create",
+  "1:2\trc://en/tw/dict/bible/kt/begin",
+].join("\n");
 
-describe('getLinksForVerse', () => {
-  it('fetches and filters links correctly', async () => {
-    fetch.mockResolvedValue({ ok: true, text: () => Promise.resolve(sampleTsv) });
-    const links = await getLinksForVerse('gen', '1', '1');
-    expect(links).toEqual(['rc://en/tw/dict/bible/kt/create']);
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith(
-      'https://git.door43.org/unfoldingWord/en_twl/raw/branch/master/gen.tsv'
-    );
+const mockTwlManifest = {
+  projects: [
+    {
+      identifier: "gen",
+      path: "./gen.tsv",
+      title: "Genesis",
+    },
+    {
+      identifier: "exo",
+      path: "./exo.tsv",
+      title: "Exodus",
+    },
+  ],
+};
+
+describe("getLinksForVerse", () => {
+  it("fetches and filters links correctly", async () => {
+    dcsClient.fetchResourceFile.mockResolvedValue(sampleTsv);
+
+    const links = await getLinksForVerse("gen", 1, 1, mockTwlManifest);
+
+    expect(links).toEqual(["rc://en/tw/dict/bible/kt/create"]);
+    expect(dcsClient.fetchResourceFile).toHaveBeenCalledWith("en", "twl", "gen.tsv");
   });
 
-  it('returns empty array for no matches', async () => {
-    fetch.mockResolvedValue({ ok: true, text: () => Promise.resolve(sampleTsv) });
-    const links = await getLinksForVerse('gen', '2', '1');
+  it("returns empty array for no matches", async () => {
+    dcsClient.fetchResourceFile.mockResolvedValue(sampleTsv);
+
+    const links = await getLinksForVerse("gen", 2, 1, mockTwlManifest);
+
     expect(links).toEqual([]);
   });
 
-  it('throws when response not ok', async () => {
-    fetch.mockResolvedValue({ ok: false, statusText: 'Not Found' });
-    await expect(getLinksForVerse('gen', '1', '1')).rejects.toThrow(
+  it("throws when response not ok", async () => {
+    dcsClient.fetchResourceFile.mockRejectedValue(
+      new Error("Failed to load TWL file for gen: Not Found")
+    );
+
+    await expect(getLinksForVerse("gen", 1, 1, mockTwlManifest)).rejects.toThrow(
       /Failed to load TWL file for gen: Not Found/
     );
   });
