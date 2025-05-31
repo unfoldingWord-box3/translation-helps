@@ -1,7 +1,14 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import { App } from './App';
 import { MemoryRouter } from 'react-router-dom';
+
+// Mock the fetchManifest function
+vi.mock('../services/dcsClient', () => ({
+  fetchManifest: vi.fn(() => Promise.resolve({ projects: [] })),
+  fetchResourceFile: vi.fn(() => Promise.resolve(''))
+}));
 
 describe('App', () => {
   it('renders NavigationBar and MainView with reference selector', () => {

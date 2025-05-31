@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { ReferenceContext } from '../context/ReferenceContext';
 import { ResourcesContext } from '../context/ResourcesContext';
+import { ManifestsContext } from '../context/MultiManifestsContext';
 import { MainView } from './MainView';
 
 describe('MainView', () => {
@@ -12,12 +13,21 @@ describe('MainView', () => {
       tq: { data: [{ Question: 'sample question' }] },
       twl: { data: { links: ['http://example.com'] } },
     };
+    const testManifests = {
+      ult: { projects: [] },
+      tn: { projects: [] },
+      tq: { projects: [] },
+      tw: { projects: [] },
+      twl: { projects: [] }
+    };
     render(
-      <ReferenceContext.Provider value={{ reference: testReference, setReference: () => {}, updateReference: () => {} }}>
-        <ResourcesContext.Provider value={{ resources: testResources, loadResource: () => {}, isLoading: false }}>
-          <MainView />
-        </ResourcesContext.Provider>
-      </ReferenceContext.Provider>
+      <ManifestsContext.Provider value={{ manifests: testManifests, isLoading: false }}>
+        <ReferenceContext.Provider value={{ reference: testReference, setReference: () => {}, updateReference: () => {} }}>
+          <ResourcesContext.Provider value={{ resources: testResources, loadResource: () => {}, isLoading: false }}>
+            <MainView />
+          </ResourcesContext.Provider>
+        </ReferenceContext.Provider>
+      </ManifestsContext.Provider>
     );
     expect(screen.getByTestId('main-view')).toBeInTheDocument();
     expect(screen.getByTestId('reference-selector')).toBeInTheDocument();

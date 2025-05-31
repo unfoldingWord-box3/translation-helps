@@ -6,7 +6,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ReferenceProvider } from '../context/ReferenceContext';
-import { ManifestsProvider } from '../context/ManifestsContext';
+import { MultiManifestsProvider } from '../context/MultiManifestsContext';
 import { ResourcesProvider } from '../context/ResourcesContext';
 import { NavigationBar } from './NavigationBar';
 import { MainView } from './MainView';
@@ -14,7 +14,7 @@ import { MainView } from './MainView';
 export function App() {
   return (
     <ReferenceProvider>
-      <ManifestsProvider languageId="en" resourceId="twl">
+      <MultiManifestsProvider languageId="en">
         <ResourcesProvider>
           <div style={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
             <NavigationBar />
@@ -24,7 +24,7 @@ export function App() {
             </Routes>
           </div>
         </ResourcesProvider>
-      </ManifestsProvider>
+      </MultiManifestsProvider>
     </ReferenceProvider>
   );
 }

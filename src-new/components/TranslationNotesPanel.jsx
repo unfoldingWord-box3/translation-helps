@@ -4,12 +4,15 @@
  */
 
 import React, { useContext, useEffect, useState } from 'react';
-import { ReferenceContext } from '../context/ReferenceContext';
+import { ManifestsContext } from '../context/MultiManifestsContext';
+import { fetchResourceFile } from '../services/dcsClient';
+import { parseTsv } from '../utils/parseTsv';
 
 export function TranslationNotesPanel({ reference }) {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { manifests } = useContext(ManifestsContext);
 
   useEffect(() => {
     async function loadNotes() {
@@ -18,36 +21,49 @@ export function TranslationNotesPanel({ reference }) {
         return;
       }
 
+      const tnManifest = manifests.tn;
+      if (!tnManifest) {
+        console.log('tN manifest not loaded yet');
+        return;
+      }
+
       setLoading(true);
       setError(null);
 
       try {
-        // Fetch translation notes from DCS
-        const url = `https://git.door43.org/unfoldingWord/en_tn/raw/branch/master/${reference.bookId}/${reference.chapter?.padStart(2, '0')}.md`;
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-          throw new Error('Failed to load translation notes');
+        // Find the project for this book in the manifest
+        const project = tnManifest.projects?.find(p => p.identifier === reference.bookId);
+        if (!project) {
+          throw new Error(`Book ${reference.bookId} not found in tN manifest`);
         }
-
-        const content = await response.text();
         
-        // Parse the markdown content to extract notes for the specific verse
-        const verseSection = new RegExp(`^#+\\s*${reference.verse}\\s*$([\\s\\S]*?)(?=^#+\\s*\\d+\\s*$|$)`, 'gm');
-        const match = content.match(verseSection);
-        
-        if (match && match[1]) {
-          // Extract individual notes from the verse section
-          const noteLines = match[1].trim().split('\n').filter(line => line.trim());
-          const parsedNotes = noteLines.map((line, index) => ({
-            id: index,
-            text: line.replace(/^[-*]\s*/, '').trim()
-          })).filter(note => note.text);
-          
-          setNotes(parsedNotes);
-        } else {
-          setNotes([]);
+        // Get the TSV file path from the manifest
+        const filePath = project.path?.replace('./', '');
+        if (!filePath) {
+          throw new Error(`No file path found for ${reference.bookId} in manifest`);
         }
+        
+        // Fetch the TSV content
+        const tsvContent = await fetchResourceFile('en', 'tn', filePath);
+        
+        // Parse the TSV data
+        const allNotes = parseTsv(tsvContent);
+        
+        // Filter notes for the specific chapter and verse
+        const verseNotes = allNotes.filter(note => {
+          return note.Chapter === reference.chapter && 
+                 note.Verse === reference.verse;
+        });
+        
+        // Transform notes into display format
+        const parsedNotes = verseNotes.map((note, index) => ({
+          id: index,
+          text: note.Note || '',
+          quote: note.Quote || '',
+          occurrence: note.Occurrence || '1'
+        })).filter(note => note.text);
+        
+        setNotes(parsedNotes);
       } catch (err) {
         console.error('Error loading translation notes:', err);
         setError('Failed to load translation notes');
@@ -58,7 +74,7 @@ export function TranslationNotesPanel({ reference }) {
     }
 
     loadNotes();
-  }, [reference]);
+  }, [reference, manifests.tn]);
 
   if (!reference?.verse) {
     return (

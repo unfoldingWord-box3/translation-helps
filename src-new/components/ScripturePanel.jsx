@@ -4,6 +4,8 @@
  */
 import React, { useState, useEffect, useContext } from 'react';
 import { ReferenceContext } from '../context/ReferenceContext';
+import { ManifestsContext } from '../context/MultiManifestsContext';
+import { fetchResourceFile } from '../services/dcsClient';
 
 /**
  * @param {object} props
@@ -14,21 +16,36 @@ export function ScripturePanel({ reference, onVerseClick }) {
   const [chapterText, setChapterText] = useState([]);
   const [loading, setLoading] = useState(false);
   const { updateReference } = useContext(ReferenceContext);
+  const { manifests } = useContext(ManifestsContext);
 
   useEffect(() => {
     async function loadChapter() {
       if (!reference?.bookId || !reference.chapter) return;
       
+      const ultManifest = manifests.ult;
+      if (!ultManifest) {
+        console.log('ULT manifest not loaded yet');
+        return;
+      }
+      
       setLoading(true);
       const { bookId, chapter } = reference;
-      const url = `https://git.door43.org/unfoldingWord/en_ult/raw/branch/master/${bookId}.usfm`;
       
       try {
-        const res = await fetch(url);
-        if (!res.ok) {
-          throw new Error(`Failed to load scripture for ${bookId}`);
+        // Find the project for this book in the manifest
+        const project = ultManifest.projects?.find(p => p.identifier === bookId);
+        if (!project) {
+          throw new Error(`Book ${bookId} not found in ULT manifest`);
         }
-        const usfm = await res.text();
+        
+        // Get the USFM file path from the manifest
+        const filePath = project.path?.replace('./', '');
+        if (!filePath) {
+          throw new Error(`No file path found for ${bookId} in manifest`);
+        }
+        
+        // Fetch the USFM content using the manifest path
+        const usfm = await fetchResourceFile('en', 'ult', filePath);
         
         // Parse chapter text
         const chapterRegex = new RegExp(`\\\\c ${chapter}\\s([\\s\\S]*?)(?=\\\\c|$)`);
@@ -60,7 +77,7 @@ export function ScripturePanel({ reference, onVerseClick }) {
     }
     
     loadChapter();
-  }, [reference?.bookId, reference?.chapter]);
+  }, [reference?.bookId, reference?.chapter, manifests.ult]);
 
   const handleVerseClick = (verseNum) => {
     updateReference({ verse: verseNum });

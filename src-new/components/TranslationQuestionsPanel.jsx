@@ -3,12 +3,16 @@
  * tQ entries for comprehension.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { ManifestsContext } from '../context/MultiManifestsContext';
+import { fetchResourceFile } from '../services/dcsClient';
+import { parseTsv } from '../utils/parseTsv';
 
 export function TranslationQuestionsPanel({ reference }) {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { manifests } = useContext(ManifestsContext);
 
   useEffect(() => {
     async function loadQuestions() {
@@ -17,39 +21,48 @@ export function TranslationQuestionsPanel({ reference }) {
         return;
       }
 
+      const tqManifest = manifests.tq;
+      if (!tqManifest) {
+        console.log('tQ manifest not loaded yet');
+        return;
+      }
+
       setLoading(true);
       setError(null);
 
       try {
-        // Fetch translation questions from DCS
-        const url = `https://git.door43.org/unfoldingWord/en_tq/raw/branch/master/${reference.bookId}/${reference.chapter?.padStart(2, '0')}.md`;
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-          throw new Error('Failed to load translation questions');
+        // Find the project for this book in the manifest
+        const project = tqManifest.projects?.find(p => p.identifier === reference.bookId);
+        if (!project) {
+          throw new Error(`Book ${reference.bookId} not found in tQ manifest`);
         }
-
-        const content = await response.text();
         
-        // Parse the markdown to extract Q&A pairs for the verse
-        const verseSection = new RegExp(`^#+\\s*${reference.verse}\\s*$([\\s\\S]*?)(?=^#+\\s*\\d+\\s*$|$)`, 'gm');
-        const match = content.match(verseSection);
-        
-        if (match && match[1]) {
-          // Extract Q&A pairs
-          const qaRegex = /^#+\s*(.+?)\s*\n+(.+?)$/gm;
-          const qaMatches = [...match[1].matchAll(qaRegex)];
-          
-          const parsedQuestions = qaMatches.map((qa, index) => ({
-            id: index,
-            question: qa[1].trim(),
-            answer: qa[2].trim()
-          }));
-          
-          setQuestions(parsedQuestions);
-        } else {
-          setQuestions([]);
+        // Get the TSV file path from the manifest
+        const filePath = project.path?.replace('./', '');
+        if (!filePath) {
+          throw new Error(`No file path found for ${reference.bookId} in manifest`);
         }
+        
+        // Fetch the TSV content
+        const tsvContent = await fetchResourceFile('en', 'tq', filePath);
+        
+        // Parse the TSV data
+        const allQuestions = parseTsv(tsvContent);
+        
+        // Filter questions for the specific chapter and verse
+        const verseQuestions = allQuestions.filter(q => {
+          return q.Chapter === reference.chapter && 
+                 q.Verse === reference.verse;
+        });
+        
+        // Transform questions into display format
+        const parsedQuestions = verseQuestions.map((q, index) => ({
+          id: index,
+          question: q.Question || '',
+          answer: q.Response || q.Answer || ''
+        })).filter(q => q.question);
+        
+        setQuestions(parsedQuestions);
       } catch (err) {
         console.error('Error loading translation questions:', err);
         setError('Failed to load translation questions');
@@ -60,7 +73,7 @@ export function TranslationQuestionsPanel({ reference }) {
     }
 
     loadQuestions();
-  }, [reference]);
+  }, [reference, manifests.tq]);
 
   if (!reference?.verse) {
     return (
