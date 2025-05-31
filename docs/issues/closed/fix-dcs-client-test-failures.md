@@ -1,8 +1,9 @@
 <!--
-status: open
-Resolved: false
+status: closed
+Resolved: true
 priority: high
 created: 2025-05-31
+resolved: 2025-05-31
 tags: [testing, dcs-client, fetch, mocking]
 -->
 
@@ -82,3 +83,32 @@ npm test src-new/services/dcsClient.test.js
 ## Related Tests
 
 These failures may also be contributing to console errors and warnings seen in other component tests that depend on DCS client functionality.
+
+## Resolution
+
+**Root Cause**: The issue was caused by a global mock in `vitest.setup.js` that was overriding the entire dcsClient module:
+
+```javascript
+vi.mock("./src-new/services/dcsClient", () => ({
+  fetchManifest: async () => ({}),
+  fetchResourceFile: async () => "",
+}));
+```
+
+This global mock was preventing the actual implementation from being tested and causing the functions to always resolve with empty values instead of making real fetch calls or throwing errors.
+
+**Solution**: Modified `src-new/services/dcsClient.test.js` to unmock the dcsClient module specifically for these tests:
+
+```javascript
+// Unmock the dcsClient module for these tests
+vi.unmock("./dcsClient");
+
+// Import the actual implementation after unmocking
+const { fetchManifest, fetchResourceFile } = await import("./dcsClient");
+```
+
+**Result**: All 4 tests now pass successfully, properly testing the actual implementation with mocked fetch calls.
+
+**Files Modified**:
+
+- `src-new/services/dcsClient.test.js` - Added unmocking logic to test actual implementation

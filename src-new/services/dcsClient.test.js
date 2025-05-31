@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { fetchManifest, fetchResourceFile } from "./dcsClient";
 import * as yaml from "js-yaml";
+
+// Unmock the dcsClient module for these tests
+vi.unmock("./dcsClient");
+
+// Import the actual implementation after unmocking
+const { fetchManifest, fetchResourceFile } = await import("./dcsClient");
 
 // Mock global fetch
 global.fetch = vi.fn();
