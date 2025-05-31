@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { ScripturePanel } from './ScripturePanel';
 
 describe('ScripturePanel', () => {

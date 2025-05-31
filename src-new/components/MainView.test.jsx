@@ -1,20 +1,23 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { ReferenceProvider } from '../context/ReferenceContext';
-import { ManifestsProvider } from '../context/ManifestsContext';
-import { ResourcesProvider } from '../context/ResourcesContext';
+import { ReferenceContext } from '../context/ReferenceContext';
+import { ResourcesContext } from '../context/ResourcesContext';
 import { MainView } from './MainView';
 
 describe('MainView', () => {
   it('renders verse tabs, scripture panel, and helps panels', () => {
+    const testReference = { bookId: 'gen', chapter: '1', verse: '1' };
+    const testResources = {
+      tn: { data: [{ Note: 'sample note' }] },
+      tq: { data: [{ Question: 'sample question' }] },
+      twl: { data: { links: ['http://example.com'] } },
+    };
     render(
-      <ReferenceProvider>
-        <ManifestsProvider languageId="en" resourceId="twl">
-          <ResourcesProvider resourceId="twl" reference={{ bookId: 'gen', chapter: '1', verse: '1' }}>
-            <MainView />
-          </ResourcesProvider>
-        </ManifestsProvider>
-      </ReferenceProvider>
+      <ReferenceContext.Provider value={{ reference: testReference, setReference: () => {} }}>
+        <ResourcesContext.Provider value={{ resources: testResources }}>
+          <MainView />
+        </ResourcesContext.Provider>
+      </ReferenceContext.Provider>
     );
     expect(screen.getByTestId('main-view')).toBeInTheDocument();
     expect(screen.getByTestId('verse-tabs')).toBeInTheDocument();

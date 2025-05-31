@@ -87,7 +87,9 @@ This document defines a clean-slate architecture and rewrite roadmap for the tra
     Establish shared context, routing, and resource-loading hooks.
  4. **Presentational Components**  
     Build generic UI components for rendering resource data and navigation controls.
- 5. **Platform Integration**  
+ 5. **UI/UX Tests**  
+    Implement UI/UX tests using Vitest and React Testing Library for core components (App, MainView, VerseTabs, TranslationWordsPanel, ScripturePanel).
+ 6. **Platform Integration**  
     Integrate with native platforms (Capacitor) after web-first implementation.
 
  ---

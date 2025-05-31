@@ -41,6 +41,7 @@ description: An application for viewing unfoldingWord Bible translation resource
 - Prioritize docs in `/docs` for any questions about resource format or architecture
 - If editing React components, respect separation of concerns (UI, state, data-fetching)
 - TWL is a new addition that replaces Greek inline tags—point devs to TWL documentation
+- UI/UX tests have been added for core components using Vitest and React Testing Library (see `src-new/__tests__/`).
 For Dev Server issues (blank page), refer to the “Debugging Dev Server Blank Screen” section in README.md.
 
 ## 🚧 Issue Resolution Workflow

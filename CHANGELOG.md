@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.14] - 2025-06-11
+
+### Added
+- UI/UX tests for core components (App, MainView, VerseTabs, TranslationWordsPanel, ScripturePanel) using Vitest and React Testing Library; see `src-new/__tests__/`.
+
 ## [0.2.13] - 2025-06-10
 
 ### Changed
