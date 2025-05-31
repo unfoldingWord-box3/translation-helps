@@ -38,3 +38,12 @@ export async function getLinksForVerse(bookId, chapter, verse) {
 }
 
 export default { getLinksForVerse };
+
+/**
+ * Clears the internal TWL cache (for testing or reloading purposes).
+ */
+export function clearCache() {
+  Object.keys(cache).forEach(key => {
+    delete cache[key];
+  });
+}

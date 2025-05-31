@@ -3,7 +3,7 @@
  * Unified fetch layer for DCS repositories.
  */
 
-import { parse } from 'yaml';
+import * as yaml from 'yaml';
 
 const BASE_URL = 'https://git.door43.org/unfoldingWord';
 
@@ -32,7 +32,7 @@ export async function fetchManifest(languageId, resourceId) {
     );
   }
   const text = await res.text();
-  return parse(text);
+  return yaml.parse(text);
 }
 
 /**

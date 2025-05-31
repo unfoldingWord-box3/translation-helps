@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { getLinksForVerse } from './twlService';
+import { getLinksForVerse, clearCache } from './twlService';
 
 beforeEach(() => {
+  clearCache();
   global.fetch = vi.fn();
 });
 
