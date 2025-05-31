@@ -46,13 +46,17 @@ export function ScripturePanel({ reference, onVerseClick }) {
         
         // Fetch the USFM content using the manifest path
         const usfm = await fetchResourceFile('en', 'ult', filePath);
+        console.log(`Fetched USFM for ${bookId}, length: ${usfm.length}`);
         
         // Parse chapter text
         const chapterRegex = new RegExp(`\\\\c ${chapter}\\s([\\s\\S]*?)(?=\\\\c|$)`);
         const chapterMatch = usfm.match(chapterRegex);
+        console.log(`Chapter ${chapter} match:`, chapterMatch ? 'found' : 'not found');
         
         if (chapterMatch) {
           const chapterContent = chapterMatch[1];
+          console.log(`Chapter content preview: ${chapterContent.substring(0, 200)}...`);
+          
           const verseRegex = /\\v\s+(\d+)\s+([^\\]+)/g;
           const verses = [];
           let match;
@@ -64,6 +68,7 @@ export function ScripturePanel({ reference, onVerseClick }) {
             });
           }
           
+          console.log(`Found ${verses.length} verses in chapter ${chapter}`);
           setChapterText(verses);
         } else {
           setChapterText([]);

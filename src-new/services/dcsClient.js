@@ -3,7 +3,7 @@
  * Unified fetch layer for DCS repositories.
  */
 
-import { load } from 'js-yaml';
+import * as yaml from 'js-yaml';
 
 const BASE_URL = 'https://git.door43.org/unfoldingWord';
 
@@ -25,14 +25,29 @@ function rawBaseUrl(languageId, resourceId) {
  */
 export async function fetchManifest(languageId, resourceId) {
   const url = `${rawBaseUrl(languageId, resourceId)}/manifest.yaml`;
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(
-      `Failed to load manifest for ${languageId}_${resourceId}: ${res.statusText}`
-    );
+  
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(
+        `Failed to load manifest for ${languageId}_${resourceId}: ${res.statusText}`
+      );
+    }
+    const text = await res.text();
+    
+    // Debug logging
+    console.log(`Fetched manifest for ${languageId}_${resourceId}, length: ${text.length}`);
+    console.log('yaml object:', yaml);
+    console.log('yaml.load function:', yaml.load);
+    
+    const parsed = yaml.load(text);
+    console.log(`Parsed manifest for ${languageId}_${resourceId}:`, parsed);
+    
+    return parsed;
+  } catch (error) {
+    console.error(`Error in fetchManifest for ${languageId}_${resourceId}:`, error);
+    throw error;
   }
-  const text = await res.text();
-  return load(text);
 }
 
 /**

@@ -5,10 +5,10 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      // REMOVE: 'yaml': 'yaml/browser/index.js'
+      // Ensure js-yaml uses the browser-compatible version
     },
   },
   optimizeDeps: {
-    // include: ["yaml"], // REMOVE 'yaml/browser'
+    include: ["js-yaml"], // Pre-bundle js-yaml
   },
 });
