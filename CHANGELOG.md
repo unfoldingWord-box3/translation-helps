@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.16] - 2025-06-13
+
+### Changed
+
+- Import YAML from `yaml/browser` in `dcsClient.js` and related tests to avoid internal module resolution errors.
+- Update `vite.config.ts` to pre-bundle both `yaml` and `yaml/browser`.
+- Document YAML module resolution workaround in `codex.md`.
+
+## [0.2.15] - 2025-06-12
+
+### Changed
+
+- Add `yaml` to Vite `optimizeDeps` in `vite.config.ts` to pre-bundle it and prevent stale cache errors.
+- Update README.md with instructions to clear Vite optimization cache if you get 504 Gateway Timeout errors.
+
 ## [0.2.14] - 2025-06-11
 
 ### Added

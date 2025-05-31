@@ -76,6 +76,25 @@ If the development server launches a blank page, check the following:
 - Open the browser console to inspect any import or runtime errors.
 - Add an `ErrorBoundary` to catch render-time exceptions in the UI.
 
+### Clearing Vite Optimization Cache
+
+If you encounter 504 Gateway Timeout errors when loading optimized dependencies (e.g., `yaml.js`), clear the Vite dependency cache:
+
+```bash
+rm -rf node_modules/.vite
+yarn dev
+```
+
+To avoid internal module resolution errors in the `yaml` package when building with Vite, add the following alias to your `vite.config.ts`:
+
+```ts
+resolve: {
+  alias: {
+    'yaml': 'yaml/browser'
+  }
+}
+```
+
 ## Technical Overview
 All resources are managed in Git repositories on (DCS)[https://git.door43.org]. Each repository is organized in a Resource Container Spec (RC). Each RC has a manifest that contains metadata about included resource projects. Each project has metadata including information such as the book id and relative paths to included project files. By fetching the project file it can then be parsed by file type. Each resource project's data can then be integrated based on the relevant alignments and tags that link the resources together.
 

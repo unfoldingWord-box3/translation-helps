@@ -1,6 +1,7 @@
 
 <!--
-status: open
+Resolved: true
+status: closed
 priority: high
 created: 2025-05-30
 tags: [vite, bug, optimize-deps, 504, yaml]
