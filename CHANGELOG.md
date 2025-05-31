@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.2.9] - 2025-06-05
+
+### Added
+
+- Core rewrite implementations for services, contexts, hooks, helpers, and UI components
+- Unit tests for services and helper utilities
+- Rendering tests for core components and context provider tests
+
+### Changed
+- Bump version to 0.2.9
+
+### Closed
+- Close open rewrite sub-issues (rewrite-services, rewrite-contexts, rewrite-hooks, rewrite-helpers, rewrite-ui-components, rewrite-tests)
+
+## [0.2.8] - 2025-06-04
+
+### Changed
+
+- Close and decompose rewrite-entire-app issue (`docs/issues/closed/rewrite-entire-app.md`)
+- Create new issues for rewrite-services, rewrite-contexts, rewrite-ui-components, rewrite-hooks, rewrite-helpers, and rewrite-tests under `docs/issues/open/`
+
 ## [0.2.7] - 2025-06-03
 
 ### Added
