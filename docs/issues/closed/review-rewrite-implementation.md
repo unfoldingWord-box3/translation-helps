@@ -1,5 +1,6 @@
 
 <!--
+Resolved: true
 status: open
 priority: high
 created: 2025-05-30

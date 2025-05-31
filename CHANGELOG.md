@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.11] - 2025-06-08
+
+### Added
+
+- Consolidate helper utilities (parseTsv, parseRcUri, groupByVerse) into src/utils with unit tests
+- Introduce unified DCS client service (dcsClient.ts) for manifest and file fetching, with tests
+- Implement tnService and tqService for tN and tQ resource loading, with tests
+- Refactor twlService to use dcsClient and centralized parseTsv utility, with tests
+- Implement module hooks: useTwlLinks, useTranslationNotes, useTranslationQuestions, useTranslationWords with tests
+
+### Changed
+
+- Bump version to 0.2.11 and close open rewrite-related issues
+
+## [0.2.10] - 2025-06-07
+
 ## [0.2.9] - 2025-06-05
 
 ### Added
