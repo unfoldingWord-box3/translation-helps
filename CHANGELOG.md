@@ -1,5 +1,46 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Placeholder for future features
+
+## [0.3.3] - 2025-05-31
+
+### Added
+
+- **Translation Words (tW) functionality via TWL integration - COMPLETED**
+  - ✅ Complete TWL service implementation with manifest-based file loading
+  - ✅ Fixed TWL service URL format and reference format (`chapter:verse`)
+  - ✅ Added wildcard rc:// URI support (`rc://*/tw/dict/...` → `rc://en/tw/dict/...`)
+  - ✅ Comprehensive `twService.js` for fetching and parsing tW articles from rc:// URIs
+  - ✅ Robust caching for both TWL files and tW articles with error handling
+  - ✅ TranslationWordsPanel displays contextually relevant articles per verse
+  - ✅ Successfully tested with Titus 1:1 showing 11 translation words (Paul, servant, God, etc.)
+  - ✅ Complete TWL → tW articles pipeline working end-to-end
+
+### Changed
+
+- **TWL service refactored to use manifest-based file loading**
+  - Removed hardcoded filename generation (`twl_BOOKID.tsv`)
+  - Now uses manifest projects to find file paths, following same pattern as Translation Notes
+  - Integrated with DCS client for consistent resource fetching
+
+### Removed
+
+- **Redundant Translation Word Links (TWL) tab**
+  - TWL now powers Translation Words tab behind the scenes
+  - Simplified UI to 3 tabs: Translation Notes, Translation Questions, Translation Words
+  - Eliminated user confusion between TWL and Translation Words
+
+## [0.3.2] - 2025-05-31
+
+### Added
+
+- Create comprehensive issue for implementing full Translation Words (tW) integration via TWL (Translation Words Links)
+- Document complete pipeline from TWL entries to tW article display with cross-tab navigation
+
 ## [0.3.1] - 2025-05-31
 
 ### Fixed
