@@ -1,4 +1,3 @@
-
 <!--
 status: open
 priority: critical
@@ -24,15 +23,15 @@ The recent rewrite succeeded in bootstrapping a working Vite-based React app, bu
 
 ## 📋 Parity Restoration Checklist
 
-| Feature | Status | Linked Issue |
-|---------|--------|--------------|
-| Auto-load default scripture reference | ❌ Missing | _(To be created)_ |
-| Tabbed view for tW, tN, TWL, etc. | ❌ Missing | _(To be created)_ |
-| Verse click triggers help panel update | ❌ Missing | _(To be created)_ |
-| Context sync across scripture + helps | ❌ Missing | _(To be created)_ |
-| TWL link resolution and display | ❌ Partial | [TWL migration issue](#) |
-| Maintain layout from original app | ❌ Broken | _(To be created)_ |
-| Avoid manual Bible reference entry | ❌ Manual-only | _(To be created)_ |
+| Feature                                | Status         | Linked Issue                                                 |
+| -------------------------------------- | -------------- | ------------------------------------------------------------ |
+| Auto-load default scripture reference  | ❌ Missing     | _(To be created)_                                            |
+| Tabbed view for tW, tN, TWL, etc.      | ❌ Missing     | _(To be created)_                                            |
+| Verse click triggers help panel update | ✅ Complete    | [Closed Issue](../closed/fix-verse-click-help-panel-sync.md) |
+| Context sync across scripture + helps  | ❌ Missing     | _(To be created)_                                            |
+| TWL link resolution and display        | ❌ Partial     | [TWL migration issue](#)                                     |
+| Maintain layout from original app      | ❌ Broken      | _(To be created)_                                            |
+| Avoid manual Bible reference entry     | ❌ Manual-only | _(To be created)_                                            |
 
 ---
 

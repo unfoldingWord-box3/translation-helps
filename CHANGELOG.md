@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.1] - 2025-05-31
+
+### Fixed
+
+- Verify verse click synchronization with translation helps panels
+
 ## [0.3.0] - 2025-05-31
 
 ### Added
