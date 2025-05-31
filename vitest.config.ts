@@ -1,19 +1,18 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    environment: 'jsdom',
+    environment: "jsdom",
     globals: true,
-    setupFiles: './vitest.setup.js',
-    transformMode: {
-      web: [/\.[jt]sx$/],
-    },
+    setupFiles: "./vitest.setup.js",
+
     include: [
-      'src/utils/**/*.{test,spec}.{ts,tsx}',
-      'src/modules/**/tests/**/*.{test,spec}.ts',
-      'src-new/utils/**/*.{test,spec}.js',
-      'src-new/services/**/*.{test,spec}.js',
-      'src-new/components/**/*.{test,spec}.{js,jsx,ts,tsx}'
+      "src/utils/**/*.{test,spec}.{ts,tsx}",
+      "src/modules/**/tests/**/*.{test,spec}.ts",
+      "src-new/utils/**/*.{test,spec}.js",
+      "src-new/hooks/**/*.{test,spec}.{js,jsx}",
+      "src-new/services/**/*.{test,spec}.js",
+      "src-new/components/**/*.{test,spec}.{js,jsx,ts,tsx}",
     ],
   },
 });
