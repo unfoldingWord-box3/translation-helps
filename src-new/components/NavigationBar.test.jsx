@@ -4,14 +4,14 @@ import { ReferenceProvider } from '../context/ReferenceContext';
 import { NavigationBar } from './NavigationBar';
 
 describe('NavigationBar', () => {
-  it('renders input fields', () => {
+  it('renders title and current reference', () => {
     render(
       <ReferenceProvider>
         <NavigationBar />
       </ReferenceProvider>
     );
-    expect(screen.getByTestId('book-input')).toBeInTheDocument();
-    expect(screen.getByTestId('chapter-input')).toBeInTheDocument();
-    expect(screen.getByTestId('verse-input')).toBeInTheDocument();
+    expect(screen.getByText('Translation Helps Viewer')).toBeInTheDocument();
+    // The default reference is Titus 1:1
+    expect(screen.getByText('Titus 1:1')).toBeInTheDocument();
   });
 });

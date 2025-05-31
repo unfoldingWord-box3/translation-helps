@@ -9,12 +9,13 @@ afterAll(() => {
 });
 
 describe('main entrypoint', () => {
-  it('renders main view and navigation inputs by default', async () => {
+  it('renders main view and reference selector by default', async () => {
     document.body.innerHTML = '<div id="root"></div>';
     await import('../main.jsx');
     await waitFor(() => {
       expect(screen.getByTestId('main-view')).toBeInTheDocument();
-      expect(screen.getByTestId('book-input')).toBeInTheDocument();
+      expect(screen.getByTestId('reference-selector')).toBeInTheDocument();
+      expect(screen.getByTestId('book-selector')).toBeInTheDocument();
     });
   });
 });
