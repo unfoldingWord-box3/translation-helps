@@ -6,6 +6,28 @@
 
 - Placeholder for future features
 
+## [0.3.4] - 2025-05-31
+
+### Fixed
+
+- **RC Links issues completely resolved**
+  - ✅ Fixed article word links creating duplicate tabs (e.g., Tit 1:1 Paul)
+  - ✅ Fixed Translation Academy articles showing placeholder text instead of real content
+  - ✅ Corrected DCS repository URL structure (removed incorrect "man" path segment)
+  - ✅ Added comprehensive markdown rendering with ReactMarkdown integration
+  - ✅ Implemented proper heading hierarchy: title.md → # headings, sub-title.md → ## headings
+  - ✅ Enhanced ArticlePanel with professional typography and styling
+  - ✅ Added complete Translation Academy service (taService.js) with caching and error handling
+  - ✅ All 12 taService tests passing with corrected URL structure
+
+### Added
+
+- **Complete markdown rendering system**
+  - ReactMarkdown integration with remark-gfm support
+  - Custom component styling for all markdown elements (headings, lists, tables, code blocks)
+  - Professional blue theming consistent with app design
+  - Proper RC link processing within markdown content
+
 ## [0.3.3] - 2025-05-31
 
 ### Added

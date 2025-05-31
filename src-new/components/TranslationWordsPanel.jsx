@@ -78,15 +78,24 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
           // Step 2: Fetch tW articles for the links
           const articles = await getArticlesForLinks(links);
 
-          // Step 3: Transform articles into display format
-          const wordsData = articles.map((article, index) => ({
-            id: article.rcUri || `article-${index}`,
-            title: article.title,
-            content: article.content,
-            rcUri: article.rcUri,
-            summary: extractSummary(article.content),
-            error: article.error,
-          }));
+          // Step 3: Transform articles into display format and deduplicate by rcUri
+          const articlesMap = new Map();
+          articles.forEach((article, index) => {
+            const key = article.rcUri || `article-${index}`;
+            // Only add if we haven't seen this rcUri before, or if it's a fallback key
+            if (!articlesMap.has(key) || key.startsWith("article-")) {
+              articlesMap.set(key, {
+                id: key,
+                title: article.title,
+                content: article.content,
+                rcUri: article.rcUri,
+                summary: extractSummary(article.content),
+                error: article.error,
+              });
+            }
+          });
+
+          const wordsData = Array.from(articlesMap.values());
 
           setWords(wordsData);
         } else {
@@ -222,6 +231,7 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
                     fontSize: "0.8em",
                     color: "#666",
                   }}
+                  onClick={(e) => e.stopPropagation()} // Prevent triggering parent onClick
                 >
                   <RcLink rcUri={word.rcUri} onRcLinkClick={handleRcLinkClick}>
                     {word.rcUri}

@@ -54,7 +54,14 @@ export async function getLinksForVerse(bookId, chapter, verse, twlManifest) {
     }
   }
 
-  return entries.filter((entry) => entry.Reference === ref).map((entry) => entry.TWLink);
+  // Filter entries for this verse and get unique TWLinks to avoid duplicates
+  const links = entries
+    .filter((entry) => entry.Reference === ref)
+    .map((entry) => entry.TWLink)
+    .filter(Boolean); // Remove any null/undefined links
+
+  // Remove duplicates at the TWL level
+  return [...new Set(links)];
 }
 
 export default { getLinksForVerse };

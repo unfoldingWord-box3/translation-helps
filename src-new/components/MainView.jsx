@@ -11,6 +11,7 @@ import { ScripturePanel } from "./ScripturePanel";
 import { HelpsTabs } from "./HelpsTabs";
 import { convertRcUriToUrl } from "../utils/rcLinkUtils.jsx";
 import { getArticle } from "../services/twService";
+import { getArticle as getTaArticle } from "../services/taService";
 
 // Context for rc:// link handling
 export const RcLinkContext = createContext();
@@ -18,6 +19,10 @@ export const RcLinkContext = createContext();
 export function MainView() {
   const { reference } = useContext(ReferenceContext);
   const { manifests } = useContext(ManifestsContext);
+
+  // Extract language context for RC link resolution
+  // TODO: Get languageId from proper source when dynamic language switching is implemented
+  const languageId = "en";
   const [activeHelpsTab, setActiveHelpsTab] = useState("tn");
   const helpsTabsRef = useRef();
 
@@ -47,7 +52,7 @@ export function MainView() {
       case "tw":
         // For translation words, fetch the full article and open in new tab
         try {
-          const article = await getArticle(rcUri);
+          const article = await getArticle(rcUri, languageId);
           if (article && helpsTabsRef.current) {
             helpsTabsRef.current.openArticleTab({
               id: rcUri.replace(/[^a-zA-Z0-9]/g, "_"),
@@ -84,29 +89,30 @@ export function MainView() {
         }
         break;
       case "ta":
-        // For Translation Academy, open as article tab
+        // For Translation Academy, fetch the actual article and open in new tab
         try {
-          // Create a pseudo-article for TA links since we don't have a TA service yet
-          const pathParts = rcUri.split("/").slice(5); // Get path after resource/version
-          const articleTitle = pathParts[pathParts.length - 1] || "Translation Academy Article";
-
-          if (helpsTabsRef.current) {
+          const article = await getTaArticle(rcUri, languageId);
+          if (article && helpsTabsRef.current) {
             helpsTabsRef.current.openArticleTab({
               id: rcUri.replace(/[^a-zA-Z0-9]/g, "_"),
-              title: articleTitle.replace(/[-_]/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
-              content: `# ${articleTitle
-                .replace(/[-_]/g, " ")
-                .replace(/\b\w/g, (l) =>
-                  l.toUpperCase()
-                )}\n\nThis Translation Academy article is not yet available for in-app viewing.\n\nSource: ${rcUri}\n\nFor now, you can access the full article at the original source.`,
+              title: article.title,
+              content: article.content,
               rcUri: rcUri,
-              error: null,
+              error: article.error,
             });
+          } else {
+            console.warn("Could not fetch Translation Academy article for rc:// URI:", rcUri);
+            // Fallback to external link
+            const externalUrl = convertRcUriToUrl(rcUri, languageId);
+            if (externalUrl) {
+              console.log("Opening external resource:", externalUrl);
+              window.open(externalUrl, "_blank", "noopener,noreferrer");
+            }
           }
         } catch (error) {
-          console.error("Error creating TA article tab:", error);
+          console.error("Error fetching Translation Academy article:", error);
           // Fallback to external link
-          const externalUrl = convertRcUriToUrl(rcUri, "en");
+          const externalUrl = convertRcUriToUrl(rcUri, languageId);
           if (externalUrl) {
             console.log("Opening external resource:", externalUrl);
             window.open(externalUrl, "_blank", "noopener,noreferrer");
@@ -115,7 +121,7 @@ export function MainView() {
         break;
       default:
         // For other external resources, open in new tab
-        const externalUrl = convertRcUriToUrl(rcUri, "en");
+        const externalUrl = convertRcUriToUrl(rcUri, languageId);
         if (externalUrl) {
           console.log("Opening external resource:", externalUrl);
           window.open(externalUrl, "_blank", "noopener,noreferrer");

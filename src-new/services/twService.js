@@ -13,18 +13,19 @@ const cache = {};
 
 /**
  * Parses an rc:// URI to extract repository and file path information
- * @param {string} rcUri - RC URI like "rc://en/tw/dict/bible/kt/create" or "rc://<asterisk>/tw/dict/bible/kt/create"
+ * @param {string} rcUri - RC URI with format: rc://language/resource/path
+ * @param {string} [contextLanguage="en"] - Current language context for wildcard resolution
  * @returns {object} Parsed URI components
  */
-function parseRcUri(rcUri) {
+function parseRcUri(rcUri, contextLanguage = "en") {
   if (!rcUri || !rcUri.startsWith("rc://")) {
     throw new Error(`Invalid rc:// URI: ${rcUri}`);
   }
 
-  // Handle wildcard language code by replacing * with en
+  // Handle wildcard language code by replacing * with contextLanguage
   let normalizedUri = rcUri;
   if (rcUri.startsWith("rc://*/")) {
-    normalizedUri = rcUri.replace("rc://*/", "rc://en/");
+    normalizedUri = rcUri.replace("rc://*/", `rc://${contextLanguage}/`);
   }
 
   // Remove rc:// prefix and split
@@ -47,10 +48,11 @@ function parseRcUri(rcUri) {
 /**
  * Converts rc:// URI to DCS raw file URL
  * @param {string} rcUri - RC URI like "rc://en/tw/dict/bible/kt/create"
+ * @param {string} [contextLanguage="en"] - Current language context for wildcard resolution
  * @returns {string} DCS raw file URL
  */
-function rcUriToUrl(rcUri) {
-  const { language, resource, path } = parseRcUri(rcUri);
+function rcUriToUrl(rcUri, contextLanguage = "en") {
+  const { language, resource, path } = parseRcUri(rcUri, contextLanguage);
   const baseUrl = `https://git.door43.org/unfoldingWord/${language}_${resource}/raw/branch/master`;
 
   // For tW URIs, skip the "dict" part in the path
@@ -112,9 +114,10 @@ function parseMarkdown(markdown) {
 /**
  * Fetches a single tW article from an rc:// URI
  * @param {string} rcUri - RC URI pointing to a tW article
+ * @param {string} [contextLanguage="en"] - Current language context for wildcard resolution
  * @returns {Promise<object>} Article object with title, content, and metadata
  */
-export async function getArticle(rcUri) {
+export async function getArticle(rcUri, contextLanguage = "en") {
   if (!rcUri) {
     throw new Error("RC URI is required");
   }
@@ -126,7 +129,7 @@ export async function getArticle(rcUri) {
 
   let url;
   try {
-    url = rcUriToUrl(rcUri);
+    url = rcUriToUrl(rcUri, contextLanguage);
     const response = await fetch(url);
 
     if (!response.ok) {
