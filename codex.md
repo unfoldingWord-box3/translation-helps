@@ -27,6 +27,7 @@ description: An application for viewing unfoldingWord Bible translation resource
 - `Translation_Notes_Implementation.md`: Implementation details for Translation Notes (tN)
 - `DCS_Integration_Documentation.md`: Explains access patterns to Door43 Content Service
 - `Resource_Integration_Overview.md`: Outlines all supported translation resource types
+- `codex-version-guard.md`: Policy and CLI guard for verifying package versions against Codex model cutoff date
 
 ## 🛠️ Development Environment
 
@@ -42,7 +43,9 @@ description: An application for viewing unfoldingWord Bible translation resource
 - If editing React components, respect separation of concerns (UI, state, data-fetching)
 - TWL is a new addition that replaces Greek inline tags—point devs to TWL documentation
 - UI/UX tests have been added for core components using Vitest and React Testing Library (see `src-new/__tests__/`).
-For Dev Server issues (blank page), refer to the “Debugging Dev Server Blank Screen” section in README.md.
+- For Dev Server issues (blank page), refer to the “Debugging Dev Server Blank Screen” section in README.md.
+
+- For modern ESM/bundler incompatibilities (e.g., missing "./browser" specifier in `yaml`), alias the module in `vite.config.ts` (for example, mapping `yaml` to `yaml/browser/index.js`) and include it in `optimizeDeps.include`.
 
 ## 🚧 Issue Resolution Workflow
 

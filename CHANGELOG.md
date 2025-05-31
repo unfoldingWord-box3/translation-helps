@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.18] - 2025-06-15
+
+### Changed
+
+- Add `codex-version-guard` CLI script to verify dependencies against the Codex model cutoff date (May 31, 2024).
+- Create `docs/codex-version-guard.md` describing the version guard policy.
+- Reference `codex-version-guard.md` in `codex.md`.
+
+## [0.2.17] - 2025-06-14
+
+### Changed
+
+- Use explicit `yaml/browser/index.js` alias and pre-bundle both `yaml` and `yaml/browser` in `vite.config.ts` to avoid missing subpath export errors.
+- Add troubleshooting entry in `codex.md` for modern ESM/bundler incompatibilities.
+
 ## [0.2.16] - 2025-06-13
 
 ### Changed

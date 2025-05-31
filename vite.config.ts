@@ -5,10 +5,10 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      'yaml': 'yaml/browser'
+      'yaml': 'yaml/browser/index.js'
     }
   },
   optimizeDeps: {
-    include: ['yaml']
+    include: ['yaml', 'yaml/browser']
   },
 });
