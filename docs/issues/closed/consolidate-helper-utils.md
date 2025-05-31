@@ -1,6 +1,6 @@
 <!--
 Resolved: true
-status: open
+status: closed
 priority: medium
 created: 2025-06-07
 tags: [rewrite, helpers, utils]
@@ -14,7 +14,7 @@ Multiple helper functions (e.g., TSV parsers, RC URI parsers, grouping utilities
 
 ## ✅ Acceptance Criteria
 
-- [ ] Create `src/utils/parseTsv.ts`, `src/utils/getRcUriParts.ts`, and `src/utils/groupByVerse.ts` with unit tests.
-- [ ] Update `twlService.js` (or module hooks) to use the centralized `parseTsv` utility.
-- [ ] Remove or deprecate inline helper definitions in `src/services` and component-level `helpers.js` files.
-- [ ] Ensure no duplicate or outdated helper code remains.
+- [x] Create `src/utils/parseTsv.ts`, `src/utils/getRcUriParts.ts`, and `src/utils/groupByVerse.ts` with unit tests.
+- [x] Update `twlService.js` (or module hooks) to use the centralized `parseTsv` utility.
+- [x] Remove or deprecate inline helper definitions in `src/services` and component-level `helpers.js` files.
+- [x] Ensure no duplicate or outdated helper code remains.

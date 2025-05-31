@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.13] - 2025-06-10
+
+### Changed
+- Fix blank page when running `yarn dev` under Vite: added root `index.html`, `src-new/main.jsx`, and error boundary with routing support
+- Update README.md with debug instructions for Vite dev server blank screen
+
 ## [0.2.12] - 2025-06-09
 
 ### Added

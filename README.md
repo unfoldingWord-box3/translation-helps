@@ -66,6 +66,16 @@ export NODE_OPTIONS=--openssl-legacy-provider
    npm start
    ```
 
+### Debugging Dev Server Blank Screen
+
+If the development server launches a blank page, check the following:
+
+- Ensure `index.html` at project root contains a `<div id="root">`.
+- Verify `src-new/main.jsx` mounts the `<App />` component using `ReactDOM.createRoot`.
+- Wrap `<App />` with `BrowserRouter` and configure a `<Route path="/" element={<MainView />} />` in `App.jsx`.
+- Open the browser console to inspect any import or runtime errors.
+- Add an `ErrorBoundary` to catch render-time exceptions in the UI.
+
 ## Technical Overview
 All resources are managed in Git repositories on (DCS)[https://git.door43.org]. Each repository is organized in a Resource Container Spec (RC). Each RC has a manifest that contains metadata about included resource projects. Each project has metadata including information such as the book id and relative paths to included project files. By fetching the project file it can then be parsed by file type. Each resource project's data can then be integrated based on the relevant alignments and tags that link the resources together.
 

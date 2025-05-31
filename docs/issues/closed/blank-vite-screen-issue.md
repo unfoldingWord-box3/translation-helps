@@ -1,6 +1,6 @@
-
 <!--
-status: open
+Resolved: true
+status: closed
 priority: high
 created: 2025-05-30
 tags: [vite, bug, dev-server, blank-screen]
