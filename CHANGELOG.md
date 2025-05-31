@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.20] - 2025-06-17
+
+### Changed
+
+- Replace `yaml` package with `js-yaml` for YAML parsing in DCS client (`dcsClient.js`), update tests and mock setup to use `js-yaml`, and update documentation and codex.md accordingly.
+
+## [0.2.19] - 2025-06-16
+
+### Closed
+
+- Close and resolve the Missing "./browser" Export Specifier in `yaml` Package issue (`docs/issues/closed/vite-yaml-browser-entry-error.md`).
+
 ## [0.2.18] - 2025-06-15
 
 ### Changed

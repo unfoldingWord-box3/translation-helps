@@ -1,7 +1,7 @@
 {
   "name": "translation-helps",
   "homepage": "https://unfoldingword-box3.github.io/translation-helps/",
-  "version": "0.2.18",
+  "version": "0.2.20",
   "private": false,
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -20,7 +20,7 @@
     "remark": "^14.0.1",
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.1",
-    "yaml": "^2.3.1"
+    "js-yaml": "^4.1.0"
   },
   "scripts": {
     "codex-version-guard": "node scripts/codex-version-guard.js",

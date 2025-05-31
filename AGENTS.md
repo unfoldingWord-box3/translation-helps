@@ -1,4 +1,4 @@
-# codex.md
+# AGENTS.md
 
 name: translationHelps Viewer
 description: An application for viewing unfoldingWord Bible translation resources including Translation Notes (tN), Translation Questions (tQ), Translation Words (tW), and the new Translation Words Links (TWL) format.
@@ -36,7 +36,7 @@ description: An application for viewing unfoldingWord Bible translation resource
 - Loads data from Door43 Git-based repos
 - Uses TSV and Markdown content structures
 
-## 🧠 Assistant Tips (for Codex)
+## 🧠 Assistant Tips (for AGENTS)
 
 - Be concise but context-aware
 - Prioritize docs in `/docs` for any questions about resource format or architecture
@@ -45,7 +45,7 @@ description: An application for viewing unfoldingWord Bible translation resource
 - UI/UX tests have been added for core components using Vitest and React Testing Library (see `src-new/__tests__/`).
 - For Dev Server issues (blank page), refer to the “Debugging Dev Server Blank Screen” section in README.md.
 
-- For modern ESM/bundler incompatibilities (e.g., missing "./browser" specifier in `yaml`), alias the module in `vite.config.ts` (for example, mapping `yaml` to `yaml/browser/index.js`) and include it in `optimizeDeps.include`.
+- The app now uses `js-yaml` for YAML parsing (`load()` API); remove any legacy `yaml` aliasing in `vite.config.ts` and add `js-yaml` to `optimizeDeps.include` if needed.
 
 ## 🚧 Issue Resolution Workflow
 
@@ -57,7 +57,7 @@ docs/issues/open/
 
 Each file describes a single issue using standard headings like `## Description`, `## Acceptance Criteria`, etc.
 
-Codex CLI should:
+AGENTIC AI should:
 
 1. Read all open issues from `docs/issues/open/`
 2. For each issue:

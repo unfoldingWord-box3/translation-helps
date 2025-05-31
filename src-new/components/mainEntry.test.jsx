@@ -1,7 +1,7 @@
 import { vi, describe, it, expect } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 
-vi.mock('yaml', () => ({ parse: () => ({}) }));
+vi.mock('js-yaml', () => ({ load: () => ({}) }));
 vi.mock('../services/dcsClient', () => ({ fetchManifest: async () => ({}), fetchResourceFile: async () => '' }));
 import { afterAll } from 'vitest';
 afterAll(() => {
