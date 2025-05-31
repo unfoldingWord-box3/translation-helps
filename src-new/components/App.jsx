@@ -8,8 +8,7 @@ import { ReferenceProvider } from '../context/ReferenceContext';
 import { ManifestsProvider } from '../context/ManifestsContext';
 import { ResourcesProvider } from '../context/ResourcesContext';
 import { NavigationBar } from './NavigationBar';
-import { VerseTabs } from './VerseTabs';
-import { VerseView } from './VerseView';
+import { MainView } from './MainView';
 
 export function App() {
   return (
@@ -17,8 +16,7 @@ export function App() {
       <ManifestsProvider languageId="en" resourceId="twl">
         <ResourcesProvider resourceId="twl" reference={{ bookId: '', chapter: '', verse: '' }}>
           <NavigationBar />
-          <VerseTabs />
-          <VerseView />
+          <MainView />
         </ResourcesProvider>
       </ManifestsProvider>
     </ReferenceProvider>

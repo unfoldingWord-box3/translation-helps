@@ -42,3 +42,14 @@
 - Align module hooks with separation-of-concerns guidelines.
 - Improve consistency and testability by centralizing helper utilities.
 - Simplify and standardize resource fetching via a unified DCS client.
+
+### [2025-06-09] Orchestrate panels via MainView for context sync
+
+**Decision:** Introduce `MainView.jsx` to consolidate `VerseTabs`, `ScripturePanel`, and helps panels under a single component driven by `ReferenceContext`.
+
+**Context:** As part of the Post-Refactor QA epic, it was necessary to ensure that selecting a verse consistently updates all panels.
+
+**Rationale:**
+- Centralizes panel orchestration and simplifies the component tree.
+- Ensures uniform context-driven rendering across panels.
+- Improves maintainability by isolating layout concerns.

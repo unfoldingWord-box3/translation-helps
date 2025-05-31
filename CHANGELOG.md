@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.12] - 2025-06-09
+
+### Added
+
+- Introduce MainView.jsx to consolidate panels and context sync
+- Added integration tests for context synchronization and component orchestration
+- Added unit tests for ScripturePanel and TranslationWordsPanel
+- Updated component-map.md, rewrite/plan.md, rewrite/decision-log.md, and codex.md
+- Created docs/rewrite/backlog.md for deferred items
+- Moved epic-post-refactor-completion.md to docs/issues/closed with Resolved metadata
+
 ## [0.2.11] - 2025-06-08
 
 ### Added

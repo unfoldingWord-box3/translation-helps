@@ -5,7 +5,8 @@ description: An application for viewing unfoldingWord Bible translation resource
 
 ## 🧭 Project Structure
 
-- `src/`: Main React app source
+- `src-new/`: Main React app source (clean-slate rewrite)
+- `src/`: Legacy source (can be removed)
 - `docs/`: Developer documentation (architecture, TWL, resource guides, DCS)
 - `public/`: Static assets
 - `package.json`: Project config and dependencies
@@ -56,7 +57,7 @@ Codex CLI should:
 1. Read all open issues from `docs/issues/open/`
 2. For each issue:
    - Review related documentation in `docs/`
-   - Locate and update relevant code files (typically under `src/`)
+   - Locate and update relevant code files (typically under `src-new/`)
    - Implement the requested behavior (e.g., `twlService.js`)
    - Update documentation as described (e.g., `TWL_Integration_Documentation.md`)
    - Increment the version number in `package.json`

@@ -7,61 +7,68 @@ This document lists and describes the major components in the viewer and their r
 
 ## 🔝 Top-Level
 
-| Component | Path | Description |
-|-----------|------|-------------|
-| `App.js` | `/src/App.js` | Entry shell that wraps viewer in contexts |
-| `Viewer.js` | `/src/components/Viewer/Viewer.js` | Manages context change detection and manifest loading |
-| `Workspace.js` | `/src/components/Viewer/Workspace/Container.js` | Core layout manager for scripture and helps views |
-
----
-
-## 🔨 Modules (Vertical Slices)
-
-| Module | Path | Description |
-|--------|------|-------------|
-| `TWL`  | `/src/modules/twl` | Translation Words Links module (data, hooks, types, tests) |
-| `tN`   | `/src/modules/tn`  | Translation Notes module |
-| `tQ`   | `/src/modules/tq`  | Translation Questions module |
-| `tW`   | `/src/modules/tw`  | Translation Words module |
+| Component   | Path                                | Description                                    |
+|-------------|-------------------------------------|------------------------------------------------|
+| `App`       | `src-new/components/App.jsx`        | Entry shell that wraps the viewer in contexts  |
+| `MainView`  | `src-new/components/MainView.jsx`   | Orchestrates scripture, navigation, and helps panels |
+| `NavigationBar` | `src-new/components/NavigationBar.jsx` | Book, chapter, and verse selectors      |
 
 ---
 
 ## 📖 Scripture Panel
 
-| Component | Path | Description |
-|-----------|------|-------------|
-| `ScriptureView.js` | `Scripture/ScriptureView/` | Displays scripture, verse panels, and aligned data |
-| `VerseComponent.js` | `Verse/Component.js` | Renders a single verse with embedded helps tabs |
-| `Chapter.js` | `Scripture/ChapterSelection/` | Responsible for changing chapter context |
-| `Book.js` | `Scripture/BookSelection/` | Responsible for changing book context |
+| Component        | Path                                        | Description                         |
+|------------------|---------------------------------------------|-------------------------------------|
+| `ScripturePanel` | `src-new/components/ScripturePanel.jsx`     | Displays selected scripture text    |
 
 ---
 
-## 🧠 Helps Panels
+## 🔢 Verse Navigation
 
-| Component | Description |
-|-----------|-------------|
-| `TranslationNotesTable.js` | Displays TSV-based tN rows for the current verse |
-| `TranslationWordsPanel` | Renders tW article linked from TWL `.tsv` |
-| `HelpsTab.js` | Switches between notes, words, questions tabs |
-| `RCLinkContainer.js` | Resolves `rc://` article paths to markdown content |
+| Component   | Path                                 | Description                       |
+|-------------|--------------------------------------|-----------------------------------|
+| `VerseTabs` | `src-new/components/VerseTabs.jsx`   | Displays verse navigation tabs    |
 
 ---
 
-## 🛠 Utilities & Context
+## 📝 Helps Panels
 
-| File | Description |
-|------|-------------|
-| `Resources.context.js` | Global store for loaded resource data |
-| `helpers.js` | Parsing and utility functions for each resource type |
-| `twlService.js` | Loads and parses TWL `.tsv` links |
+| Component                  | Path                                                   | Description                                  |
+|----------------------------|--------------------------------------------------------|----------------------------------------------|
+| `TranslationNotesPanel`    | `src-new/components/TranslationNotesPanel.jsx`         | Displays translation notes (tN) entries      |
+| `TranslationQuestionsPanel`| `src-new/components/TranslationQuestionsPanel.jsx`     | Displays translation questions (tQ) entries  |
+| `TranslationWordsPanel`    | `src-new/components/TranslationWordsPanel.jsx`         | Displays linked translation words (TWL) links |
 
 ---
 
-## 🧪 Test Coverage
+## 🧠 Context Providers
 
-Unit tests exist (or should be added) for:
-- `twlService.js` (parsing)
-- TSV parsing helpers
-- Book/chapter selection behavior
+| Context Provider    | Path                                         | Description                           |
+|---------------------|----------------------------------------------|---------------------------------------|
+| `ReferenceProvider` | `src-new/context/ReferenceContext.jsx`       | Manages selected book, chapter, verse |
+| `ManifestsProvider` | `src-new/context/ManifestsContext.jsx`       | Provides DCS manifests for resources  |
+| `ResourcesProvider` | `src-new/context/ResourcesContext.jsx`       | Loads and stores resource data        |
+
+---
+
+## ⚙️ Hooks & Services
+
+| File               | Path                                      | Description                              |
+|--------------------|-------------------------------------------|------------------------------------------|
+| `useManifest`      | `src-new/hooks/useManifest.js`            | Hook for fetching DCS manifests          |
+| `useLoadResources` | `src-new/hooks/useLoadResources.js`       | Hook for loading resource data           |
+| `dcsClient`        | `src-new/services/dcsClient.js`           | Unified client for DCS content fetching  |
+| `tnService`        | `src-new/services/tnService.js`           | Service for translation notes (tN)       |
+| `tqService`        | `src-new/services/tqService.js`           | Service for translation questions (tQ)  |
+| `twlService`       | `src-new/services/twlService.js`          | Service for translation words links (TWL)|
+
+---
+
+## 🧪 Utilities
+
+| File             | Path                                     | Description                |
+|------------------|------------------------------------------|----------------------------|
+| `parseTsv`       | `src-new/utils/parseTsv.js`              | TSV parsing utility        |
+| `rcUri`          | `src-new/utils/rcUri.js`                 | RCUri parsing utility      |
+| `groupByVerse`   | `src-new/utils/groupByVerse.js`          | Groups TSV rows by verse   |
 

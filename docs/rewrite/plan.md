@@ -1,6 +1,12 @@
- # 📝 Rewrite Plan: translationHelps Viewer
+# 📝 Rewrite Plan: translationHelps Viewer
 
- This document defines a clean-slate architecture and rewrite roadmap for the translationHelps Viewer. It focuses on behavior requirements and modern frameworks without referencing internal implementation details of the legacy codebase.
+## ✅ Rewrite Plan Status
+
+All core rewrite tasks have been implemented under `src-new/` as of version 0.2.11. See `docs/rewrite/backlog.md` for deferred enhancements.
+
+---
+
+This document defines a clean-slate architecture and rewrite roadmap for the translationHelps Viewer. It focuses on behavior requirements and modern frameworks without referencing internal implementation details of the legacy codebase.
 
  ---
 

@@ -36,7 +36,7 @@ export function ScripturePanel({ reference }) {
   }
 
   return (
-    <section>
+    <section data-testid="scripture-panel">
       <h2>{`${reference.bookId.toUpperCase()} ${reference.chapter}:${reference.verse}`}</h2>
       <p>{verseText || 'Verse text not available.'}</p>
     </section>
