@@ -13,6 +13,9 @@ Resolved: false
 priority: [low|medium|high|critical]
 created: YYYY-MM-DD
 tags: [tag1, tag2, tag3]
+changelog_category: [added|changed|deprecated|removed|fixed|security|closed]
+semver_impact: [patch|minor|major]
+changelog_description: "Brief description for changelog entry"
 -->
 ```
 
@@ -27,6 +30,19 @@ tags: [tag1, tag2, tag3]
   - `critical` - Blocking or breaking functionality
 - **created**: Date in YYYY-MM-DD format
 - **tags**: Array of relevant tags (see common tags below)
+- **changelog_category**: Type of change for changelog entry
+  - `added` - New features, new functionality
+  - `changed` - Changes to existing functionality
+  - `deprecated` - Features marked for removal in future versions
+  - `removed` - Features removed in this version
+  - `fixed` - Bug fixes
+  - `security` - Security-related changes
+  - `closed` - Issue resolution (for tracking purposes)
+- **semver_impact**: Semantic versioning impact level
+  - `patch` - Bug fixes, documentation updates, test improvements, internal refactoring
+  - `minor` - New features, new components, non-breaking API additions
+  - `major` - Breaking changes, API removals, incompatible changes
+- **changelog_description**: Brief description for the changelog entry (exact text to be used)
 
 ### Common Tags
 
@@ -94,15 +110,68 @@ npm test src/service-x.test.js
 ```
 ````
 
+````
+
+## Issue Completion Process
+
+When resolving an issue, follow this standardized completion checklist:
+
+### Completion Checklist
+
+- [ ] **Update CHANGELOG.md** with entry based on `changelog_category` and `changelog_description`
+- [ ] **Bump package.json version** according to `semver_impact` (patch/minor/major)
+- [ ] **Update issue metadata**:
+  - `status: closed`
+  - `Resolved: true`
+  - Add `resolved: YYYY-MM-DD` field
+- [ ] **Move issue file** from `docs/issues/open/` to `docs/issues/closed/`
+- [ ] **Verify tests pass** and functionality works as expected
+
+### Version Bumping Rules
+
+- **Patch** (x.y.Z+1): Use for `semver_impact: patch`
+  - Bug fixes, documentation updates, test improvements, internal refactoring
+- **Minor** (x.Y+1.0): Use for `semver_impact: minor`
+  - New features, new components, non-breaking API additions
+- **Major** (X+1.0.0): Use for `semver_impact: major`
+  - Breaking changes, API removals, incompatible changes
+
+### Changelog Entry Format
+
+Add entries to CHANGELOG.md following this format:
+
+```markdown
+## [NEW_VERSION] - YYYY-MM-DD
+
+### [CHANGELOG_CATEGORY]
+
+- [CHANGELOG_DESCRIPTION]
+````
+
+### Example Completion
+
+For an issue with:
+
+- `changelog_category: fixed`
+- `semver_impact: patch`
+- `changelog_description: "Fix DCS client test failures by unmocking module"`
+- Current version: `0.2.20`
+
+**Steps:**
+
+1. Bump version to `0.2.21` in package.json
+2. Add changelog entry:
+
+   ```markdown
+   ## [0.2.21] - 2025-05-31
+
+   ### Fixed
+
+   - Fix DCS client test failures by unmocking module
+   ```
+
+3. Update issue metadata and move to closed
+
 ```
 
-## Moving Issues
-
-When an issue is resolved:
-
-1. Move from `docs/issues/open/` to `docs/issues/closed/`
-2. Update metadata:
-   - `status: closed`
-   - `Resolved: true`
-   - Add `resolved: YYYY-MM-DD` field
 ```

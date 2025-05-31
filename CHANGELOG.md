@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.0] - 2025-05-31
+
+### Added
+
+- Add standardized changelog and semantic versioning process with updated issue template
+
 ## [0.2.20] - 2025-06-17
 
 ### Changed
@@ -45,11 +51,13 @@
 ## [0.2.14] - 2025-06-11
 
 ### Added
+
 - UI/UX tests for core components (App, MainView, VerseTabs, TranslationWordsPanel, ScripturePanel) using Vitest and React Testing Library; see `src-new/__tests__/`.
 
 ## [0.2.13] - 2025-06-10
 
 ### Changed
+
 - Fix blank page when running `yarn dev` under Vite: added root `index.html`, `src-new/main.jsx`, and error boundary with routing support
 - Update README.md with debug instructions for Vite dev server blank screen
 
@@ -89,9 +97,11 @@
 - Rendering tests for core components and context provider tests
 
 ### Changed
+
 - Bump version to 0.2.9
 
 ### Closed
+
 - Close open rewrite sub-issues (rewrite-services, rewrite-contexts, rewrite-hooks, rewrite-helpers, rewrite-ui-components, rewrite-tests)
 
 ## [0.2.8] - 2025-06-04
