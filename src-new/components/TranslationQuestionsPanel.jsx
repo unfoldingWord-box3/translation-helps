@@ -3,10 +3,9 @@
  * tQ entries for comprehension.
  */
 
-import React, { useContext, useEffect, useState } from 'react';
-import { ManifestsContext } from '../context/MultiManifestsContext';
-import { fetchResourceFile } from '../services/dcsClient';
-import { parseTsv } from '../utils/parseTsv';
+import React, { useContext, useEffect, useState } from "react";
+import { ManifestsContext } from "../context/MultiManifestsContext";
+import { getQuestionsForVerse } from "../services/tqService";
 
 export function TranslationQuestionsPanel({ reference }) {
   const [questions, setQuestions] = useState([]);
@@ -17,55 +16,45 @@ export function TranslationQuestionsPanel({ reference }) {
   useEffect(() => {
     async function loadQuestions() {
       if (!reference?.bookId || !reference?.chapter || !reference?.verse) {
+        console.log("tQ: Missing reference data", reference);
         setQuestions([]);
         return;
       }
 
-      const tqManifest = manifests.tq;
-      if (!tqManifest) {
-        console.log('tQ manifest not loaded yet');
-        return;
-      }
-
+      console.log("tQ: Loading questions for", reference);
       setLoading(true);
       setError(null);
 
       try {
-        // Find the project for this book in the manifest
-        const project = tqManifest.projects?.find(p => p.identifier === reference.bookId);
-        if (!project) {
-          throw new Error(`Book ${reference.bookId} not found in tQ manifest`);
+        // Try to get custom file path from manifest if available
+        let customFilePath = null;
+        const tqManifest = manifests.tq;
+
+        if (tqManifest) {
+          const project = tqManifest.projects?.find((p) => p.identifier === reference.bookId);
+          if (project && project.path) {
+            customFilePath = project.path.replace("./", "");
+            console.log(`tQ: Using manifest file path: ${customFilePath}`);
+          } else {
+            console.log(`tQ: Book ${reference.bookId} not found in manifest, using default naming`);
+          }
+        } else {
+          console.log("tQ: Manifest not loaded, using default naming");
         }
-        
-        // Get the TSV file path from the manifest
-        const filePath = project.path?.replace('./', '');
-        if (!filePath) {
-          throw new Error(`No file path found for ${reference.bookId} in manifest`);
-        }
-        
-        // Fetch the TSV content
-        const tsvContent = await fetchResourceFile('en', 'tq', filePath);
-        
-        // Parse the TSV data
-        const allQuestions = parseTsv(tsvContent);
-        
-        // Filter questions for the specific chapter and verse
-        const verseQuestions = allQuestions.filter(q => {
-          return q.Chapter === reference.chapter && 
-                 q.Verse === reference.verse;
-        });
-        
-        // Transform questions into display format
-        const parsedQuestions = verseQuestions.map((q, index) => ({
-          id: index,
-          question: q.Question || '',
-          answer: q.Response || q.Answer || ''
-        })).filter(q => q.question);
-        
-        setQuestions(parsedQuestions);
+
+        // Use the tqService to load questions
+        const loadedQuestions = await getQuestionsForVerse(
+          reference.bookId,
+          reference.chapter,
+          reference.verse,
+          customFilePath
+        );
+
+        console.log(`tQ: Loaded ${loadedQuestions.length} questions`);
+        setQuestions(loadedQuestions);
       } catch (err) {
-        console.error('Error loading translation questions:', err);
-        setError('Failed to load translation questions');
+        console.error("Error loading translation questions:", err);
+        setError(`Failed to load translation questions: ${err.message}`);
         setQuestions([]);
       } finally {
         setLoading(false);
@@ -77,7 +66,7 @@ export function TranslationQuestionsPanel({ reference }) {
 
   if (!reference?.verse) {
     return (
-      <section data-testid="translation-questions-panel">
+      <section data-testid='translation-questions-panel'>
         <p>Select a verse to view translation questions.</p>
       </section>
     );
@@ -85,7 +74,7 @@ export function TranslationQuestionsPanel({ reference }) {
 
   if (loading) {
     return (
-      <section data-testid="translation-questions-panel">
+      <section data-testid='translation-questions-panel'>
         <p>Loading translation questions...</p>
       </section>
     );
@@ -93,32 +82,33 @@ export function TranslationQuestionsPanel({ reference }) {
 
   if (error) {
     return (
-      <section data-testid="translation-questions-panel">
-        <p style={{ color: 'red' }}>{error}</p>
+      <section data-testid='translation-questions-panel'>
+        <p style={{ color: "red" }}>{error}</p>
       </section>
     );
   }
 
   return (
-    <section data-testid="translation-questions-panel">
+    <section data-testid='translation-questions-panel'>
       <h3>Translation Questions</h3>
       {questions.length === 0 ? (
         <p>No translation questions available for this verse.</p>
       ) : (
         <div>
           {questions.map((qa) => (
-            <div key={qa.id} style={{ 
-              marginBottom: '16px', 
-              padding: '12px',
-              backgroundColor: '#f5f5f5',
-              borderRadius: '4px'
-            }}>
-              <p style={{ fontWeight: 'bold', marginBottom: '8px', color: '#1976d2' }}>
+            <div
+              key={qa.id}
+              style={{
+                marginBottom: "16px",
+                padding: "12px",
+                backgroundColor: "#f5f5f5",
+                borderRadius: "4px",
+              }}
+            >
+              <p style={{ fontWeight: "bold", marginBottom: "8px", color: "#1976d2" }}>
                 Q: {qa.question}
               </p>
-              <p style={{ marginLeft: '16px' }}>
-                A: {qa.answer}
-              </p>
+              <p style={{ marginLeft: "16px" }}>A: {qa.answer}</p>
             </div>
           ))}
         </div>
