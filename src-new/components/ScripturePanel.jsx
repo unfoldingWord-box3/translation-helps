@@ -5,7 +5,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { ReferenceContext } from '../context/ReferenceContext';
 import { ManifestsContext } from '../context/MultiManifestsContext';
-import { fetchResourceFile } from '../services/dcsClient';
+import { fetchBook } from '../services/scriptureService';
+import { getChapter, extractVersesFromChapter } from '../utils/usfmParser';
 
 /**
  * @param {object} props
@@ -32,47 +33,32 @@ export function ScripturePanel({ reference, onVerseClick }) {
       const { bookId, chapter } = reference;
       
       try {
-        // Find the project for this book in the manifest
-        const project = ultManifest.projects?.find(p => p.identifier === bookId);
-        if (!project) {
-          throw new Error(`Book ${bookId} not found in ULT manifest`);
-        }
+        // Fetch and parse the book using the scripture service
+        const chapters = await fetchBook({
+          languageId: 'en',
+          resourceId: 'ult',
+          bookId,
+          manifest: ultManifest
+        });
         
-        // Get the USFM file path from the manifest
-        const filePath = project.path?.replace('./', '');
-        if (!filePath) {
-          throw new Error(`No file path found for ${bookId} in manifest`);
-        }
-        
-        // Fetch the USFM content using the manifest path
-        const usfm = await fetchResourceFile('en', 'ult', filePath);
-        console.log(`Fetched USFM for ${bookId}, length: ${usfm.length}`);
-        
-        // Parse chapter text
-        const chapterRegex = new RegExp(`\\\\c ${chapter}\\s([\\s\\S]*?)(?=\\\\c|$)`);
-        const chapterMatch = usfm.match(chapterRegex);
-        console.log(`Chapter ${chapter} match:`, chapterMatch ? 'found' : 'not found');
-        
-        if (chapterMatch) {
-          const chapterContent = chapterMatch[1];
-          console.log(`Chapter content preview: ${chapterContent.substring(0, 200)}...`);
-          
-          const verseRegex = /\\v\s+(\d+)\s+([^\\]+)/g;
-          const verses = [];
-          let match;
-          
-          while ((match = verseRegex.exec(chapterContent)) !== null) {
-            verses.push({
-              verse: match[1],
-              text: match[2].trim()
-            });
-          }
-          
-          console.log(`Found ${verses.length} verses in chapter ${chapter}`);
-          setChapterText(verses);
-        } else {
+        if (!chapters) {
+          console.error(`Failed to fetch book ${bookId}`);
           setChapterText([]);
+          return;
         }
+        
+        // Get the specific chapter
+        const chapterData = chapters[String(chapter)];
+        if (!chapterData) {
+          console.log(`Chapter ${chapter} not found in book ${bookId}`);
+          setChapterText([]);
+          return;
+        }
+        
+        // Extract verses from the chapter
+        const verses = extractVersesFromChapter(chapterData);
+        console.log(`Found ${verses.length} verses in ${bookId} chapter ${chapter}`);
+        setChapterText(verses);
       } catch (e) {
         console.error('Failed to load chapter:', e);
         setChapterText([]);

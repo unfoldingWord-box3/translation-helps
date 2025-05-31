@@ -5,12 +5,12 @@ import { ScripturePanel } from './ScripturePanel';
 import { ReferenceContext } from '../context/ReferenceContext';
 import { ManifestsContext } from '../context/MultiManifestsContext';
 
-// Mock the fetchResourceFile function
-vi.mock('../services/dcsClient', () => ({
-  fetchResourceFile: vi.fn()
+// Mock the scripture service
+vi.mock('../services/scriptureService', () => ({
+  fetchBook: vi.fn()
 }));
 
-import { fetchResourceFile } from '../services/dcsClient';
+import { fetchBook } from '../services/scriptureService';
 
 describe('ScripturePanel', () => {
   afterEach(() => {
@@ -31,8 +31,23 @@ describe('ScripturePanel', () => {
   });
 
   it('loads and displays chapter text when reference is provided', async () => {
-    const usfm = '\\c 1\n\\v 1 In the beginning God created the heavens and the earth.\n\\v 2 The earth was without form and void.';
-    fetchResourceFile.mockResolvedValue(usfm);
+    // Mock the parsed chapters data that would come from usfm-js
+    const mockChapters = {
+      '1': {
+        '1': {
+          verseObjects: [
+            { type: 'text', text: 'In the beginning God created the heavens and the earth.' }
+          ]
+        },
+        '2': {
+          verseObjects: [
+            { type: 'text', text: 'The earth was without form and void.' }
+          ]
+        }
+      }
+    };
+    
+    fetchBook.mockResolvedValue(mockChapters);
     
     const mockManifests = { 
       ult: { 
@@ -59,6 +74,11 @@ describe('ScripturePanel', () => {
       expect(screen.getByText('In the beginning God created the heavens and the earth.')).toBeInTheDocument();
     });
     
-    expect(fetchResourceFile).toHaveBeenCalledWith('en', 'ult', '01-GEN.usfm');
+    expect(fetchBook).toHaveBeenCalledWith({
+      languageId: 'en',
+      resourceId: 'ult',
+      bookId: 'gen',
+      manifest: mockManifests.ult
+    });
   });
 });

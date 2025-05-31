@@ -20,7 +20,8 @@
     "react-router-dom": "^6.14.1",
     "remark": "^14.0.1",
     "remark-gfm": "^3.0.1",
-    "remark-parse": "^10.0.1"
+    "remark-parse": "^10.0.1",
+    "usfm-js": "^3.4.3"
   },
   "scripts": {
     "codex-version-guard": "node scripts/codex-version-guard.js",

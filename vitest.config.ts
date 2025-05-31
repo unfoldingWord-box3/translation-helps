@@ -12,7 +12,7 @@ export default defineConfig({
       'src/utils/**/*.{test,spec}.{ts,tsx}',
       'src/modules/**/tests/**/*.{test,spec}.ts',
       'src-new/utils/**/*.{test,spec}.js',
-      'src-new/services/twlService.test.js',
+      'src-new/services/**/*.{test,spec}.js',
       'src-new/components/**/*.{test,spec}.{js,jsx,ts,tsx}'
     ],
   },
