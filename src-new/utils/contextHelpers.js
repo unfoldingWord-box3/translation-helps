@@ -38,12 +38,18 @@ export function updateQueryFromContext(context) {
 
 /**
  * Parses the current URL to extract context information.
- * @returns {Object} The context parsed from URL parameters
+ * @returns {Object} The context parsed from URL parameters with hasUrlParams flag
  */
 export function contextFromQuery() {
   const urlParams = new URLSearchParams(window.location.search);
-  const organization = urlParams.get("owner") || "door43-catalog";
-  const rc = urlParams.get("rc") || "";
+  const ownerParam = urlParams.get("owner");
+  const rcParam = urlParams.get("rc");
+
+  // Check if URL actually has parameters
+  const hasUrlParams = ownerParam || rcParam;
+
+  const organization = ownerParam || "unfoldingWord";
+  const rc = rcParam || "";
   const rcArray = rc
     .slice(1)
     .split("/")
@@ -51,13 +57,14 @@ export function contextFromQuery() {
   const [languageId, resourceId, bookId, chapter, verse] = rcArray;
 
   return {
+    hasUrlParams: !!hasUrlParams,
     organization,
     languageId: languageId || "en",
-    resourceId: resourceId,
+    resourceId: resourceId || null,
     reference: {
-      bookId,
-      chapter,
-      verse,
+      bookId: bookId || null,
+      chapter: chapter || null,
+      verse: verse || null,
     },
   };
 }

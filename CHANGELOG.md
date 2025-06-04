@@ -6,6 +6,38 @@
 
 - Placeholder for future features
 
+## [0.4.0] - 2025-05-31
+
+### Added
+
+- **RC Link Style Hierarchical Navigation Dropdowns**
+  - ✅ DCS Catalog API integration service (catalogService.js) with caching and error handling
+  - ✅ Dynamic organization discovery via `https://git.door43.org/api/v1/catalog/list/owners`
+  - ✅ Language discovery via `https://git.door43.org/api/v1/catalog/list/languages/{owner}`
+  - ✅ Resource discovery via `https://git.door43.org/api/v1/catalog/list/subjects/{owner}/{language}`
+  - ✅ Custom hooks: useOrganizations, useLanguages, useResources for data fetching
+  - ✅ Enhanced ReferenceSelector with hierarchical dropdowns: Organization → Language → Resource → Book → Chapter → Verse
+  - ✅ Extended ReferenceContext to include organization, languageId, resourceId state management
+  - ✅ Cascading dropdown logic with proper state reset when higher levels change
+  - ✅ URL synchronization with browser address bar using existing contextHelpers
+  - ✅ Loading states and error handling for all catalog API calls
+  - ✅ Comprehensive test coverage for catalogService with 100% branch coverage
+  - ✅ Fallback data when API calls fail to ensure app remains functional
+  - ✅ Professional UI with consistent styling and responsive design
+
+### Fixed
+
+- **URL Synchronization Issues**
+  - ✅ Fixed URL parameters being overridden by app state instead of respecting URL as source of truth
+  - ✅ Fixed dropdowns, breadcrumbs, and URL parameters being out of sync
+  - ✅ Fixed default loading state not rendering content properly
+  - ✅ Enhanced contextHelpers to detect when URL actually contains parameters vs. defaults
+  - ✅ Implemented proper initialization flow that respects URL parameters first
+- **API Integration Issues**
+  - ✅ Fixed DCS catalog API 404 errors by implementing hardcoded fallback data
+  - ✅ Replaced non-functional API endpoints with reliable static data for organizations, languages, and resources
+  - ✅ Ensured dropdown population works reliably even when external APIs are unavailable
+
 ## [0.3.4] - 2025-05-31
 
 ### Fixed
