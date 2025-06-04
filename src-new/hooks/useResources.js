@@ -21,7 +21,10 @@ export function useResources(organization, language) {
     let isMounted = true;
 
     const loadResources = async () => {
+      console.log("🔍 useResources - loadResources called:", { organization, language });
+
       if (!organization || !language) {
+        console.log("⚠️ Missing organization or language:", { organization, language });
         setResources([]);
         setLoading(false);
         setError(null);
@@ -29,12 +32,15 @@ export function useResources(organization, language) {
       }
 
       try {
+        console.log("📡 Fetching Bible resources for:", organization, language);
         setLoading(true);
         setError(null);
         const data = await fetchBibleResources(organization, language);
+        console.log("✅ Bible resources fetched:", data);
 
         if (isMounted) {
           setResources(data);
+          console.log("🔄 Resources set in state:", data.length, "items");
         }
       } catch (err) {
         if (isMounted) {

@@ -22,6 +22,27 @@ export function ReferenceSelector() {
   const { languages, loading: langsLoading } = useLanguages(organization);
   const { resources, loading: resourcesLoading } = useResources(organization, languageId);
 
+  // Debug logging with actual values
+  const dropdownDisabled = !organization || !languageId || resourcesLoading;
+  console.log("🎯 Organization:", organization);
+  console.log("🎯 LanguageId:", languageId);
+  console.log("🎯 ResourceId:", resourceId);
+  console.log("🎯 Resources count:", resources?.length || 0);
+  console.log("🎯 Resources loading:", resourcesLoading);
+  console.log("🎯 Dropdown disabled:", dropdownDisabled);
+  console.log("🎯 Org check (!organization):", !organization);
+  console.log("🎯 Lang check (!languageId):", !languageId);
+  console.log("🎯 Loading check (resourcesLoading):", resourcesLoading);
+
+  if (resources?.length > 0) {
+    console.log(
+      "📋 Available resources:",
+      resources.map((r) => `${r.id}: ${r.name} - ${r.description}`)
+    );
+    // Log the actual structure
+    console.log("🔍 Resource structure:", JSON.stringify(resources[0], null, 2));
+  }
+
   // Book chapter counts (simplified - in production this would come from a data source)
   const CHAPTER_COUNTS = {
     gen: 50,
@@ -277,11 +298,14 @@ export function ReferenceSelector() {
           ) : (
             <>
               <option value=''>Select Bible Resource</option>
-              {resources.map((resource) => (
-                <option key={resource.id} value={resource.id}>
-                  {resource.name.toUpperCase()} - {resource.description}
-                </option>
-              ))}
+              <option value='test1'>TEST 1 - Hardcoded Option</option>
+              <option value='test2'>TEST 2 - Another Hardcoded Option</option>
+              {console.log("🎨 About to map resources:", resources) ||
+                resources.map((resource) => (
+                  <option key={resource.id} value={resource.id}>
+                    {resource.name.toUpperCase()} - {resource.description}
+                  </option>
+                ))}
             </>
           )}
         </select>

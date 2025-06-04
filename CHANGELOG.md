@@ -19,6 +19,11 @@
   - ✅ Updated ScripturePanel to use selected resourceId instead of hardcoded 'ult'
   - ✅ Scripture text now switches repositories when different Bible resource is selected
   - ✅ Proper dependency management ensures Scripture reloads when resource changes
+  - ✅ Implemented proper Bible resource search using DCS Catalog API Search endpoint
+  - ✅ Added filtering for "Bible" and "Aligned Bible" subjects only (instead of generic resources)
+  - ✅ Enhanced catalogService with searchBibleResources function using owner, language, and subject parameters
+  - ✅ Updated useResources hook to use specialized Bible resource search
+  - ✅ Added comprehensive test coverage for Bible resource search functionality
 
 ## [0.4.1] - 2025-06-04
 

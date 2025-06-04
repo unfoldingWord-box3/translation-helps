@@ -1,3 +1,9 @@
+---
+Resolved: true
+ResolvedDate: 2025-06-04
+ResolvedVersion: 0.4.2
+---
+
 # Fix Resources/Subjects Mismatch - Implement Bible Resource Search
 
 ## Issue Summary
