@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.4.9] - 2025-06-04
+
+### Fixed
+
+- **Race Condition in Resource Loading (Regression)**
+  - ✅ Fixed race condition causing intermittent resource loading failures for Bible resources like GLT
+  - ✅ Enhanced MultiManifestsContext with proper loading operation tracking using useRef to prevent race conditions
+  - ✅ Resolved "Resource HI_GLT not available" errors that occurred when manifests were being cleared and reloaded multiple times
+  - ✅ Improved manifest loading state management to only update state for active loading operations
+  - ✅ Added comprehensive debug logging to track loading sequence and identify stale operations
+  - ✅ Restored reliable loading behavior for URLs like `?owner=translationCore-Create-BCS&rc=/hi/glt/tit/1/1`
+  - ✅ Scripture content now loads consistently without intermittent failures or flashing
+  - ✅ Fixed regression where content briefly loaded correctly before failing due to timing issues
+
+### Technical Details
+
+- **Root Cause**: Multiple concurrent manifest loading operations were interfering with each other, causing manifests to be cleared while components were trying to access them
+- **Solution**: Implemented loading operation tracking with useRef to ensure only the most recent loading operation updates state
+- **Impact**: Eliminated intermittent failures and restored consistent resource loading behavior
+- **Files Modified**: `src-new/context/MultiManifestsContext.jsx`
+
 ## [0.4.8] - 2025-06-04
 
 ### Fixed

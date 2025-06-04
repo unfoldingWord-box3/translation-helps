@@ -3,7 +3,7 @@
  * Context to provide DCS manifests for multiple resources.
  */
 
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext, useRef } from "react";
 import { fetchManifest } from "../services/dcsClient";
 import { ReferenceContext } from "./ReferenceContext";
 import { fetchBibleResources } from "../services/catalogService";
@@ -21,6 +21,7 @@ const BASE_RESOURCE_IDS = ["tn", "tq", "tw", "twl"];
 export function MultiManifestsProvider({ children }) {
   const [manifests, setManifests] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const currentLoadingRef = useRef(""); // Track current loading operation to prevent race conditions
   const { organization, languageId } = useContext(ReferenceContext);
 
   useEffect(() => {
@@ -28,11 +29,16 @@ export function MultiManifestsProvider({ children }) {
       if (!languageId || !organization) {
         setManifests({});
         setIsLoading(false);
+        currentLoadingRef.current = "";
         return;
       }
 
+      // Create a unique key for this loading operation to prevent race conditions
+      const currentLoadingKey = `${organization}-${languageId}`;
+      currentLoadingRef.current = currentLoadingKey;
       setIsLoading(true);
-      setManifests({}); // Clear previous manifests when context changes
+
+      console.log(`🔄 MultiManifestsContext: Starting load for ${currentLoadingKey}`);
 
       const loadedManifests = {};
       let allResourceIds = [...BASE_RESOURCE_IDS];
@@ -75,15 +81,29 @@ export function MultiManifestsProvider({ children }) {
 
       const results = await Promise.all(promises);
 
-      results.forEach(({ resourceId, manifest }) => {
-        if (manifest) {
-          loadedManifests[resourceId] = manifest;
-          console.log(`✅ Loaded manifest for ${resourceId}`);
-        }
-      });
+      // Only update state if this is still the active loading operation (prevent race conditions)
+      if (currentLoadingRef.current === currentLoadingKey) {
+        results.forEach(({ resourceId, manifest }) => {
+          if (manifest) {
+            loadedManifests[resourceId] = manifest;
+            console.log(`✅ Loaded manifest for ${resourceId}`);
+          } else {
+            console.warn(`❌ Failed to load manifest for ${resourceId}`);
+          }
+        });
 
-      setManifests(loadedManifests);
-      setIsLoading(false);
+        console.log(
+          `✅ MultiManifestsContext: Completed load for ${currentLoadingKey}, loaded ${
+            Object.keys(loadedManifests).length
+          } manifests`
+        );
+        setManifests(loadedManifests);
+        setIsLoading(false);
+      } else {
+        console.log(
+          `🚫 MultiManifestsContext: Discarding stale load result for ${currentLoadingKey} (current: ${currentLoadingRef.current})`
+        );
+      }
     }
 
     loadManifests();
