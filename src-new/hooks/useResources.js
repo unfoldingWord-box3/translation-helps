@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { fetchResources } from "../services/catalogService.js";
+import { fetchBibleResources } from "../services/catalogService.js";
 
 /**
  * Hook for fetching available resources for a specific organization and language
@@ -31,8 +31,7 @@ export function useResources(organization, language) {
       try {
         setLoading(true);
         setError(null);
-
-        const data = await fetchResources(organization, language);
+        const data = await fetchBibleResources(organization, language);
 
         if (isMounted) {
           setResources(data);

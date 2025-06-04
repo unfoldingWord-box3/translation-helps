@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.4.2] - 2025-06-04
+
+### Added
+
+- **Bible Resource Search Functionality**
+  - ✅ Implemented `fetchBibleResources()` in catalogService.js using DCS Search endpoint
+  - ✅ Added proper subject filtering for "Bible" and "Aligned Bible" resources only
+  - ✅ Enhanced useResources hook to populate Bible Resource dropdown with real API data
+  - ✅ Added comprehensive test coverage in catalogService.bible.test.js
+  - ✅ Dynamic resource discovery shows actual Bible translations (ULT, UST, T4T, UEB)
+
+### Fixed
+
+- **Resources vs Subjects API Mismatch**
+  - ✅ Resolved UI showing "resources" while API uses "subjects" terminology
+  - ✅ Bible Resource dropdown now populates with compatible repositories for .usfm file rendering
+  - ✅ Updated ScripturePanel to use selected resourceId instead of hardcoded 'ult'
+  - ✅ Scripture text now switches repositories when different Bible resource is selected
+  - ✅ Proper dependency management ensures Scripture reloads when resource changes
+
 ## [0.4.1] - 2025-06-04
 
 ### Fixed

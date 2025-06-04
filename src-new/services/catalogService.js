@@ -202,6 +202,70 @@ export async function fetchResources(owner, language) {
 }
 
 /**
+ * Fetches available Bible resources for a specific organization and language
+ * @param {string} owner - The organization/owner name
+ * @param {string|Object} language - The language ID or language object
+ * @returns {Promise<Object[]>} Array of Bible repository objects
+ */
+export async function fetchBibleResources(owner, language) {
+  if (!owner || !language) {
+    return [];
+  }
+
+  const languageCode = typeof language === "string" ? language : language.code;
+  if (!languageCode) {
+    return [];
+  }
+
+  const fallbackResources = [
+    { id: "ult", name: "ult", description: "unfoldingWord Literal Text", subject: "Aligned Bible" },
+    {
+      id: "ust",
+      name: "ust",
+      description: "unfoldingWord Simplified Text",
+      subject: "Aligned Bible",
+    },
+  ];
+
+  try {
+    const searchParams = new URLSearchParams({
+      owner: owner,
+      lang: languageCode,
+      subject: "Bible,Aligned Bible", // Filter for Bible subjects only
+      limit: "50",
+    });
+
+    const url = `https://git.door43.org/api/v1/repos/search?${searchParams}`;
+    const data = await fetchWithCache(url, `bible_resources_${owner}_${languageCode}`);
+
+    if (data && data.data && Array.isArray(data.data) && data.data.length > 0) {
+      // Filter and format Bible resources
+      const resources = data.data
+        .filter(
+          (repo) =>
+            repo && repo.name && (repo.subject === "Bible" || repo.subject === "Aligned Bible")
+        )
+        .map((repo) => ({
+          id: repo.name,
+          name: repo.name,
+          fullName: repo.full_name,
+          description: repo.description || repo.name,
+          subject: repo.subject,
+          repoUrl: repo.html_url || repo.repo_url,
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      return resources.length > 0 ? resources : fallbackResources;
+    }
+
+    return fallbackResources;
+  } catch (error) {
+    console.warn(`Failed to fetch Bible resources for ${owner}/${languageCode}:`, error);
+    return fallbackResources;
+  }
+}
+
+/**
  * Clears all cached catalog data
  */
 export function clearCatalogCache() {
@@ -230,6 +294,7 @@ export default {
   fetchOrganizations,
   fetchLanguages,
   fetchResources,
+  fetchBibleResources,
   clearCatalogCache,
   preloadCatalogData,
 };

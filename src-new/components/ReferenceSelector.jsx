@@ -260,9 +260,9 @@ export function ReferenceSelector() {
         </select>
       </label>
 
-      {/* Resource Dropdown */}
+      {/* Bible Resource Dropdown */}
       <label style={labelStyle}>
-        <span style={labelTextStyle}>Resource</span>
+        <span style={labelTextStyle}>Bible Resource</span>
         <select
           value={resourceId || ""}
           onChange={handleResourceChange}
@@ -276,10 +276,10 @@ export function ReferenceSelector() {
             <option>Loading...</option>
           ) : (
             <>
-              <option value=''>Select Resource</option>
+              <option value=''>Select Bible Resource</option>
               {resources.map((resource) => (
-                <option key={resource} value={resource}>
-                  {resource.toUpperCase()}
+                <option key={resource.id} value={resource.id}>
+                  {resource.name.toUpperCase()} - {resource.description}
                 </option>
               ))}
             </>
