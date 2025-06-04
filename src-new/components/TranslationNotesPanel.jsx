@@ -6,8 +6,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ManifestsContext } from "../context/MultiManifestsContext";
 import { RcLinkContext } from "./MainView";
-import { fetchResourceFile } from "../services/dcsClient";
-import { parseTsv } from "../utils/parseTsv";
+import { ReferenceContext } from "../context/ReferenceContext";
+import { getNotesForVerse } from "../services/tnService";
 import { processRcLinks } from "../utils/rcLinkUtils.jsx";
 
 export function TranslationNotesPanel({ reference }) {
@@ -16,6 +16,7 @@ export function TranslationNotesPanel({ reference }) {
   const [error, setError] = useState(null);
   const { manifests } = useContext(ManifestsContext);
   const { handleRcLinkClick } = useContext(RcLinkContext) || {};
+  const { organization, languageId } = useContext(ReferenceContext);
 
   useEffect(() => {
     async function loadNotes() {
@@ -34,57 +35,14 @@ export function TranslationNotesPanel({ reference }) {
       setError(null);
 
       try {
-        // Find the project for this book in the manifest
-        const project = tnManifest.projects?.find((p) => p.identifier === reference.bookId);
-        if (!project) {
-          throw new Error(`Book ${reference.bookId} not found in tN manifest`);
-        }
-
-        // Get the TSV file path from the manifest
-        const filePath = project.path?.replace("./", "");
-        if (!filePath) {
-          throw new Error(`No file path found for ${reference.bookId} in manifest`);
-        }
-
-        // Fetch the TSV content
-        const tsvContent = await fetchResourceFile("en", "tn", filePath);
-
-        // Parse the TSV data
-        const allNotes = parseTsv(tsvContent);
-
-        // Filter notes for the specific chapter and verse
-        // tN TSV format uses Reference field like "1:1" or "gen/1/1"
-        const verseNotes = allNotes.filter((note) => {
-          if (!note.Reference) return false;
-
-          // Handle different reference formats
-          let chapterVerse;
-          if (note.Reference.includes("/")) {
-            // Format: "gen/1/1" - extract chapter:verse part
-            const parts = note.Reference.split("/");
-            if (parts.length >= 3) {
-              chapterVerse = `${parts[1]}:${parts[2]}`;
-            }
-          } else {
-            // Format: "1:1" - use as is
-            chapterVerse = note.Reference;
-          }
-
-          const expectedRef = `${reference.chapter}:${reference.verse}`;
-          return chapterVerse === expectedRef;
-        });
-
-        // Transform notes into display format
-        const parsedNotes = verseNotes
-          .map((note, index) => ({
-            id: index,
-            text: note.Note || "",
-            quote: note.Quote || "",
-            occurrence: note.Occurrence || "1",
-            tags: note.Tags || "",
-            supportReference: note.SupportReference || "",
-          }))
-          .filter((note) => note.text);
+        // Use the updated tnService with organization and language context
+        const parsedNotes = await getNotesForVerse(
+          reference.bookId,
+          reference.chapter,
+          reference.verse,
+          organization || "unfoldingWord",
+          languageId || "en"
+        );
 
         setNotes(parsedNotes);
       } catch (err) {
@@ -166,7 +124,11 @@ export function TranslationNotesPanel({ reference }) {
                 </div>
               )}
               <div style={{ lineHeight: "1.5", color: "#333" }}>
-                {processRcLinks(note.text, handleRcLinkClick)}
+                {processRcLinks(note.text, (rcUri) => {
+                  if (handleRcLinkClick) {
+                    handleRcLinkClick(rcUri, languageId, organization);
+                  }
+                })}
               </div>
               {note.tags && (
                 <div
@@ -188,7 +150,12 @@ export function TranslationNotesPanel({ reference }) {
                     color: "#666",
                   }}
                 >
-                  See also: {processRcLinks(note.supportReference, handleRcLinkClick)}
+                  See also:{" "}
+                  {processRcLinks(note.supportReference, (rcUri) => {
+                    if (handleRcLinkClick) {
+                      handleRcLinkClick(rcUri, languageId, organization);
+                    }
+                  })}
                 </div>
               )}
             </li>

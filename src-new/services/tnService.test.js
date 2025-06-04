@@ -41,8 +41,13 @@ describe("tnService", () => {
 
       const notes = await getNotesForVerse("gen", "1", "1");
 
-      expect(dcsClient.fetchManifest).toHaveBeenCalledWith("en", "tn");
-      expect(dcsClient.fetchResourceFile).toHaveBeenCalledWith("en", "tn", "tn_GEN.tsv");
+      expect(dcsClient.fetchManifest).toHaveBeenCalledWith("en", "tn", "unfoldingWord");
+      expect(dcsClient.fetchResourceFile).toHaveBeenCalledWith(
+        "en",
+        "tn",
+        "tn_GEN.tsv",
+        "unfoldingWord"
+      );
       expect(notes).toHaveLength(1);
       expect(notes[0]).toEqual({
         id: 0,
@@ -116,8 +121,13 @@ describe("tnService", () => {
 
       const notes = await getNotesForBook("gen");
 
-      expect(dcsClient.fetchManifest).toHaveBeenCalledWith("en", "tn");
-      expect(dcsClient.fetchResourceFile).toHaveBeenCalledWith("en", "tn", "tn_GEN.tsv");
+      expect(dcsClient.fetchManifest).toHaveBeenCalledWith("en", "tn", "unfoldingWord");
+      expect(dcsClient.fetchResourceFile).toHaveBeenCalledWith(
+        "en",
+        "tn",
+        "tn_GEN.tsv",
+        "unfoldingWord"
+      );
       expect(notes).toHaveLength(3);
 
       // Check that chapter and verse are parsed correctly

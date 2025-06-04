@@ -28,7 +28,12 @@ describe("getQuestionsForVerse", () => {
   it("fetches and filters questions correctly with Reference format", async () => {
     dcsClient.fetchResourceFile.mockResolvedValue(sampleTsvWithReference);
     const questions = await getQuestionsForVerse("gen", 1, 1);
-    expect(dcsClient.fetchResourceFile).toHaveBeenCalledWith("en", "tq", "gen.tsv");
+    expect(dcsClient.fetchResourceFile).toHaveBeenCalledWith(
+      "en",
+      "tq",
+      "gen.tsv",
+      "unfoldingWord"
+    );
     expect(questions).toEqual([
       {
         id: 0,
@@ -54,8 +59,13 @@ describe("getQuestionsForVerse", () => {
 
   it("uses custom file path when provided", async () => {
     dcsClient.fetchResourceFile.mockResolvedValue(sampleTsvWithReference);
-    await getQuestionsForVerse("gen", 1, 1, "custom_gen.tsv");
-    expect(dcsClient.fetchResourceFile).toHaveBeenCalledWith("en", "tq", "custom_gen.tsv");
+    await getQuestionsForVerse("gen", 1, 1, "unfoldingWord", "en", "custom_gen.tsv");
+    expect(dcsClient.fetchResourceFile).toHaveBeenCalledWith(
+      "en",
+      "tq",
+      "custom_gen.tsv",
+      "unfoldingWord"
+    );
   });
 
   it("handles empty content gracefully", async () => {

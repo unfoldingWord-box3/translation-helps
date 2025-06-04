@@ -7,7 +7,6 @@ import { fetchResourceFile } from "./dcsClient";
 import { parseTsv } from "../utils/parseTsv";
 
 const RESOURCE_ID = "tq";
-const LANGUAGE_ID = "en";
 
 /**
  * Retrieves tQ entries for a given verse reference.
@@ -15,16 +14,25 @@ const LANGUAGE_ID = "en";
  * @param {string} bookId
  * @param {string|number} chapter
  * @param {string|number} verse
+ * @param {string} [organization="unfoldingWord"] Organization name
+ * @param {string} [languageId="en"] Language code
  * @param {string} [customFilePath] - Optional custom file path from manifest
  * @returns {Promise<Array<Object>>}
  */
-export async function getQuestionsForVerse(bookId, chapter, verse, customFilePath = null) {
+export async function getQuestionsForVerse(
+  bookId,
+  chapter,
+  verse,
+  organization = "unfoldingWord",
+  languageId = "en",
+  customFilePath = null
+) {
   try {
-    console.log(`Loading tQ for ${bookId} ${chapter}:${verse}`);
+    console.log(`Loading tQ for ${organization}/${languageId}_tq ${bookId} ${chapter}:${verse}`);
 
     // Use custom file path if provided, otherwise default to bookId.tsv
     const fileName = customFilePath || `${bookId}.tsv`;
-    const text = await fetchResourceFile(LANGUAGE_ID, RESOURCE_ID, fileName);
+    const text = await fetchResourceFile(languageId, RESOURCE_ID, fileName, organization);
 
     if (!text || text.trim() === "") {
       console.warn(`Empty tQ file content for ${fileName}`);
@@ -84,7 +92,10 @@ export async function getQuestionsForVerse(bookId, chapter, verse, customFilePat
       }))
       .filter((q) => q.question);
   } catch (error) {
-    console.error(`Error loading tQ for ${bookId} ${chapter}:${verse}:`, error);
+    console.error(
+      `Error loading tQ for ${organization}/${languageId}_tq ${bookId} ${chapter}:${verse}:`,
+      error
+    );
     throw new Error(`Failed to load translation questions: ${error.message}`);
   }
 }

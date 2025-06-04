@@ -203,9 +203,20 @@ const stats = twService.getCacheStats();
 
 ### DCS Repository Structure
 
+**NEW in v0.4.7**: Organization context support for RC links
+
 ```
-https://git.door43.org/unfoldingWord/{language}_{resource}/raw/branch/master/
+https://git.door43.org/{organization}/{language}_{resource}/raw/branch/master/
 ```
+
+Where `{organization}` is determined by current user context:
+
+- unfoldingWord (default)
+- STR
+- WA
+- translationCore-Create-BCS
+- door43-catalog
+- Or any other DCS organization
 
 #### Translation Academy
 

@@ -87,9 +87,14 @@ export function processRcLinks(text, onRcLinkClick) {
  * Converts an rc:// URI to a browsable URL (for external access if needed)
  * @param {string} rcUri - The rc:// URI to convert
  * @param {string} defaultLanguage - Default language code to use if URI has wildcard
+ * @param {string} defaultOrganization - Default organization to use
  * @returns {string|null} - The converted URL or null if conversion fails
  */
-export function convertRcUriToUrl(rcUri, defaultLanguage = "en") {
+export function convertRcUriToUrl(
+  rcUri,
+  defaultLanguage = "en",
+  defaultOrganization = "unfoldingWord"
+) {
   if (!rcUri || !rcUri.startsWith("rc://")) {
     return null;
   }
@@ -118,9 +123,9 @@ export function convertRcUriToUrl(rcUri, defaultLanguage = "en") {
     const repoPath = `${language}_${resource}`;
 
     if (path) {
-      return `${baseUrl}/unfoldingWord/${repoPath}/src/branch/master/${path}`;
+      return `${baseUrl}/${defaultOrganization}/${repoPath}/src/branch/master/${path}`;
     } else {
-      return `${baseUrl}/unfoldingWord/${repoPath}`;
+      return `${baseUrl}/${defaultOrganization}/${repoPath}`;
     }
   } catch (error) {
     console.error("Error converting rc:// URI to URL:", error);

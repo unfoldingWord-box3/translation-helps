@@ -18,9 +18,18 @@ const cache = {};
  * @param {string|number} chapter Chapter number.
  * @param {string|number} verse Verse number.
  * @param {object} twlManifest TWL manifest containing project information.
+ * @param {string} [organization="unfoldingWord"] Organization name.
+ * @param {string} [languageId="en"] Language code.
  * @returns {Promise<Array<string>>} Array of TWLink values (rc:// URIs).
  */
-export async function getLinksForVerse(bookId, chapter, verse, twlManifest) {
+export async function getLinksForVerse(
+  bookId,
+  chapter,
+  verse,
+  twlManifest,
+  organization = "unfoldingWord",
+  languageId = "en"
+) {
   if (!twlManifest) {
     throw new Error("TWL manifest is required");
   }
@@ -43,7 +52,7 @@ export async function getLinksForVerse(bookId, chapter, verse, twlManifest) {
       }
 
       // Fetch the TSV content using dcsClient
-      const tsvContent = await fetchResourceFile("en", "twl", filePath);
+      const tsvContent = await fetchResourceFile(languageId, "twl", filePath, organization);
 
       // Parse the TSV data
       entries = parseTsv(tsvContent);

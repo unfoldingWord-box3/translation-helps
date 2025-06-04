@@ -7,7 +7,6 @@ import { fetchResourceFile, fetchManifest } from "./dcsClient";
 import { parseTsv } from "../utils/parseTsv";
 
 const RESOURCE_ID = "tn";
-const LANGUAGE_ID = "en";
 
 /**
  * Parses a Reference field to extract chapter and verse.
@@ -41,12 +40,20 @@ function parseReference(reference) {
  * @param {string} bookId Bible book identifier (e.g., 'gen')
  * @param {string|number} chapter Chapter number
  * @param {string|number} verse Verse number
+ * @param {string} [organization="unfoldingWord"] Organization name
+ * @param {string} [languageId="en"] Language code
  * @returns {Promise<Array<Object>>} Array of parsed tN entries
  */
-export async function getNotesForVerse(bookId, chapter, verse) {
+export async function getNotesForVerse(
+  bookId,
+  chapter,
+  verse,
+  organization = "unfoldingWord",
+  languageId = "en"
+) {
   try {
     // Get the manifest to find the correct TSV file path
-    const manifest = await fetchManifest(LANGUAGE_ID, RESOURCE_ID);
+    const manifest = await fetchManifest(languageId, RESOURCE_ID, organization);
 
     // Find the project for this book in the manifest
     const project = manifest.projects?.find((p) => p.identifier === bookId);
@@ -61,7 +68,7 @@ export async function getNotesForVerse(bookId, chapter, verse) {
     }
 
     // Fetch and parse the TSV content
-    const tsvContent = await fetchResourceFile(LANGUAGE_ID, RESOURCE_ID, filePath);
+    const tsvContent = await fetchResourceFile(languageId, RESOURCE_ID, filePath, organization);
     const allNotes = parseTsv(tsvContent);
 
     // Filter notes for the specific chapter and verse
@@ -83,7 +90,10 @@ export async function getNotesForVerse(bookId, chapter, verse) {
       reference: note.Reference || "",
     }));
   } catch (error) {
-    console.error(`Error fetching translation notes for ${bookId} ${chapter}:${verse}:`, error);
+    console.error(
+      `Error fetching translation notes for ${organization}/${languageId}_tn ${bookId} ${chapter}:${verse}:`,
+      error
+    );
     throw error;
   }
 }
@@ -91,12 +101,14 @@ export async function getNotesForVerse(bookId, chapter, verse) {
 /**
  * Retrieves all tN entries for a given book.
  * @param {string} bookId Bible book identifier (e.g., 'gen')
+ * @param {string} [organization="unfoldingWord"] Organization name
+ * @param {string} [languageId="en"] Language code
  * @returns {Promise<Array<Object>>} Array of all parsed tN entries for the book
  */
-export async function getNotesForBook(bookId) {
+export async function getNotesForBook(bookId, organization = "unfoldingWord", languageId = "en") {
   try {
     // Get the manifest to find the correct TSV file path
-    const manifest = await fetchManifest(LANGUAGE_ID, RESOURCE_ID);
+    const manifest = await fetchManifest(languageId, RESOURCE_ID, organization);
 
     // Find the project for this book in the manifest
     const project = manifest.projects?.find((p) => p.identifier === bookId);
@@ -111,7 +123,7 @@ export async function getNotesForBook(bookId) {
     }
 
     // Fetch and parse the TSV content
-    const tsvContent = await fetchResourceFile(LANGUAGE_ID, RESOURCE_ID, filePath);
+    const tsvContent = await fetchResourceFile(languageId, RESOURCE_ID, filePath, organization);
     const allNotes = parseTsv(tsvContent);
 
     // Transform to consistent format
@@ -126,7 +138,10 @@ export async function getNotesForBook(bookId) {
       ...parseReference(note.Reference), // adds chapter and verse fields
     }));
   } catch (error) {
-    console.error(`Error fetching translation notes for book ${bookId}:`, error);
+    console.error(
+      `Error fetching translation notes for ${organization}/${languageId}_tn book ${bookId}:`,
+      error
+    );
     throw error;
   }
 }

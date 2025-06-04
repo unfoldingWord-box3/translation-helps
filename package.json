@@ -1,7 +1,7 @@
 {
   "name": "translation-helps",
   "homepage": "https://unfoldingword-box3.github.io/translation-helps/",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "private": false,
   "dependencies": {
     "@emotion/react": "^11.10.5",

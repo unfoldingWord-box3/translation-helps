@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.7] - 2025-06-04
+
+### Fixed
+
+- **Translation Helps Organization and Language Context Support - COMPLETED**
+  - ✅ Updated Translation Notes (tN) service to accept and use organization and language parameters
+  - ✅ Updated Translation Questions (tQ) service to accept and use organization and language parameters
+  - ✅ Updated Translation Words (tW) service to accept organization context for RC URI resolution
+  - ✅ Updated Translation Words Links (TWL) service to accept and use organization and language parameters
+  - ✅ Updated RC Link utilities to accept and use organization and language context
+  - ✅ Updated all translation help panels to pass current organization and language context to services
+  - ✅ Fixed RC link processing to use current organization and language context throughout
+  - ✅ Updated service function signatures and test cases to match new organization parameter requirements
+  - ✅ Translation helps now consistently respect user-selected organization and language instead of hardcoded unfoldingWord/English
+  - ✅ RC links within content now resolve to correct organization/language repositories based on user selection
+
 ## [0.4.6] - 2025-06-04
 
 ### Fixed
@@ -111,6 +127,19 @@
   - ✅ Graceful fallback to hardcoded data when APIs fail or are unavailable
   - ✅ Comprehensive test coverage updated to reflect actual API integration behavior
   - ✅ Error handling for HTTP errors, network failures, and malformed responses
+- **Translation Helps Organization and Language Context Support**
+  - ✅ Organization and language context support for Translation Notes (tN)
+  - ✅ Organization and language context support for Translation Questions (tQ)
+  - ✅ Organization and language context support for Translation Words (tW)
+  - ✅ Dynamic organization context for RC link resolution
+
+### Changed
+
+- **Translation Helps Service Layer Updates**
+  - ✅ All translation help services now honor user-selected organization and language
+  - ✅ RC links now resolve using current organization and language context
+  - ✅ Service function signatures updated to accept organization and language parameters
+  - ✅ Test cases updated to match new service signatures
 
 ### Fixed
 
@@ -118,6 +147,10 @@
   - v0.4.0 claimed dynamic API integration was complete but actually used hardcoded values
   - Now truly implements the API calls that were promised but never delivered
   - Addresses technical debt from falsely claiming completion of unimplemented features
+- **Translation Helps Context Consistency**
+  - ✅ Translation helps now respect organization and language selection consistently
+  - ✅ RC links no longer hardcoded to unfoldingWord/English repositories
+  - ✅ Translation helps panels use current user context instead of hardcoded defaults
 
 ## [0.4.0] - 2025-05-31
 

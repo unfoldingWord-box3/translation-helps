@@ -39,16 +39,21 @@ describe("getLinksForVerse", () => {
   it("fetches and filters links correctly", async () => {
     dcsClient.fetchResourceFile.mockResolvedValue(sampleTsv);
 
-    const links = await getLinksForVerse("gen", 1, 1, mockTwlManifest);
+    const links = await getLinksForVerse("gen", 1, 1, mockTwlManifest, "unfoldingWord", "en");
 
     expect(links).toEqual(["rc://en/tw/dict/bible/kt/create"]);
-    expect(dcsClient.fetchResourceFile).toHaveBeenCalledWith("en", "twl", "gen.tsv");
+    expect(dcsClient.fetchResourceFile).toHaveBeenCalledWith(
+      "en",
+      "twl",
+      "gen.tsv",
+      "unfoldingWord"
+    );
   });
 
   it("returns empty array for no matches", async () => {
     dcsClient.fetchResourceFile.mockResolvedValue(sampleTsv);
 
-    const links = await getLinksForVerse("gen", 2, 1, mockTwlManifest);
+    const links = await getLinksForVerse("gen", 2, 1, mockTwlManifest, "unfoldingWord", "en");
 
     expect(links).toEqual([]);
   });
@@ -58,8 +63,8 @@ describe("getLinksForVerse", () => {
       new Error("Failed to load TWL file for gen: Not Found")
     );
 
-    await expect(getLinksForVerse("gen", 1, 1, mockTwlManifest)).rejects.toThrow(
-      /Failed to load TWL file for gen: Not Found/
-    );
+    await expect(
+      getLinksForVerse("gen", 1, 1, mockTwlManifest, "unfoldingWord", "en")
+    ).rejects.toThrow(/Failed to load TWL file for gen: Not Found/);
   });
 });

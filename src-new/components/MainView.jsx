@@ -17,12 +17,8 @@ import { getArticle as getTaArticle } from "../services/taService";
 export const RcLinkContext = createContext();
 
 export function MainView() {
-  const { reference } = useContext(ReferenceContext);
+  const { reference, organization, languageId } = useContext(ReferenceContext);
   const { manifests } = useContext(ManifestsContext);
-
-  // Extract language context for RC link resolution
-  // TODO: Get languageId from proper source when dynamic language switching is implemented
-  const languageId = "en";
   const [activeHelpsTab, setActiveHelpsTab] = useState("tn");
   const helpsTabsRef = useRef();
 
@@ -33,11 +29,15 @@ export function MainView() {
   };
 
   // Handle rc:// link clicks to open article tabs or switch to appropriate internal tabs
-  const handleRcLinkClick = async (rcUri) => {
+  const handleRcLinkClick = async (rcUri, contextLanguageId, contextOrganization) => {
     if (!rcUri || !rcUri.startsWith("rc://")) {
       console.warn("Invalid rc:// URI:", rcUri);
       return;
     }
+
+    // Use provided context or fall back to default context
+    const effectiveLanguageId = contextLanguageId || languageId || "en";
+    const effectiveOrganization = contextOrganization || organization || "unfoldingWord";
 
     // Parse the rc:// URI to determine the appropriate tab
     const uriParts = rcUri.split("/");
@@ -52,7 +52,7 @@ export function MainView() {
       case "tw":
         // For translation words, fetch the full article and open in new tab
         try {
-          const article = await getArticle(rcUri, languageId);
+          const article = await getArticle(rcUri, effectiveLanguageId, effectiveOrganization);
           if (article && helpsTabsRef.current) {
             helpsTabsRef.current.openArticleTab({
               id: rcUri.replace(/[^a-zA-Z0-9]/g, "_"),
@@ -91,7 +91,7 @@ export function MainView() {
       case "ta":
         // For Translation Academy, fetch the actual article and open in new tab
         try {
-          const article = await getTaArticle(rcUri, languageId);
+          const article = await getTaArticle(rcUri, effectiveLanguageId, effectiveOrganization);
           if (article && helpsTabsRef.current) {
             helpsTabsRef.current.openArticleTab({
               id: rcUri.replace(/[^a-zA-Z0-9]/g, "_"),
@@ -103,7 +103,11 @@ export function MainView() {
           } else {
             console.warn("Could not fetch Translation Academy article for rc:// URI:", rcUri);
             // Fallback to external link
-            const externalUrl = convertRcUriToUrl(rcUri, languageId);
+            const externalUrl = convertRcUriToUrl(
+              rcUri,
+              effectiveLanguageId,
+              effectiveOrganization
+            );
             if (externalUrl) {
               console.log("Opening external resource:", externalUrl);
               window.open(externalUrl, "_blank", "noopener,noreferrer");
@@ -112,7 +116,7 @@ export function MainView() {
         } catch (error) {
           console.error("Error fetching Translation Academy article:", error);
           // Fallback to external link
-          const externalUrl = convertRcUriToUrl(rcUri, languageId);
+          const externalUrl = convertRcUriToUrl(rcUri, effectiveLanguageId, effectiveOrganization);
           if (externalUrl) {
             console.log("Opening external resource:", externalUrl);
             window.open(externalUrl, "_blank", "noopener,noreferrer");
@@ -121,7 +125,7 @@ export function MainView() {
         break;
       default:
         // For other external resources, open in new tab
-        const externalUrl = convertRcUriToUrl(rcUri, languageId);
+        const externalUrl = convertRcUriToUrl(rcUri, effectiveLanguageId, effectiveOrganization);
         if (externalUrl) {
           console.log("Opening external resource:", externalUrl);
           window.open(externalUrl, "_blank", "noopener,noreferrer");

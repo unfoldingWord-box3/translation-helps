@@ -6,6 +6,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ManifestsContext } from "../context/MultiManifestsContext";
 import { RcLinkContext } from "./MainView";
+import { ReferenceContext } from "../context/ReferenceContext";
 import { getQuestionsForVerse } from "../services/tqService";
 import { processRcLinks } from "../utils/rcLinkUtils.jsx";
 
@@ -15,6 +16,7 @@ export function TranslationQuestionsPanel({ reference }) {
   const [error, setError] = useState(null);
   const { manifests } = useContext(ManifestsContext);
   const { handleRcLinkClick } = useContext(RcLinkContext) || {};
+  const { organization, languageId } = useContext(ReferenceContext);
 
   useEffect(() => {
     async function loadQuestions() {
@@ -50,6 +52,8 @@ export function TranslationQuestionsPanel({ reference }) {
           reference.bookId,
           reference.chapter,
           reference.verse,
+          organization || "unfoldingWord",
+          languageId || "en",
           customFilePath
         );
 
@@ -109,10 +113,20 @@ export function TranslationQuestionsPanel({ reference }) {
               }}
             >
               <p style={{ fontWeight: "bold", marginBottom: "8px", color: "#1976d2" }}>
-                Q: {processRcLinks(qa.question, handleRcLinkClick)}
+                Q:{" "}
+                {processRcLinks(qa.question, (rcUri) => {
+                  if (handleRcLinkClick) {
+                    handleRcLinkClick(rcUri, languageId, organization);
+                  }
+                })}
               </p>
               <p style={{ marginLeft: "16px" }}>
-                A: {processRcLinks(qa.answer, handleRcLinkClick)}
+                A:{" "}
+                {processRcLinks(qa.answer, (rcUri) => {
+                  if (handleRcLinkClick) {
+                    handleRcLinkClick(rcUri, languageId, organization);
+                  }
+                })}
               </p>
             </div>
           ))}

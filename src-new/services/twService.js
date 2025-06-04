@@ -51,9 +51,9 @@ function parseRcUri(rcUri, contextLanguage = "en") {
  * @param {string} [contextLanguage="en"] - Current language context for wildcard resolution
  * @returns {string} DCS raw file URL
  */
-function rcUriToUrl(rcUri, contextLanguage = "en") {
+function rcUriToUrl(rcUri, contextLanguage = "en", contextOrganization = "unfoldingWord") {
   const { language, resource, path } = parseRcUri(rcUri, contextLanguage);
-  const baseUrl = `https://git.door43.org/unfoldingWord/${language}_${resource}/raw/branch/master`;
+  const baseUrl = `https://git.door43.org/${contextOrganization}/${language}_${resource}/raw/branch/master`;
 
   // For tW URIs, skip the "dict" part in the path
   // rc://en/tw/dict/bible/kt/create -> bible/kt/create.md
@@ -115,9 +115,14 @@ function parseMarkdown(markdown) {
  * Fetches a single tW article from an rc:// URI
  * @param {string} rcUri - RC URI pointing to a tW article
  * @param {string} [contextLanguage="en"] - Current language context for wildcard resolution
+ * @param {string} [contextOrganization="unfoldingWord"] - Current organization context
  * @returns {Promise<object>} Article object with title, content, and metadata
  */
-export async function getArticle(rcUri, contextLanguage = "en") {
+export async function getArticle(
+  rcUri,
+  contextLanguage = "en",
+  contextOrganization = "unfoldingWord"
+) {
   if (!rcUri) {
     throw new Error("RC URI is required");
   }
@@ -129,7 +134,7 @@ export async function getArticle(rcUri, contextLanguage = "en") {
 
   let url;
   try {
-    url = rcUriToUrl(rcUri, contextLanguage);
+    url = rcUriToUrl(rcUri, contextLanguage, contextOrganization);
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -182,9 +187,15 @@ export async function getArticle(rcUri, contextLanguage = "en") {
 /**
  * Fetches multiple tW articles in parallel
  * @param {string[]} rcUris - Array of RC URIs
+ * @param {string} [contextLanguage="en"] - Current language context for wildcard resolution
+ * @param {string} [contextOrganization="unfoldingWord"] - Current organization context
  * @returns {Promise<object[]>} Array of article objects
  */
-export async function getArticlesForLinks(rcUris) {
+export async function getArticlesForLinks(
+  rcUris,
+  contextLanguage = "en",
+  contextOrganization = "unfoldingWord"
+) {
   if (!Array.isArray(rcUris)) {
     return [];
   }
@@ -196,7 +207,9 @@ export async function getArticlesForLinks(rcUris) {
   }
 
   try {
-    const articles = await Promise.all(uniqueUris.map((uri) => getArticle(uri)));
+    const articles = await Promise.all(
+      uniqueUris.map((uri) => getArticle(uri, contextLanguage, contextOrganization))
+    );
 
     return articles.filter((article) => article && !article.error);
   } catch (error) {

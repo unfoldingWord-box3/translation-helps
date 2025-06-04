@@ -5,6 +5,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ManifestsContext } from "../context/MultiManifestsContext";
 import { RcLinkContext } from "./MainView";
+import { ReferenceContext } from "../context/ReferenceContext";
 import { getLinksForVerse } from "../services/twlService";
 import { getArticlesForLinks } from "../services/twService";
 import { processRcLinks, RcLink } from "../utils/rcLinkUtils.jsx";
@@ -45,6 +46,7 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
   const [twlLinks, setTwlLinks] = useState([]);
   const { manifests } = useContext(ManifestsContext);
   const { handleRcLinkClick } = useContext(RcLinkContext) || {};
+  const { organization, languageId } = useContext(ReferenceContext);
 
   useEffect(() => {
     async function loadWords() {
@@ -69,14 +71,16 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
           reference.bookId,
           reference.chapter,
           reference.verse,
-          twlManifest
+          twlManifest,
+          organization,
+          languageId
         );
 
         setTwlLinks(links);
 
         if (links && links.length > 0) {
           // Step 2: Fetch tW articles for the links
-          const articles = await getArticlesForLinks(links);
+          const articles = await getArticlesForLinks(links, languageId, organization);
 
           // Step 3: Transform articles into display format and deduplicate by rcUri
           const articlesMap = new Map();
@@ -111,7 +115,7 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
     }
 
     loadWords();
-  }, [reference, manifests.twl]);
+  }, [reference, manifests.twl, organization, languageId]);
 
   const handleWordClick = (word) => {
     // First try the provided callback
@@ -122,7 +126,7 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
 
     // If no callback provided, and we have the rc link context, open as new tab
     if (handleRcLinkClick && word.rcUri) {
-      handleRcLinkClick(word.rcUri);
+      handleRcLinkClick(word.rcUri, languageId, organization);
     }
   };
 
@@ -221,7 +225,11 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
                   lineHeight: "1.4",
                 }}
               >
-                {processRcLinks(word.summary, handleRcLinkClick)}
+                {processRcLinks(word.summary, (rcUri) => {
+                  if (handleRcLinkClick) {
+                    handleRcLinkClick(rcUri, languageId, organization);
+                  }
+                })}
               </p>
 
               {word.rcUri && (
@@ -233,7 +241,14 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
                   }}
                   onClick={(e) => e.stopPropagation()} // Prevent triggering parent onClick
                 >
-                  <RcLink rcUri={word.rcUri} onRcLinkClick={handleRcLinkClick}>
+                  <RcLink
+                    rcUri={word.rcUri}
+                    onRcLinkClick={(rcUri) => {
+                      if (handleRcLinkClick) {
+                        handleRcLinkClick(rcUri, languageId, organization);
+                      }
+                    }}
+                  >
                     {word.rcUri}
                   </RcLink>
                 </p>
