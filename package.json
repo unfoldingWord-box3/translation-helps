@@ -1,7 +1,7 @@
 {
   "name": "translation-helps",
   "homepage": "https://unfoldingword-box3.github.io/translation-helps/",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "private": false,
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -27,7 +27,7 @@
     "codex-version-guard": "node scripts/codex-version-guard.js",
     "dev": "vite",
     "build": "vite build",
-    "test": "vitest --run",
+    "test": "node --max-old-space-size=4096 ./node_modules/.bin/vitest --run",
     "lint": "eslint --ext .ts,.tsx src"
   },
   "eslintConfig": {

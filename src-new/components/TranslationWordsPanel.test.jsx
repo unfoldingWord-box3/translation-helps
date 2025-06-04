@@ -9,6 +9,7 @@ import { TranslationWordsPanel } from "./TranslationWordsPanel";
 import * as twlService from "../services/twlService";
 import * as twService from "../services/twService";
 import { ManifestsContext } from "../context/MultiManifestsContext";
+import { ReferenceContext } from "../context/ReferenceContext";
 
 // Mock the services
 vi.mock("../services/twlService");
@@ -31,9 +32,22 @@ const mockManifests = {
   tN: { projects: [] },
 };
 
+// Mock RcLinkContext
+const mockRcLinkContext = {
+  handleRcLinkClick: vi.fn(),
+};
+
+// Mock ReferenceContext
+const mockReferenceContext = {
+  organization: "unfoldingWord",
+  languageId: "en",
+};
+
 // Wrapper component with context
 const TestWrapper = ({ children, manifests = mockManifests }) => (
-  <ManifestsContext.Provider value={{ manifests }}>{children}</ManifestsContext.Provider>
+  <ManifestsContext.Provider value={{ manifests }}>
+    <ReferenceContext.Provider value={mockReferenceContext}>{children}</ReferenceContext.Provider>
+  </ManifestsContext.Provider>
 );
 
 describe("TranslationWordsPanel", () => {
@@ -98,7 +112,14 @@ describe("TranslationWordsPanel", () => {
       ).toBeInTheDocument();
     });
 
-    expect(mockGetLinksForVerse).toHaveBeenCalledWith("gen", 1, 1, mockTwlManifest);
+    expect(mockGetLinksForVerse).toHaveBeenCalledWith(
+      "gen",
+      1,
+      1,
+      mockTwlManifest,
+      "unfoldingWord",
+      "en"
+    );
   });
 
   it("should display translation words when data is available", async () => {
@@ -151,8 +172,15 @@ describe("TranslationWordsPanel", () => {
     expect(screen.getByText("rc://en/tw/dict/bible/kt/create")).toBeInTheDocument();
     expect(screen.getByText("rc://en/tw/dict/bible/kt/heaven")).toBeInTheDocument();
 
-    expect(mockGetLinksForVerse).toHaveBeenCalledWith("gen", 1, 1, mockTwlManifest);
-    expect(mockGetArticlesForLinks).toHaveBeenCalledWith(mockLinks);
+    expect(mockGetLinksForVerse).toHaveBeenCalledWith(
+      "gen",
+      1,
+      1,
+      mockTwlManifest,
+      "unfoldingWord",
+      "en"
+    );
+    expect(mockGetArticlesForLinks).toHaveBeenCalledWith(mockLinks, "en", "unfoldingWord");
   });
 
   it("should show error state when service fails", async () => {
@@ -333,7 +361,14 @@ describe("TranslationWordsPanel", () => {
       ).toBeInTheDocument();
     });
 
-    expect(mockGetLinksForVerse).toHaveBeenCalledWith("gen", 1, 1, mockTwlManifest);
+    expect(mockGetLinksForVerse).toHaveBeenCalledWith(
+      "gen",
+      1,
+      1,
+      mockTwlManifest,
+      "unfoldingWord",
+      "en"
+    );
 
     // Change reference
     rerender(
@@ -343,7 +378,14 @@ describe("TranslationWordsPanel", () => {
     );
 
     await waitFor(() => {
-      expect(mockGetLinksForVerse).toHaveBeenCalledWith("gen", 1, 2, mockTwlManifest);
+      expect(mockGetLinksForVerse).toHaveBeenCalledWith(
+        "gen",
+        1,
+        2,
+        mockTwlManifest,
+        "unfoldingWord",
+        "en"
+      );
     });
 
     expect(mockGetLinksForVerse).toHaveBeenCalledTimes(2);

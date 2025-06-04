@@ -2,7 +2,9 @@ import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
 import { ManifestsContext } from "../context/MultiManifestsContext";
+import { ReferenceContext } from "../context/ReferenceContext";
 import { TranslationQuestionsPanel } from "./TranslationQuestionsPanel";
+import { RcLinkContext } from "./MainView";
 import * as tqService from "../services/tqService";
 
 // Mock the tqService
@@ -31,9 +33,23 @@ const mockManifestsContext = {
   isLoading: false,
 };
 
+const mockReferenceContext = {
+  organization: "unfoldingWord",
+  languageId: "en",
+  resourceId: "ult",
+};
+
+const mockRcLinkContext = {
+  handleRcLinkClick: vi.fn(),
+};
+
 const renderWithContext = (component, manifests = mockManifestsContext) => {
   return render(
-    <ManifestsContext.Provider value={manifests}>{component}</ManifestsContext.Provider>
+    <ManifestsContext.Provider value={manifests}>
+      <ReferenceContext.Provider value={mockReferenceContext}>
+        <RcLinkContext.Provider value={mockRcLinkContext}>{component}</RcLinkContext.Provider>
+      </ReferenceContext.Provider>
+    </ManifestsContext.Provider>
   );
 };
 
@@ -121,7 +137,14 @@ describe("TranslationQuestionsPanel", () => {
     );
 
     await waitFor(() => {
-      expect(tqService.getQuestionsForVerse).toHaveBeenCalledWith("gen", "1", "1", "gen.tsv");
+      expect(tqService.getQuestionsForVerse).toHaveBeenCalledWith(
+        "gen",
+        "1",
+        "1",
+        "unfoldingWord",
+        "en",
+        "gen.tsv"
+      );
     });
   });
 
@@ -139,7 +162,14 @@ describe("TranslationQuestionsPanel", () => {
     );
 
     await waitFor(() => {
-      expect(tqService.getQuestionsForVerse).toHaveBeenCalledWith("gen", "1", "1", null);
+      expect(tqService.getQuestionsForVerse).toHaveBeenCalledWith(
+        "gen",
+        "1",
+        "1",
+        "unfoldingWord",
+        "en",
+        null
+      );
     });
   });
 });

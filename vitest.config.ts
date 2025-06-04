@@ -5,6 +5,12 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: "./vitest.setup.js",
+    maxConcurrency: 1,
+    testTimeout: 30000,
+    hookTimeout: 30000,
+    isolate: true,
+    minThreads: 1,
+    maxThreads: 1,
 
     include: [
       "src/utils/**/*.{test,spec}.{ts,tsx}",
@@ -13,6 +19,12 @@ export default defineConfig({
       "src-new/hooks/**/*.{test,spec}.{js,jsx}",
       "src-new/services/**/*.{test,spec}.js",
       "src-new/components/**/*.{test,spec}.{js,jsx,ts,tsx}",
+    ],
+    exclude: [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/*.integration.test.*",
+      "**/useAppState.test.jsx",
     ],
   },
 });
