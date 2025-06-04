@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.4.3] - 2025-06-04
+
+### Fixed
+
+- **Dropdown Changes Not Reflecting in Scripture Panel**
+  - ✅ Added missing `organization` dependency to ScripturePanel useEffect array
+  - ✅ Updated MultiManifestsContext to respond to both languageId AND organization changes
+  - ✅ Modified dcsClient to support dynamic organization parameter instead of hardcoded values
+  - ✅ Created ManifestsWrapper component for proper context flow with dynamic organization/languageId
+  - ✅ Updated scriptureService to propagate organization parameter through entire fetch chain
+  - ✅ All dropdown changes (organization, language, resource) now immediately trigger scripture panel updates
+  - ✅ Proper context dependency tracking ensures no stale content remains after dropdown changes
+  - ✅ Maintains backward compatibility and existing functionality
+
 ## [0.4.2] - 2025-06-04
 
 ### Added

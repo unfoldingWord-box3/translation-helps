@@ -5,26 +5,28 @@
 
 import * as yaml from "js-yaml";
 
-const BASE_URL = "https://git.door43.org/unfoldingWord";
+const BASE_URL = "https://git.door43.org";
 
 /**
- * Constructs the raw branch URL for a given language and resource.
+ * Constructs the raw branch URL for a given organization, language and resource.
+ * @param {string} organization
  * @param {string} languageId
  * @param {string} resourceId
  * @returns {string}
  */
-function rawBaseUrl(languageId, resourceId) {
-  return `${BASE_URL}/${languageId}_${resourceId}/raw/branch/master`;
+function rawBaseUrl(organization, languageId, resourceId) {
+  return `${BASE_URL}/${organization}/${languageId}_${resourceId}/raw/branch/master`;
 }
 
 /**
  * Fetches and parses the manifest.yaml from a DCS repository.
  * @param {string} languageId
  * @param {string} resourceId
+ * @param {string} organization
  * @returns {Promise<Object>}
  */
-export async function fetchManifest(languageId, resourceId) {
-  const url = `${rawBaseUrl(languageId, resourceId)}/manifest.yaml`;
+export async function fetchManifest(languageId, resourceId, organization = "unfoldingWord") {
+  const url = `${rawBaseUrl(organization, languageId, resourceId)}/manifest.yaml`;
 
   const res = await fetch(url);
   if (!res.ok) {
@@ -39,10 +41,16 @@ export async function fetchManifest(languageId, resourceId) {
  * @param {string} languageId
  * @param {string} resourceId
  * @param {string} filePath
+ * @param {string} organization
  * @returns {Promise<string>}
  */
-export async function fetchResourceFile(languageId, resourceId, filePath) {
-  const url = `${rawBaseUrl(languageId, resourceId)}/${filePath}`;
+export async function fetchResourceFile(
+  languageId,
+  resourceId,
+  filePath,
+  organization = "unfoldingWord"
+) {
+  const url = `${rawBaseUrl(organization, languageId, resourceId)}/${filePath}`;
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(

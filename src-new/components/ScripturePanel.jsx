@@ -41,6 +41,7 @@ export function ScripturePanel({ reference, onVerseClick }) {
           resourceId: selectedResourceId,
           bookId,
           manifest: selectedManifest,
+          organization: organization || "unfoldingWord",
         });
 
         if (!chapters) {
@@ -70,7 +71,7 @@ export function ScripturePanel({ reference, onVerseClick }) {
     }
 
     loadChapter();
-  }, [reference?.bookId, reference?.chapter, resourceId, languageId, manifests]);
+  }, [reference?.bookId, reference?.chapter, resourceId, languageId, organization, manifests]);
 
   const handleVerseClick = (verseNum) => {
     updateReference({ verse: verseNum });

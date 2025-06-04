@@ -3,8 +3,8 @@
  * Service for fetching and parsing scripture resources
  * Mirrors the functionality from the old src/components/Viewer/Workspace/Scripture/helpers.js
  */
-import { fetchResourceFile } from './dcsClient';
-import { parseUSFM } from '../utils/usfmParser';
+import { fetchResourceFile } from "./dcsClient";
+import { parseUSFM } from "../utils/usfmParser";
 
 /**
  * Fetches and parses a scripture book
@@ -13,30 +13,37 @@ import { parseUSFM } from '../utils/usfmParser';
  * @param {string} params.resourceId - Resource identifier (e.g., 'ult', 'ust')
  * @param {string} params.bookId - Book identifier (e.g., 'gen')
  * @param {object} params.manifest - Resource manifest
+ * @param {string} params.organization - Organization identifier (e.g., 'unfoldingWord')
  * @returns {Promise<object>} Parsed chapters object
  */
-export async function fetchBook({ languageId, resourceId, bookId, manifest }) {
+export async function fetchBook({
+  languageId,
+  resourceId,
+  bookId,
+  manifest,
+  organization = "unfoldingWord",
+}) {
   try {
     // Find the project for this book in the manifest
-    const project = manifest.projects?.find(p => p.identifier === bookId);
+    const project = manifest.projects?.find((p) => p.identifier === bookId);
     if (!project) {
       console.warn(`Book ${bookId} not found in ${resourceId} manifest`);
       return null;
     }
-    
+
     // Get the file path from the manifest
-    const filePath = project.path?.replace('./', '');
+    const filePath = project.path?.replace("./", "");
     if (!filePath) {
       console.error(`No file path found for ${bookId} in ${resourceId} manifest`);
       return null;
     }
-    
+
     // Fetch the USFM content
-    const usfm = await fetchResourceFile(languageId, resourceId, filePath);
-    
+    const usfm = await fetchResourceFile(languageId, resourceId, filePath, organization);
+
     // Parse USFM to JSON
     const json = parseUSFM(usfm);
-    
+
     // Return chapters object
     return json?.chapters || null;
   } catch (error) {
@@ -51,11 +58,17 @@ export async function fetchBook({ languageId, resourceId, bookId, manifest }) {
  * @param {string} params.languageId - Language identifier
  * @param {object} params.reference - Reference object { bookId, chapter, verse }
  * @param {object} params.manifests - Object containing all loaded manifests
+ * @param {string} params.organization - Organization identifier (e.g., 'unfoldingWord')
  * @returns {Promise<object>} Object with all fetched resources
  */
-export async function fetchScriptureResources({ languageId, reference, manifests }) {
+export async function fetchScriptureResources({
+  languageId,
+  reference,
+  manifests,
+  organization = "unfoldingWord",
+}) {
   const { bookId } = reference;
-  
+
   const resources = {
     ult: null,
     ust: null,
@@ -63,7 +76,7 @@ export async function fetchScriptureResources({ languageId, reference, manifests
     udb: null,
     irv: null,
   };
-  
+
   // Fetch all available scripture resources in parallel
   const resourceIds = Object.keys(resources);
   const promises = resourceIds.map(async (resourceId) => {
@@ -72,24 +85,25 @@ export async function fetchScriptureResources({ languageId, reference, manifests
         languageId,
         resourceId,
         bookId,
-        manifest: manifests[resourceId]
+        manifest: manifests[resourceId],
+        organization,
       });
     }
     return null;
   });
-  
+
   const results = await Promise.all(promises);
-  
+
   // Map results back to resources object
   resourceIds.forEach((resourceId, index) => {
     if (results[index]) {
       resources[resourceId] = {
         manifest: manifests[resourceId],
-        data: results[index]
+        data: results[index],
       };
     }
   });
-  
+
   return resources;
 }
 
@@ -101,11 +115,11 @@ export async function fetchScriptureResources({ languageId, reference, manifests
  * @returns {string|null} 'old' or 'new' or null
  */
 export function whichTestament({ bookId, uhbManifest, ugntManifest }) {
-  if (uhbManifest?.projects?.find(p => p.identifier === bookId)) {
-    return 'old';
+  if (uhbManifest?.projects?.find((p) => p.identifier === bookId)) {
+    return "old";
   }
-  if (ugntManifest?.projects?.find(p => p.identifier === bookId)) {
-    return 'new';
+  if (ugntManifest?.projects?.find((p) => p.identifier === bookId)) {
+    return "new";
   }
   return null;
 }
@@ -121,25 +135,25 @@ export function whichTestament({ bookId, uhbManifest, ugntManifest }) {
  */
 export async function fetchOriginalBook({ languageId, bookId, uhbManifest, ugntManifest }) {
   const testament = whichTestament({ bookId, uhbManifest, ugntManifest });
-  
-  if (testament === 'old' && uhbManifest) {
+
+  if (testament === "old" && uhbManifest) {
     return fetchBook({
-      languageId: 'hbo',  // Hebrew
-      resourceId: 'uhb',
+      languageId: "hbo", // Hebrew
+      resourceId: "uhb",
       bookId,
-      manifest: uhbManifest
+      manifest: uhbManifest,
     });
   }
-  
-  if (testament === 'new' && ugntManifest) {
+
+  if (testament === "new" && ugntManifest) {
     return fetchBook({
-      languageId: 'grc',  // Greek
-      resourceId: 'ugnt',
+      languageId: "grc", // Greek
+      resourceId: "ugnt",
       bookId,
-      manifest: ugntManifest
+      manifest: ugntManifest,
     });
   }
-  
+
   return null;
 }
 
@@ -152,9 +166,9 @@ export async function fetchOriginalBook({ languageId, bookId, uhbManifest, ugntM
  */
 export function getVerse(chapters, chapter, verse) {
   if (!chapters) return null;
-  
+
   const chapterData = chapters[String(chapter)];
   if (!chapterData) return null;
-  
+
   return chapterData[String(verse)] || null;
 }
