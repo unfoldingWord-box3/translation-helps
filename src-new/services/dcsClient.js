@@ -15,7 +15,12 @@ const BASE_URL = "https://git.door43.org";
  * @returns {string}
  */
 function rawBaseUrl(organization, languageId, resourceId) {
-  return `${BASE_URL}/${organization}/${languageId}_${resourceId}/raw/branch/master`;
+  // If resourceId already includes language prefix (e.g., "en_ult"), use it as-is
+  // Otherwise, construct the repository name with language prefix
+  const repoName = resourceId.startsWith(`${languageId}_`)
+    ? resourceId
+    : `${languageId}_${resourceId}`;
+  return `${BASE_URL}/${organization}/${repoName}/raw/branch/master`;
 }
 
 /**

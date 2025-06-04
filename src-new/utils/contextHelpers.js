@@ -24,7 +24,15 @@ export function updateQueryFromContext(context) {
 
   const _organization = organization ? `owner=${organization}` : "";
   const _languageId = languageId ? `/${languageId}` : "";
-  const _resourceId = resourceId ? `/${resourceId}` : "";
+
+  // Strip language prefix from resourceId for RC URI construction
+  // e.g., "en_ult" -> "ult" when languageId is "en"
+  let cleanResourceId = resourceId;
+  if (resourceId && languageId && resourceId.startsWith(`${languageId}_`)) {
+    cleanResourceId = resourceId.substring(languageId.length + 1);
+  }
+  const _resourceId = cleanResourceId ? `/${cleanResourceId}` : "";
+
   const _bookId = bookId ? `/${bookId}` : "";
   const _chapter = chapter ? `/${chapter}` : "";
   const _verse = verse ? `/${verse}` : "";
@@ -54,7 +62,12 @@ export function contextFromQuery() {
     .slice(1)
     .split("/")
     .filter((string) => string);
-  const [languageId, resourceId, bookId, chapter, verse] = rcArray;
+  const [languageId, resourceIdFromUrl, bookId, chapter, verse] = rcArray;
+
+  // Reconstruct full resourceId with language prefix to match catalog API
+  // e.g., languageId="en" + resourceIdFromUrl="ult" -> resourceId="en_ult"
+  const resourceId =
+    resourceIdFromUrl && languageId ? `${languageId}_${resourceIdFromUrl}` : resourceIdFromUrl;
 
   return {
     hasUrlParams: !!hasUrlParams,

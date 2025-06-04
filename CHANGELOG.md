@@ -1,5 +1,52 @@
 # Changelog
 
+## [0.4.6] - 2025-06-04
+
+### Fixed
+
+- **RC URI Language Code Duplication in URLs**
+  - ✅ Fixed URL generation creating duplicate language codes (`/en/en_ult/` → `/en/ult/`)
+  - ✅ Enhanced updateQueryFromContext to strip language prefix from resourceId for clean RC URIs
+  - ✅ Enhanced contextFromQuery to reconstruct full resourceId with language prefix for internal use
+  - ✅ Fixed ScripturePanel manifest lookup to handle language-prefixed resourceIds correctly
+  - ✅ Enhanced MultiManifestsContext to dynamically load manifests for all available Bible resources
+  - ✅ Replaced hardcoded manifest loading with dynamic discovery via catalog API
+  - ✅ URLs now display correctly: `?owner=unfoldingWord&rc=/en/ult/tit/1/1` and `?owner=unfoldingWord&rc=/en/ust/tit/1/1`
+  - ✅ Internal context properly maintains: `resourceId: "en_ult"/"en_ust"` for catalog API compatibility
+  - ✅ Resolved "Resource EN_ULT/EN_UST not available" errors caused by manifest key mismatch
+  - ✅ All available Bible resources (ULT, UST, T4T, UEB, etc.) now supported in URLs
+  - ✅ Bidirectional URL synchronization working correctly: URL ↔ Context ↔ UI
+  - ✅ Complete end-to-end functionality restored from URL parsing to content display
+
+## [0.4.5] - 2025-06-04
+
+### Fixed
+
+- **Language Code Duplication in DCS Repository URLs**
+  - ✅ Fixed dcsClient.js to prevent language code duplication in repository URLs
+  - ✅ URLs now correctly use `unfoldingWord/en_ult` instead of `unfoldingWord/en_en_ult`
+  - ✅ Enhanced rawBaseUrl function to detect when resourceId already includes language prefix
+  - ✅ Resolved "Resource EN_ULT not available" errors caused by malformed URLs
+  - ✅ Scripture content now loads successfully from proper DCS repository paths
+  - ✅ All Bible resource manifests and files now fetch correctly
+
+## [0.4.4] - 2025-06-04
+
+### Fixed
+
+- **Critical Dropdown Synchronization Regression After Bad Implementation**
+  - ✅ Fixed broken ManifestsWrapper component that corrupted context flow
+  - ✅ Removed problematic wrapper pattern and restored direct context nesting
+  - ✅ Fixed MultiManifestsContext to properly subscribe to ReferenceContext changes
+  - ✅ Enhanced ScripturePanel with proper loading states and error handling
+  - ✅ Added comprehensive context dependency management in useEffect arrays
+  - ✅ Restored organization/language/resource dropdown synchronization
+  - ✅ Fixed scripture panel waiting for manifests before attempting to render
+  - ✅ Resolved "Resource not available" errors with proper context flow
+  - ✅ Improved Bible Resource dropdown display with cleaner resource mapping
+  - ✅ All core functionality restored: org changes → manifest reload → content update
+  - ✅ Proper async flow: context changes → manifests load → resources fetch → UI updates
+
 ## [0.4.3] - 2025-06-04
 
 ### Fixed

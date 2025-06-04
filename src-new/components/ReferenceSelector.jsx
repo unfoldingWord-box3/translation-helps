@@ -298,14 +298,14 @@ export function ReferenceSelector() {
           ) : (
             <>
               <option value=''>Select Bible Resource</option>
-              <option value='test1'>TEST 1 - Hardcoded Option</option>
-              <option value='test2'>TEST 2 - Another Hardcoded Option</option>
-              {console.log("🎨 About to map resources:", resources) ||
-                resources.map((resource) => (
+              {resources.map((resource) => {
+                console.log("🎨 Mapping resource:", resource);
+                return (
                   <option key={resource.id} value={resource.id}>
-                    {resource.name.toUpperCase()} - {resource.description}
+                    {resource.id.toUpperCase()} - {resource.description}
                   </option>
-                ))}
+                );
+              })}
             </>
           )}
         </select>
