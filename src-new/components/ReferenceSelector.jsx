@@ -251,8 +251,8 @@ export function ReferenceSelector() {
             <>
               <option value=''>Select Language</option>
               {languages.map((lang) => (
-                <option key={lang} value={lang}>
-                  {lang.toUpperCase()}
+                <option key={lang.code} value={lang.code}>
+                  {lang.code.toUpperCase()} - {lang.name}
                 </option>
               ))}
             </>

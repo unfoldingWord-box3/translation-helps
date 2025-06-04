@@ -40,19 +40,32 @@ skipIfCI("catalogService Integration Tests (requires network)", () => {
       console.log(`✅ Fetched ${organizations.length} organizations from API`);
     }, 10000); // 10 second timeout for network requests
 
-    it("should fetch real languages for unfoldingWord", async () => {
+    it("should fetch real languages for unfoldingWord with proper object structure", async () => {
       const languages = await fetchLanguages("unfoldingWord");
 
       // Verify we got real data, not just fallback
       expect(languages).toBeInstanceOf(Array);
       expect(languages.length).toBeGreaterThan(20); // More than fallback data
 
-      // Verify some known languages exist
-      expect(languages).toContain("en");
-      expect(languages).toContain("es");
+      // Verify some known languages exist as objects
+      const englishLang = languages.find((lang) => lang.code === "en");
+      const spanishLang = languages.find((lang) => lang.code === "es");
+      expect(englishLang).toBeDefined();
+      expect(spanishLang).toBeDefined();
 
-      // Verify languages are sorted
-      const sortedLangs = [...languages].sort();
+      // Verify all languages have proper object structure
+      languages.forEach((lang) => {
+        expect(typeof lang).toBe("object");
+        expect(typeof lang.code).toBe("string");
+        expect(typeof lang.name).toBe("string");
+        expect(typeof lang.direction).toBe("string");
+        expect(lang.raw).toBeDefined();
+      });
+
+      // Verify languages are sorted by name
+      const sortedLangs = [...languages].sort((a, b) =>
+        (a.name || a.code).localeCompare(b.name || b.code)
+      );
       expect(languages).toEqual(sortedLangs);
 
       console.log(`✅ Fetched ${languages.length} languages for unfoldingWord from API`);
@@ -74,6 +87,23 @@ skipIfCI("catalogService Integration Tests (requires network)", () => {
       expect(resources).toEqual(sortedResources);
 
       console.log(`✅ Fetched ${resources.length} resources for unfoldingWord/en from API`);
+    }, 10000);
+
+    it("should fetch languages for Door43-Catalog and include English", async () => {
+      const languages = await fetchLanguages("door43-catalog");
+
+      // Verify we got data
+      expect(languages).toBeInstanceOf(Array);
+      expect(languages.length).toBeGreaterThan(0);
+
+      // Check if English is included in the language objects (this was the main issue)
+      const englishLang = languages.find((lang) => lang.code === "en");
+      expect(englishLang).toBeDefined();
+      expect(englishLang.name).toBeTruthy();
+      expect(englishLang.direction).toBe("ltr");
+
+      console.log(`✅ Door43-Catalog has ${languages.length} languages including English`);
+      console.log(`✅ English language object:`, englishLang);
     }, 10000);
   });
 
@@ -213,28 +243,28 @@ skipIfCI("catalogService Integration Tests (requires network)", () => {
     it("should NOT use hardcoded languages when API is available", async () => {
       const languages = await fetchLanguages("unfoldingWord");
 
-      // Fallback languages are exactly 20 items
+      // Fallback languages are exactly 20 items as objects
       const fallbackLanguages = [
-        "en",
-        "es",
-        "fr",
-        "pt",
-        "hi",
-        "ar",
-        "sw",
-        "zh",
-        "ru",
-        "de",
-        "it",
-        "ja",
-        "ko",
-        "nl",
-        "pl",
-        "tr",
-        "vi",
-        "th",
-        "id",
-        "ms",
+        { code: "en", name: "English", direction: "ltr" },
+        { code: "es", name: "Spanish", direction: "ltr" },
+        { code: "fr", name: "French", direction: "ltr" },
+        { code: "pt", name: "Portuguese", direction: "ltr" },
+        { code: "hi", name: "Hindi", direction: "ltr" },
+        { code: "ar", name: "Arabic", direction: "rtl" },
+        { code: "sw", name: "Swahili", direction: "ltr" },
+        { code: "zh", name: "Chinese", direction: "ltr" },
+        { code: "ru", name: "Russian", direction: "ltr" },
+        { code: "de", name: "German", direction: "ltr" },
+        { code: "it", name: "Italian", direction: "ltr" },
+        { code: "ja", name: "Japanese", direction: "ltr" },
+        { code: "ko", name: "Korean", direction: "ltr" },
+        { code: "nl", name: "Dutch", direction: "ltr" },
+        { code: "pl", name: "Polish", direction: "ltr" },
+        { code: "tr", name: "Turkish", direction: "ltr" },
+        { code: "vi", name: "Vietnamese", direction: "ltr" },
+        { code: "th", name: "Thai", direction: "ltr" },
+        { code: "id", name: "Indonesian", direction: "ltr" },
+        { code: "ms", name: "Malay", direction: "ltr" },
       ];
 
       expect(languages).not.toEqual(fallbackLanguages);

@@ -101,7 +101,7 @@ export async function fetchOrganizations() {
 /**
  * Fetches available languages for a specific organization
  * @param {string} owner - The organization/owner name
- * @returns {Promise<string[]>} Array of language IDs
+ * @returns {Promise<Object[]>} Array of language objects with code, name, and metadata
  */
 export async function fetchLanguages(owner) {
   if (!owner) {
@@ -109,26 +109,26 @@ export async function fetchLanguages(owner) {
   }
 
   const fallbackLanguages = [
-    "en",
-    "es",
-    "fr",
-    "pt",
-    "hi",
-    "ar",
-    "sw",
-    "zh",
-    "ru",
-    "de",
-    "it",
-    "ja",
-    "ko",
-    "nl",
-    "pl",
-    "tr",
-    "vi",
-    "th",
-    "id",
-    "ms",
+    { code: "en", name: "English", direction: "ltr" },
+    { code: "es", name: "Spanish", direction: "ltr" },
+    { code: "fr", name: "French", direction: "ltr" },
+    { code: "pt", name: "Portuguese", direction: "ltr" },
+    { code: "hi", name: "Hindi", direction: "ltr" },
+    { code: "ar", name: "Arabic", direction: "rtl" },
+    { code: "sw", name: "Swahili", direction: "ltr" },
+    { code: "zh", name: "Chinese", direction: "ltr" },
+    { code: "ru", name: "Russian", direction: "ltr" },
+    { code: "de", name: "German", direction: "ltr" },
+    { code: "it", name: "Italian", direction: "ltr" },
+    { code: "ja", name: "Japanese", direction: "ltr" },
+    { code: "ko", name: "Korean", direction: "ltr" },
+    { code: "nl", name: "Dutch", direction: "ltr" },
+    { code: "pl", name: "Polish", direction: "ltr" },
+    { code: "tr", name: "Turkish", direction: "ltr" },
+    { code: "vi", name: "Vietnamese", direction: "ltr" },
+    { code: "th", name: "Thai", direction: "ltr" },
+    { code: "id", name: "Indonesian", direction: "ltr" },
+    { code: "ms", name: "Malay", direction: "ltr" },
   ];
 
   try {
@@ -136,11 +136,16 @@ export async function fetchLanguages(owner) {
     const data = await fetchWithCache(url, `languages_${owner}`);
 
     if (data && data.data && Array.isArray(data.data) && data.data.length > 0) {
-      // Extract language codes from API response
+      // Extract language objects from API response
       const languages = data.data
         .filter((lang) => lang && lang.lc)
-        .map((lang) => lang.lc)
-        .sort();
+        .map((lang) => ({
+          code: lang.lc,
+          name: lang.ln || lang.lc,
+          direction: lang.ld || "ltr",
+          raw: lang,
+        }))
+        .sort((a, b) => (a.name || a.code).localeCompare(b.name || b.code));
 
       return languages.length > 0 ? languages : fallbackLanguages;
     }
@@ -155,11 +160,17 @@ export async function fetchLanguages(owner) {
 /**
  * Fetches available resources/subjects for a specific organization and language
  * @param {string} owner - The organization/owner name
- * @param {string} language - The language ID
+ * @param {string|Object} language - The language ID (string) or language object with code property
  * @returns {Promise<string[]>} Array of resource IDs
  */
 export async function fetchResources(owner, language) {
   if (!owner || !language) {
+    return [];
+  }
+
+  // Extract language code from string or object
+  const languageCode = typeof language === "string" ? language : language.code;
+  if (!languageCode) {
     return [];
   }
 
@@ -168,8 +179,8 @@ export async function fetchResources(owner, language) {
   try {
     const url = `${BASE_CATALOG_URL}/subjects?owner=${encodeURIComponent(
       owner
-    )}&lang=${encodeURIComponent(language)}`;
-    const data = await fetchWithCache(url, `resources_${owner}_${language}`);
+    )}&lang=${encodeURIComponent(languageCode)}`;
+    const data = await fetchWithCache(url, `resources_${owner}_${languageCode}`);
 
     if (data && data.data && Array.isArray(data.data) && data.data.length > 0) {
       // Extract resource identifiers from API response

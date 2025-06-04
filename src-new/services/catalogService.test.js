@@ -118,7 +118,26 @@ describe("catalogService", () => {
         ],
         ok: true,
       };
-      const expectedLanguages = ["en", "es", "fr"];
+      const expectedLanguages = [
+        {
+          code: "en",
+          name: "English",
+          direction: "ltr",
+          raw: { lc: "en", ln: "English", ang: "English" },
+        },
+        {
+          code: "es",
+          name: "español",
+          direction: "ltr",
+          raw: { lc: "es", ln: "español", ang: "Spanish" },
+        },
+        {
+          code: "fr",
+          name: "français",
+          direction: "ltr",
+          raw: { lc: "fr", ln: "français", ang: "French" },
+        },
+      ];
 
       fetch.mockResolvedValueOnce({
         ok: true,
@@ -146,26 +165,26 @@ describe("catalogService", () => {
       const result = await fetchLanguages("unfoldingWord");
 
       const expectedFallback = [
-        "en",
-        "es",
-        "fr",
-        "pt",
-        "hi",
-        "ar",
-        "sw",
-        "zh",
-        "ru",
-        "de",
-        "it",
-        "ja",
-        "ko",
-        "nl",
-        "pl",
-        "tr",
-        "vi",
-        "th",
-        "id",
-        "ms",
+        { code: "en", name: "English", direction: "ltr" },
+        { code: "es", name: "Spanish", direction: "ltr" },
+        { code: "fr", name: "French", direction: "ltr" },
+        { code: "pt", name: "Portuguese", direction: "ltr" },
+        { code: "hi", name: "Hindi", direction: "ltr" },
+        { code: "ar", name: "Arabic", direction: "rtl" },
+        { code: "sw", name: "Swahili", direction: "ltr" },
+        { code: "zh", name: "Chinese", direction: "ltr" },
+        { code: "ru", name: "Russian", direction: "ltr" },
+        { code: "de", name: "German", direction: "ltr" },
+        { code: "it", name: "Italian", direction: "ltr" },
+        { code: "ja", name: "Japanese", direction: "ltr" },
+        { code: "ko", name: "Korean", direction: "ltr" },
+        { code: "nl", name: "Dutch", direction: "ltr" },
+        { code: "pl", name: "Polish", direction: "ltr" },
+        { code: "tr", name: "Turkish", direction: "ltr" },
+        { code: "vi", name: "Vietnamese", direction: "ltr" },
+        { code: "th", name: "Thai", direction: "ltr" },
+        { code: "id", name: "Indonesian", direction: "ltr" },
+        { code: "ms", name: "Malay", direction: "ltr" },
       ];
       expect(result).toEqual(expectedFallback);
     });
@@ -205,7 +224,14 @@ describe("catalogService", () => {
 
       const result = await fetchLanguages("unfoldingWord");
 
-      expect(result).toEqual(["en"]);
+      expect(result).toEqual([
+        {
+          code: "en",
+          name: "English",
+          direction: "ltr",
+          raw: { lc: "en", ln: "English" },
+        },
+      ]);
     });
   });
 
@@ -421,26 +447,26 @@ describe("catalogService", () => {
       const result = await fetchLanguages("unfoldingWord");
 
       const expectedFallback = [
-        "en",
-        "es",
-        "fr",
-        "pt",
-        "hi",
-        "ar",
-        "sw",
-        "zh",
-        "ru",
-        "de",
-        "it",
-        "ja",
-        "ko",
-        "nl",
-        "pl",
-        "tr",
-        "vi",
-        "th",
-        "id",
-        "ms",
+        { code: "en", name: "English", direction: "ltr" },
+        { code: "es", name: "Spanish", direction: "ltr" },
+        { code: "fr", name: "French", direction: "ltr" },
+        { code: "pt", name: "Portuguese", direction: "ltr" },
+        { code: "hi", name: "Hindi", direction: "ltr" },
+        { code: "ar", name: "Arabic", direction: "rtl" },
+        { code: "sw", name: "Swahili", direction: "ltr" },
+        { code: "zh", name: "Chinese", direction: "ltr" },
+        { code: "ru", name: "Russian", direction: "ltr" },
+        { code: "de", name: "German", direction: "ltr" },
+        { code: "it", name: "Italian", direction: "ltr" },
+        { code: "ja", name: "Japanese", direction: "ltr" },
+        { code: "ko", name: "Korean", direction: "ltr" },
+        { code: "nl", name: "Dutch", direction: "ltr" },
+        { code: "pl", name: "Polish", direction: "ltr" },
+        { code: "tr", name: "Turkish", direction: "ltr" },
+        { code: "vi", name: "Vietnamese", direction: "ltr" },
+        { code: "th", name: "Thai", direction: "ltr" },
+        { code: "id", name: "Indonesian", direction: "ltr" },
+        { code: "ms", name: "Malay", direction: "ltr" },
       ];
       expect(result).toEqual(expectedFallback);
     });
@@ -489,26 +515,26 @@ describe("catalogService", () => {
 
       let result = await fetchLanguages("unfoldingWord");
       expect(result).toEqual([
-        "en",
-        "es",
-        "fr",
-        "pt",
-        "hi",
-        "ar",
-        "sw",
-        "zh",
-        "ru",
-        "de",
-        "it",
-        "ja",
-        "ko",
-        "nl",
-        "pl",
-        "tr",
-        "vi",
-        "th",
-        "id",
-        "ms",
+        { code: "en", name: "English", direction: "ltr" },
+        { code: "es", name: "Spanish", direction: "ltr" },
+        { code: "fr", name: "French", direction: "ltr" },
+        { code: "pt", name: "Portuguese", direction: "ltr" },
+        { code: "hi", name: "Hindi", direction: "ltr" },
+        { code: "ar", name: "Arabic", direction: "rtl" },
+        { code: "sw", name: "Swahili", direction: "ltr" },
+        { code: "zh", name: "Chinese", direction: "ltr" },
+        { code: "ru", name: "Russian", direction: "ltr" },
+        { code: "de", name: "German", direction: "ltr" },
+        { code: "it", name: "Italian", direction: "ltr" },
+        { code: "ja", name: "Japanese", direction: "ltr" },
+        { code: "ko", name: "Korean", direction: "ltr" },
+        { code: "nl", name: "Dutch", direction: "ltr" },
+        { code: "pl", name: "Polish", direction: "ltr" },
+        { code: "tr", name: "Turkish", direction: "ltr" },
+        { code: "vi", name: "Vietnamese", direction: "ltr" },
+        { code: "th", name: "Thai", direction: "ltr" },
+        { code: "id", name: "Indonesian", direction: "ltr" },
+        { code: "ms", name: "Malay", direction: "ltr" },
       ]);
 
       // Test with missing data field
@@ -519,26 +545,26 @@ describe("catalogService", () => {
 
       result = await fetchLanguages("unfoldingWord");
       expect(result).toEqual([
-        "en",
-        "es",
-        "fr",
-        "pt",
-        "hi",
-        "ar",
-        "sw",
-        "zh",
-        "ru",
-        "de",
-        "it",
-        "ja",
-        "ko",
-        "nl",
-        "pl",
-        "tr",
-        "vi",
-        "th",
-        "id",
-        "ms",
+        { code: "en", name: "English", direction: "ltr" },
+        { code: "es", name: "Spanish", direction: "ltr" },
+        { code: "fr", name: "French", direction: "ltr" },
+        { code: "pt", name: "Portuguese", direction: "ltr" },
+        { code: "hi", name: "Hindi", direction: "ltr" },
+        { code: "ar", name: "Arabic", direction: "rtl" },
+        { code: "sw", name: "Swahili", direction: "ltr" },
+        { code: "zh", name: "Chinese", direction: "ltr" },
+        { code: "ru", name: "Russian", direction: "ltr" },
+        { code: "de", name: "German", direction: "ltr" },
+        { code: "it", name: "Italian", direction: "ltr" },
+        { code: "ja", name: "Japanese", direction: "ltr" },
+        { code: "ko", name: "Korean", direction: "ltr" },
+        { code: "nl", name: "Dutch", direction: "ltr" },
+        { code: "pl", name: "Polish", direction: "ltr" },
+        { code: "tr", name: "Turkish", direction: "ltr" },
+        { code: "vi", name: "Vietnamese", direction: "ltr" },
+        { code: "th", name: "Thai", direction: "ltr" },
+        { code: "id", name: "Indonesian", direction: "ltr" },
+        { code: "ms", name: "Malay", direction: "ltr" },
       ]);
     });
 

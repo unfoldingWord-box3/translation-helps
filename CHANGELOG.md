@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.1] - 2025-06-04
+
+### Fixed
+
+- **DCS Catalog Language Display and Coverage Issues**
+  - Enhanced language dropdown to show proper names instead of just codes ("EN - English" vs "en")
+  - Added language direction support (LTR/RTL) for proper text display
+  - Rich language objects with code, name, direction, and raw API data preservation
+  - Improved language fallback data with comprehensive language names
+  - Added specific integration test for Door43-Catalog English language availability
+  - Updated all language-related tests to work with enhanced object structure
+  - Better language display across all dropdowns and UI components
+
 ## [Unreleased]
 
 ### Added
