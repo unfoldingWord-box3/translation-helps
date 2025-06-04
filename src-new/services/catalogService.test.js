@@ -23,17 +23,26 @@ describe("catalogService", () => {
   });
 
   describe("fetchOrganizations", () => {
-    it("should fetch and return organizations from API", async () => {
-      const mockOrganizations = ["unfoldingWord", "door43-catalog", "test-org"];
+    it("should fetch and return organizations from API with correct response structure", async () => {
+      const mockApiResponse = {
+        data: [
+          { login: "unfoldingWord", full_name: "unfoldingWord" },
+          { login: "door43-catalog", full_name: "Door43 Catalog" },
+          { login: "test-org", full_name: "Test Organization" },
+        ],
+        ok: true,
+      };
+      const expectedOrganizations = ["door43-catalog", "test-org", "unfoldingWord"];
+
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockOrganizations,
+        json: async () => mockApiResponse,
       });
 
       const result = await fetchOrganizations();
 
       expect(fetch).toHaveBeenCalledWith("https://git.door43.org/api/v1/catalog/list/owners");
-      expect(result).toEqual(mockOrganizations);
+      expect(result).toEqual(expectedOrganizations);
     });
 
     it("should return fallback organizations when API fails", async () => {
@@ -41,10 +50,10 @@ describe("catalogService", () => {
 
       const result = await fetchOrganizations();
 
-      expect(result).toEqual(["unfoldingWord", "door43-catalog"]);
+      expect(result).toEqual(["unfoldingWord", "door43-catalog", "STR", "WA"]);
     });
 
-    it("should return empty array if API returns non-array", async () => {
+    it("should return fallback organizations if API returns invalid structure", async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ error: "Invalid response" }),
@@ -52,14 +61,41 @@ describe("catalogService", () => {
 
       const result = await fetchOrganizations();
 
-      expect(result).toEqual([]);
+      expect(result).toEqual(["unfoldingWord", "door43-catalog", "STR", "WA"]);
+    });
+
+    it("should handle missing login field in organization data", async () => {
+      const mockApiResponse = {
+        data: [
+          { login: "valid-org", full_name: "Valid Org" },
+          { full_name: "Invalid Org - No Login" }, // Missing login field
+          { login: "", full_name: "Empty Login" }, // Empty login field
+        ],
+        ok: true,
+      };
+
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockApiResponse,
+      });
+
+      const result = await fetchOrganizations();
+
+      expect(result).toEqual(["valid-org"]);
     });
 
     it("should cache results and not call API on second request", async () => {
-      const mockOrganizations = ["unfoldingWord", "door43-catalog"];
+      const mockApiResponse = {
+        data: [
+          { login: "unfoldingWord", full_name: "unfoldingWord" },
+          { login: "door43-catalog", full_name: "Door43 Catalog" },
+        ],
+        ok: true,
+      };
+
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockOrganizations,
+        json: async () => mockApiResponse,
       });
 
       // First call
@@ -73,19 +109,28 @@ describe("catalogService", () => {
   });
 
   describe("fetchLanguages", () => {
-    it("should fetch and return languages for organization", async () => {
-      const mockLanguages = ["en", "es", "fr"];
+    it("should fetch and return languages for organization with correct URL and response structure", async () => {
+      const mockApiResponse = {
+        data: [
+          { lc: "en", ln: "English", ang: "English" },
+          { lc: "es", ln: "español", ang: "Spanish" },
+          { lc: "fr", ln: "français", ang: "French" },
+        ],
+        ok: true,
+      };
+      const expectedLanguages = ["en", "es", "fr"];
+
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockLanguages,
+        json: async () => mockApiResponse,
       });
 
       const result = await fetchLanguages("unfoldingWord");
 
       expect(fetch).toHaveBeenCalledWith(
-        "https://git.door43.org/api/v1/catalog/list/languages/unfoldingWord"
+        "https://git.door43.org/api/v1/catalog/list/languages?owner=unfoldingWord"
       );
-      expect(result).toEqual(mockLanguages);
+      expect(result).toEqual(expectedLanguages);
     });
 
     it("should return empty array when no owner provided", async () => {
@@ -100,40 +145,98 @@ describe("catalogService", () => {
 
       const result = await fetchLanguages("unfoldingWord");
 
-      expect(result).toEqual(["en"]);
+      const expectedFallback = [
+        "en",
+        "es",
+        "fr",
+        "pt",
+        "hi",
+        "ar",
+        "sw",
+        "zh",
+        "ru",
+        "de",
+        "it",
+        "ja",
+        "ko",
+        "nl",
+        "pl",
+        "tr",
+        "vi",
+        "th",
+        "id",
+        "ms",
+      ];
+      expect(result).toEqual(expectedFallback);
     });
 
-    it("should handle special characters in owner name", async () => {
-      const mockLanguages = ["en"];
+    it("should handle special characters in owner name with URL encoding", async () => {
+      const mockApiResponse = {
+        data: [{ lc: "en", ln: "English" }],
+        ok: true,
+      };
+
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockLanguages,
+        json: async () => mockApiResponse,
       });
 
       await fetchLanguages("test-org with spaces");
 
       expect(fetch).toHaveBeenCalledWith(
-        "https://git.door43.org/api/v1/catalog/list/languages/test-org%20with%20spaces"
+        "https://git.door43.org/api/v1/catalog/list/languages?owner=test-org%20with%20spaces"
       );
+    });
+
+    it("should handle missing lc field in language data", async () => {
+      const mockApiResponse = {
+        data: [
+          { lc: "en", ln: "English" },
+          { ln: "Invalid - No lc field" }, // Missing lc field
+          { lc: "", ln: "Empty lc field" }, // Empty lc field
+        ],
+        ok: true,
+      };
+
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockApiResponse,
+      });
+
+      const result = await fetchLanguages("unfoldingWord");
+
+      expect(result).toEqual(["en"]);
     });
   });
 
   describe("fetchResources", () => {
-    it("should fetch and return filtered resources", async () => {
-      const mockResources = ["tn", "tq", "tw", "twl", "ult", "ust", "other-resource"];
-      const expectedResources = ["tn", "tq", "tw", "twl", "ult", "ust"];
+    it("should fetch and return resources from API with correct URL and response structure", async () => {
+      const mockApiResponse = {
+        data: [
+          "Aligned Bible",
+          "Translation Academy",
+          "Translation Notes",
+          "Translation Questions",
+        ],
+        ok: true,
+      };
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockResources,
+        json: async () => mockApiResponse,
       });
 
       const result = await fetchResources("unfoldingWord", "en");
 
       expect(fetch).toHaveBeenCalledWith(
-        "https://git.door43.org/api/v1/catalog/list/subjects/unfoldingWord/en"
+        "https://git.door43.org/api/v1/catalog/list/subjects?owner=unfoldingWord&lang=en"
       );
-      expect(result).toEqual(expectedResources);
+      expect(result).toEqual([
+        "Aligned Bible",
+        "Translation Academy",
+        "Translation Notes",
+        "Translation Questions",
+      ]);
     });
 
     it("should return empty array when owner or language missing", async () => {
@@ -149,44 +252,70 @@ describe("catalogService", () => {
 
       const result = await fetchResources("unfoldingWord", "en");
 
-      expect(result).toEqual(["tn", "tq", "tw", "twl"]);
+      expect(result).toEqual(["ult", "ust", "tn", "tq", "tw", "twl", "ta"]);
     });
 
-    it("should filter out unsupported resources", async () => {
-      const mockResources = ["tn", "unsupported", "tw", "another-unsupported"];
-      const expectedResources = ["tn", "tw"];
+    it("should sort resources alphabetically", async () => {
+      const mockApiResponse = {
+        data: ["Translation Words", "Bible", "Aligned Bible", "Translation Notes"],
+        ok: true,
+      };
 
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockResources,
+        json: async () => mockApiResponse,
       });
 
       const result = await fetchResources("unfoldingWord", "en");
 
-      expect(result).toEqual(expectedResources);
+      expect(result).toEqual(["Aligned Bible", "Bible", "Translation Notes", "Translation Words"]);
     });
 
-    it("should handle special characters in parameters", async () => {
-      const mockResources = ["tn"];
+    it("should handle special characters in parameters with URL encoding", async () => {
+      const mockApiResponse = {
+        data: ["Translation Notes"],
+        ok: true,
+      };
+
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockResources,
+        json: async () => mockApiResponse,
       });
 
       await fetchResources("test-org with spaces", "en-US");
 
       expect(fetch).toHaveBeenCalledWith(
-        "https://git.door43.org/api/v1/catalog/list/subjects/test-org%20with%20spaces/en-US"
+        "https://git.door43.org/api/v1/catalog/list/subjects?owner=test-org%20with%20spaces&lang=en-US"
       );
+    });
+
+    it("should filter out non-string resources", async () => {
+      const mockApiResponse = {
+        data: ["Translation Notes", null, undefined, "", "Translation Words", 123],
+        ok: true,
+      };
+
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockApiResponse,
+      });
+
+      const result = await fetchResources("unfoldingWord", "en");
+
+      expect(result).toEqual(["Translation Notes", "Translation Words"]);
     });
   });
 
   describe("preloadCatalogData", () => {
     it("should preload organizations", async () => {
-      const mockOrganizations = ["unfoldingWord"];
+      const mockApiResponse = {
+        data: [{ login: "unfoldingWord", full_name: "unfoldingWord" }],
+        ok: true,
+      };
+
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockOrganizations,
+        json: async () => mockApiResponse,
       });
 
       await preloadCatalogData();
@@ -195,17 +324,23 @@ describe("catalogService", () => {
     });
 
     it("should preload organizations and languages when owner provided", async () => {
-      const mockOrganizations = ["unfoldingWord"];
-      const mockLanguages = ["en"];
+      const mockOrgResponse = {
+        data: [{ login: "unfoldingWord", full_name: "unfoldingWord" }],
+        ok: true,
+      };
+      const mockLangResponse = {
+        data: [{ lc: "en", ln: "English" }],
+        ok: true,
+      };
 
       fetch
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => mockOrganizations,
+          json: async () => mockOrgResponse,
         })
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => mockLanguages,
+          json: async () => mockLangResponse,
         });
 
       await preloadCatalogData("unfoldingWord");
@@ -214,7 +349,7 @@ describe("catalogService", () => {
       expect(fetch).toHaveBeenNthCalledWith(1, "https://git.door43.org/api/v1/catalog/list/owners");
       expect(fetch).toHaveBeenNthCalledWith(
         2,
-        "https://git.door43.org/api/v1/catalog/list/languages/unfoldingWord"
+        "https://git.door43.org/api/v1/catalog/list/languages?owner=unfoldingWord"
       );
     });
 
@@ -228,10 +363,14 @@ describe("catalogService", () => {
 
   describe("caching behavior", () => {
     it("should use cached data on subsequent calls", async () => {
-      const mockOrganizations = ["unfoldingWord"];
+      const mockApiResponse = {
+        data: [{ login: "unfoldingWord", full_name: "unfoldingWord" }],
+        ok: true,
+      };
+
       fetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockOrganizations,
+        json: async () => mockApiResponse,
       });
 
       // First call should hit API
@@ -243,10 +382,14 @@ describe("catalogService", () => {
     });
 
     it("should clear cache when clearCatalogCache is called", async () => {
-      const mockOrganizations = ["unfoldingWord"];
+      const mockApiResponse = {
+        data: [{ login: "unfoldingWord", full_name: "unfoldingWord" }],
+        ok: true,
+      };
+
       fetch.mockResolvedValue({
         ok: true,
-        json: async () => mockOrganizations,
+        json: async () => mockApiResponse,
       });
 
       // First call
@@ -269,7 +412,7 @@ describe("catalogService", () => {
 
       const result = await fetchOrganizations();
 
-      expect(result).toEqual(["unfoldingWord", "door43-catalog"]);
+      expect(result).toEqual(["unfoldingWord", "door43-catalog", "STR", "WA"]);
     });
 
     it("should handle network errors", async () => {
@@ -277,7 +420,146 @@ describe("catalogService", () => {
 
       const result = await fetchLanguages("unfoldingWord");
 
-      expect(result).toEqual(["en"]);
+      const expectedFallback = [
+        "en",
+        "es",
+        "fr",
+        "pt",
+        "hi",
+        "ar",
+        "sw",
+        "zh",
+        "ru",
+        "de",
+        "it",
+        "ja",
+        "ko",
+        "nl",
+        "pl",
+        "tr",
+        "vi",
+        "th",
+        "id",
+        "ms",
+      ];
+      expect(result).toEqual(expectedFallback);
+    });
+
+    it("should handle JSON parsing errors", async () => {
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => {
+          throw new Error("Invalid JSON");
+        },
+      });
+
+      const result = await fetchOrganizations();
+
+      expect(result).toEqual(["unfoldingWord", "door43-catalog", "STR", "WA"]);
+    });
+  });
+
+  describe("API response validation tests", () => {
+    it("should validate organizations API response structure", async () => {
+      // Test with null data
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ data: null, ok: true }),
+      });
+
+      let result = await fetchOrganizations();
+      expect(result).toEqual(["unfoldingWord", "door43-catalog", "STR", "WA"]);
+
+      // Test with missing data field
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ ok: true }),
+      });
+
+      result = await fetchOrganizations();
+      expect(result).toEqual(["unfoldingWord", "door43-catalog", "STR", "WA"]);
+    });
+
+    it("should validate languages API response structure", async () => {
+      // Test with null data
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ data: null, ok: true }),
+      });
+
+      let result = await fetchLanguages("unfoldingWord");
+      expect(result).toEqual([
+        "en",
+        "es",
+        "fr",
+        "pt",
+        "hi",
+        "ar",
+        "sw",
+        "zh",
+        "ru",
+        "de",
+        "it",
+        "ja",
+        "ko",
+        "nl",
+        "pl",
+        "tr",
+        "vi",
+        "th",
+        "id",
+        "ms",
+      ]);
+
+      // Test with missing data field
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ ok: true }),
+      });
+
+      result = await fetchLanguages("unfoldingWord");
+      expect(result).toEqual([
+        "en",
+        "es",
+        "fr",
+        "pt",
+        "hi",
+        "ar",
+        "sw",
+        "zh",
+        "ru",
+        "de",
+        "it",
+        "ja",
+        "ko",
+        "nl",
+        "pl",
+        "tr",
+        "vi",
+        "th",
+        "id",
+        "ms",
+      ]);
+    });
+
+    it("should validate resources API response structure", async () => {
+      // Test with null data
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ data: null, ok: true }),
+      });
+
+      let result = await fetchResources("unfoldingWord", "en");
+      expect(result).toEqual(["ult", "ust", "tn", "tq", "tw", "twl", "ta"]);
+
+      // Test with missing data field
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ ok: true }),
+      });
+
+      result = await fetchResources("unfoldingWord", "en");
+      expect(result).toEqual(["ult", "ust", "tn", "tq", "tw", "twl", "ta"]);
     });
   });
 });

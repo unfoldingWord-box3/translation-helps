@@ -4,7 +4,21 @@
 
 ### Added
 
-- Placeholder for future features
+- **Dynamic DCS Catalog API Integration - ACTUALLY IMPLEMENTED**
+  - ✅ Real API calls to DCS catalog endpoints (previously hardcoded in v0.4.0)
+  - ✅ Dynamic organization discovery via `https://git.door43.org/api/v1/catalog/list/owners`
+  - ✅ Dynamic language discovery via `https://git.door43.org/api/v1/catalog/list/languages?owner={owner}`
+  - ✅ Dynamic resource discovery via `https://git.door43.org/api/v1/catalog/list/subjects?owner={owner}&lang={language}`
+  - ✅ Graceful fallback to hardcoded data when APIs fail or are unavailable
+  - ✅ Comprehensive test coverage updated to reflect actual API integration behavior
+  - ✅ Error handling for HTTP errors, network failures, and malformed responses
+
+### Fixed
+
+- **Corrected misleading v0.4.0 changelog claims**
+  - v0.4.0 claimed dynamic API integration was complete but actually used hardcoded values
+  - Now truly implements the API calls that were promised but never delivered
+  - Addresses technical debt from falsely claiming completion of unimplemented features
 
 ## [0.4.0] - 2025-05-31
 
@@ -13,8 +27,8 @@
 - **RC Link Style Hierarchical Navigation Dropdowns**
   - ✅ DCS Catalog API integration service (catalogService.js) with caching and error handling
   - ✅ Dynamic organization discovery via `https://git.door43.org/api/v1/catalog/list/owners`
-  - ✅ Language discovery via `https://git.door43.org/api/v1/catalog/list/languages/{owner}`
-  - ✅ Resource discovery via `https://git.door43.org/api/v1/catalog/list/subjects/{owner}/{language}`
+  - ✅ Language discovery via `https://git.door43.org/api/v1/catalog/list/languages?owner={owner}`
+  - ✅ Resource discovery via `https://git.door43.org/api/v1/catalog/list/subjects?owner={owner}&lang={language}`
   - ✅ Custom hooks: useOrganizations, useLanguages, useResources for data fetching
   - ✅ Enhanced ReferenceSelector with hierarchical dropdowns: Organization → Language → Resource → Book → Chapter → Verse
   - ✅ Extended ReferenceContext to include organization, languageId, resourceId state management

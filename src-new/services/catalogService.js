@@ -75,9 +75,27 @@ async function fetchWithCache(url, cacheKey) {
  * @returns {Promise<string[]>} Array of organization names
  */
 export async function fetchOrganizations() {
-  // Use hardcoded organizations since DCS catalog API endpoints are not available
-  // These are the main organizations that provide Bible translation resources
-  return ["unfoldingWord", "door43-catalog", "STR", "WA"];
+  const fallbackOrganizations = ["unfoldingWord", "door43-catalog", "STR", "WA"];
+
+  try {
+    const url = `${BASE_CATALOG_URL}/owners`;
+    const data = await fetchWithCache(url, "organizations");
+
+    if (data && data.data && Array.isArray(data.data) && data.data.length > 0) {
+      // Extract organization login names from API response
+      const organizations = data.data
+        .filter((org) => org && org.login)
+        .map((org) => org.login)
+        .sort();
+
+      return organizations.length > 0 ? organizations : fallbackOrganizations;
+    }
+
+    return fallbackOrganizations;
+  } catch (error) {
+    console.warn("Failed to fetch organizations from API, using fallback data:", error);
+    return fallbackOrganizations;
+  }
 }
 
 /**
@@ -90,9 +108,7 @@ export async function fetchLanguages(owner) {
     return [];
   }
 
-  // Use hardcoded common languages since DCS catalog API endpoints are not available
-  // These are the most commonly used languages for Bible translations
-  const commonLanguages = [
+  const fallbackLanguages = [
     "en",
     "es",
     "fr",
@@ -115,7 +131,25 @@ export async function fetchLanguages(owner) {
     "ms",
   ];
 
-  return commonLanguages;
+  try {
+    const url = `${BASE_CATALOG_URL}/languages?owner=${encodeURIComponent(owner)}`;
+    const data = await fetchWithCache(url, `languages_${owner}`);
+
+    if (data && data.data && Array.isArray(data.data) && data.data.length > 0) {
+      // Extract language codes from API response
+      const languages = data.data
+        .filter((lang) => lang && lang.lc)
+        .map((lang) => lang.lc)
+        .sort();
+
+      return languages.length > 0 ? languages : fallbackLanguages;
+    }
+
+    return fallbackLanguages;
+  } catch (error) {
+    console.warn(`Failed to fetch languages for ${owner} from API, using fallback data:`, error);
+    return fallbackLanguages;
+  }
 }
 
 /**
@@ -129,11 +163,31 @@ export async function fetchResources(owner, language) {
     return [];
   }
 
-  // Use hardcoded supported resources since DCS catalog API endpoints are not available
-  // These are the Bible translation resources supported by this app
-  const supportedResources = ["ult", "ust", "tn", "tq", "tw", "twl", "ta"];
+  const fallbackResources = ["ult", "ust", "tn", "tq", "tw", "twl", "ta"];
 
-  return supportedResources;
+  try {
+    const url = `${BASE_CATALOG_URL}/subjects?owner=${encodeURIComponent(
+      owner
+    )}&lang=${encodeURIComponent(language)}`;
+    const data = await fetchWithCache(url, `resources_${owner}_${language}`);
+
+    if (data && data.data && Array.isArray(data.data) && data.data.length > 0) {
+      // Extract resource identifiers from API response
+      const resources = data.data
+        .filter((resource) => resource && typeof resource === "string")
+        .sort();
+
+      return resources.length > 0 ? resources : fallbackResources;
+    }
+
+    return fallbackResources;
+  } catch (error) {
+    console.warn(
+      `Failed to fetch resources for ${owner}/${language} from API, using fallback data:`,
+      error
+    );
+    return fallbackResources;
+  }
 }
 
 /**
