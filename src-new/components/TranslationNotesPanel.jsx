@@ -8,7 +8,7 @@ import { ManifestsContext } from "../context/MultiManifestsContext";
 import { RcLinkContext } from "./MainView";
 import { ReferenceContext } from "../context/ReferenceContext";
 import { getNotesForVerse } from "../services/tnService";
-import { processRcLinks } from "../utils/rcLinkUtils.jsx";
+import { processMarkdownWithRcLinks } from "../utils/markdownUtils.jsx";
 
 export function TranslationNotesPanel({ reference }) {
   const [notes, setNotes] = useState([]);
@@ -124,7 +124,7 @@ export function TranslationNotesPanel({ reference }) {
                 </div>
               )}
               <div style={{ lineHeight: "1.5", color: "#333" }}>
-                {processRcLinks(note.text, (rcUri) => {
+                {processMarkdownWithRcLinks(note.text, (rcUri) => {
                   if (handleRcLinkClick) {
                     handleRcLinkClick(rcUri, languageId, organization);
                   }
@@ -151,7 +151,7 @@ export function TranslationNotesPanel({ reference }) {
                   }}
                 >
                   See also:{" "}
-                  {processRcLinks(note.supportReference, (rcUri) => {
+                  {processMarkdownWithRcLinks(note.supportReference, (rcUri) => {
                     if (handleRcLinkClick) {
                       handleRcLinkClick(rcUri, languageId, organization);
                     }

@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.5.0] - 2025-06-04
+
+### Added
+
+- **Translation Notes Markdown Rendering with RC Link Support**
+  - ✅ Comprehensive markdown rendering for Translation Notes cards using react-markdown
+  - ✅ Complete RC link support for both plain text (`rc://en/tn/help/gen/01/01`) and markdown-formatted links (`[text](rc://...)`)
+  - ✅ Custom styled components for all markdown elements (bold, italic, code, lists, blockquotes)
+  - ✅ Preprocessing logic to convert plain text RC links to markdown link format while protecting existing markdown links
+  - ✅ RC links render as clickable buttons integrated with existing `handleRcLinkClick` context system
+  - ✅ Enhanced `src-new/utils/markdownUtils.jsx` with `MarkdownWithRcLinks` component and `processMarkdownWithRcLinks` utility
+  - ✅ Updated `src-new/components/TranslationNotesPanel.jsx` to use markdown rendering
+  - ✅ Security sanitization through react-markdown's built-in features
+  - ✅ Performance optimized with efficient preprocessing and no unnecessary re-renders
+  - ✅ Comprehensive test coverage (16 markdownUtils tests + 11 TranslationNotesPanel tests)
+  - ✅ Modernized implementation compared to legacy remark-based system
+  - ✅ Improved readability and visual hierarchy for Translation Notes content
+
+### Technical Details
+
+- **Implementation**: Uses `react-markdown` with custom component overrides for RC link handling
+- **RC Link Processing**: Accesses original href from AST node to bypass ReactMarkdown's URL sanitization
+- **Preprocessing**: Converts plain text RC links to markdown format while preserving existing markdown links
+- **Styling**: Custom styled components for professional appearance consistent with app design
+- **Integration**: Seamless integration with existing RC link click handling via React Context
+- **Testing**: All 204 tests passing across entire codebase
+- **Files Modified**: `src-new/utils/markdownUtils.jsx` (new), `src-new/components/TranslationNotesPanel.jsx`
+
 ## [0.4.9] - 2025-06-04
 
 ### Fixed
