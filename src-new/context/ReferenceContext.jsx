@@ -26,8 +26,8 @@ export const ReferenceContext = createContext({
  */
 export function ReferenceProvider({ children }) {
   const [isInitialized, setIsInitialized] = useState(false);
-  const [organization, setOrganization] = useState("unfoldingWord");
-  const [languageId, setLanguageId] = useState("en");
+  const [organization, setOrganization] = useState(null);
+  const [languageId, setLanguageId] = useState(null);
   const [resourceId, setResourceId] = useState(null);
   const [reference, setReference] = useState(DEFAULT_REFERENCE);
 
@@ -36,8 +36,8 @@ export function ReferenceProvider({ children }) {
     try {
       const urlContext = contextFromQuery();
 
-      // If URL has parameters, use them. Otherwise, keep defaults
       if (urlContext && urlContext.hasUrlParams) {
+        // Case 2: URI parameters exist - use them exactly, NO defaults
         if (urlContext.organization) setOrganization(urlContext.organization);
         if (urlContext.languageId) setLanguageId(urlContext.languageId);
         if (urlContext.resourceId) setResourceId(urlContext.resourceId);
@@ -45,8 +45,11 @@ export function ReferenceProvider({ children }) {
           setReference(urlContext.reference);
         }
       } else {
-        // No URL params - use defaults and set a basic working resource
-        setResourceId("ult"); // Set a default resource so content can load
+        // Case 1: Fresh open with no URI parameters - use defaults ONLY
+        setOrganization("unfoldingWord");
+        setLanguageId("en");
+        setResourceId(null);
+        setReference(DEFAULT_REFERENCE);
       }
 
       setIsInitialized(true);
@@ -83,9 +86,9 @@ export function ReferenceProvider({ children }) {
   const updateContext = (updates) => {
     // Handle cascading resets when higher-level items change
     if (updates.organization !== undefined && updates.organization !== organization) {
-      // Organization changed - reset everything below
+      // Organization changed - reset everything below (no defaults!)
       setOrganization(updates.organization);
-      setLanguageId(updates.languageId || "en");
+      setLanguageId(updates.languageId || null); // Clear language unless explicitly provided
       setResourceId(null);
       setReference(DEFAULT_REFERENCE);
     } else if (updates.languageId !== undefined && updates.languageId !== languageId) {

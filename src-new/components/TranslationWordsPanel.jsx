@@ -53,6 +53,21 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
       if (!reference?.bookId || !reference?.chapter || !reference?.verse) {
         setWords([]);
         setTwlLinks([]);
+        setError(null); // Clear any previous errors
+        return;
+      }
+
+      // Check if we have required context
+      if (!organization || !languageId) {
+        if (!organization) {
+          setError(
+            "Please select an organization from the dropdown above to view translation words."
+          );
+        } else if (!languageId) {
+          setError("Please select a language from the dropdown above to view translation words.");
+        }
+        setWords([]);
+        setTwlLinks([]);
         return;
       }
 
@@ -107,7 +122,18 @@ export function TranslationWordsPanel({ reference, onWordClick }) {
         }
       } catch (err) {
         console.error("Error loading translation words:", err);
-        setError("Failed to load translation words");
+        // Provide more user-friendly error messages
+        if (err.message.includes("Not Found") || err.message.includes("404")) {
+          setError(
+            `Translation words are not available for ${reference.bookId.toUpperCase()} ${
+              reference.chapter
+            }:${
+              reference.verse
+            } in the selected language/organization. Try selecting a different verse or language.`
+          );
+        } else {
+          setError("Failed to load translation words");
+        }
         setWords([]);
       } finally {
         setLoading(false);

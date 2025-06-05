@@ -22,6 +22,20 @@ export function TranslationNotesPanel({ reference }) {
     async function loadNotes() {
       if (!reference?.bookId || !reference?.chapter || !reference?.verse) {
         setNotes([]);
+        setError(null); // Clear any previous errors
+        return;
+      }
+
+      // Check if we have required context
+      if (!organization || !languageId) {
+        if (!organization) {
+          setError(
+            "Please select an organization from the dropdown above to view translation notes."
+          );
+        } else if (!languageId) {
+          setError("Please select a language from the dropdown above to view translation notes.");
+        }
+        setNotes([]);
         return;
       }
 
@@ -47,7 +61,18 @@ export function TranslationNotesPanel({ reference }) {
         setNotes(parsedNotes);
       } catch (err) {
         console.error("Error loading translation notes:", err);
-        setError("Failed to load translation notes");
+        // Provide more user-friendly error messages
+        if (err.message.includes("Not Found") || err.message.includes("404")) {
+          setError(
+            `Translation notes are not available for ${reference.bookId.toUpperCase()} ${
+              reference.chapter
+            }:${
+              reference.verse
+            } in the selected language/organization. Try selecting a different verse or language.`
+          );
+        } else {
+          setError("Failed to load translation notes");
+        }
         setNotes([]);
       } finally {
         setLoading(false);

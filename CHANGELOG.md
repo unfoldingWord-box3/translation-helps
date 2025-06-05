@@ -1,5 +1,51 @@
 # Changelog
 
+## [0.6.1] - 2025-06-04
+
+### Changed
+
+- **Resolved dropdown stale options issue and enhanced error handling across resource panels**
+  - ✅ ScripturePanel now shows helpful guidance instead of technical errors when selections are incomplete
+  - ✅ TranslationQuestionsPanel provides clear direction when organization/language not selected
+  - ✅ TranslationNotesPanel shows informative messages for missing selections or unavailable content
+  - ✅ TranslationWordsPanel guides users to complete dropdown selections before viewing content
+  - ✅ Replaced cryptic errors like "Resource ULT not available" with "Please select a Bible resource from the dropdown above"
+  - ✅ Improved 404/Not Found error messages to suggest trying different verses or languages
+  - ✅ Better user experience when cascading dropdowns reset selections
+  - ✅ All 52 component tests passing with enhanced error handling
+
+### Technical Details
+
+- **Error Message Strategy**: Transform technical errors into actionable user guidance
+- **Context Validation**: Check for required organization/language selections before attempting data loading
+- **Graceful Degradation**: Clear previous errors when context becomes invalid, show guidance instead of failures
+- **User-Centered Design**: Error messages guide users to the specific dropdown action needed
+- **Files Modified**: `ScripturePanel.jsx`, `TranslationQuestionsPanel.jsx`, `TranslationNotesPanel.jsx`, `TranslationWordsPanel.jsx`
+
+## [0.6.0] - 2025-06-04
+
+### Changed
+
+- **Implement cascading dropdown resets in ReferenceSelector for improved user experience**
+  - ✅ Organization change now automatically resets language, resource, book, chapter, and verse to prevent invalid combinations
+  - ✅ Language change now automatically resets resource, book, chapter, and verse selections
+  - ✅ Resource change now automatically resets book, chapter, and verse selections
+  - ✅ Preserved existing book/chapter cascading logic that was already working correctly
+  - ✅ Enhanced change handlers with proper cascading behavior to match legacy implementation patterns
+  - ✅ Prevents user confusion from invalid context combinations (e.g., Spanish ULT, Translation Notes with Genesis reference)
+  - ✅ Eliminates "Resource not available" errors caused by stale dropdown combinations
+  - ✅ Improved user experience with predictable, standard dropdown cascading behavior
+  - ✅ Comprehensive test coverage with 21 test cases covering all cascading scenarios
+  - ✅ Maintains backward compatibility and all existing functionality
+
+### Technical Details
+
+- **Implementation**: Enhanced `ReferenceSelector.jsx` change handlers to reset downstream selections on upstream changes
+- **Testing**: Created comprehensive test suite `ReferenceSelector.test.jsx` with full cascading behavior coverage
+- **UX Pattern**: Follows standard hierarchical dropdown patterns (Country → State → City) for intuitive user experience
+- **Error Prevention**: Eliminates invalid context combinations that lead to failed content loading
+- **Files Modified**: `src-new/components/ReferenceSelector.jsx`, `src-new/components/ReferenceSelector.test.jsx` (new)
+
 ## [0.5.3] - 2025-06-04
 
 ### Added

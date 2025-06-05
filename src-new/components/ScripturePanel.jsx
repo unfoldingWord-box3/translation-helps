@@ -34,6 +34,14 @@ export function ScripturePanel({ reference, onVerseClick }) {
           organization,
           languageId,
         });
+        // Set helpful guidance message instead of just returning
+        if (!organization) {
+          setError("Please select an organization from the dropdown above to view scripture.");
+        } else if (!languageId) {
+          setError("Please select a language from the dropdown above to view scripture.");
+        } else if (!reference?.bookId || !reference.chapter) {
+          setError("Please select a book and chapter from the dropdowns above to view scripture.");
+        }
         return;
       }
 
@@ -60,9 +68,14 @@ export function ScripturePanel({ reference, onVerseClick }) {
         console.log(
           `📋 ScripturePanel: ${selectedResourceId.toUpperCase()} manifest not available`
         );
-        setError(
-          `Resource ${selectedResourceId.toUpperCase()} not available for ${organization}/${languageId}`
-        );
+        // Show helpful guidance instead of technical error
+        if (!resourceId) {
+          setError("Please select a Bible resource from the dropdown above to view scripture.");
+        } else {
+          setError(
+            `The selected Bible resource (${selectedResourceId.toUpperCase()}) is not available for ${organization}/${languageId}. Please try selecting a different resource from the dropdown above.`
+          );
+        }
         return;
       }
 

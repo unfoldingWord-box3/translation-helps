@@ -22,6 +22,13 @@ export function ReferenceSelector() {
   const { languages, loading: langsLoading } = useLanguages(organization);
   const { resources, loading: resourcesLoading } = useResources(organization, languageId);
 
+  // Clear downstream options when upstream selections change
+  const availableLanguages = organization ? languages : [];
+  const availableResources = organization && languageId ? resources : [];
+  const availableBooks = resourceId ? AVAILABLE_BOOKS : [];
+  const availableChapters = reference.bookId ? chapters : [];
+  const availableVerses = reference.chapter ? verses : [];
+
   // Debug logging with actual values
   const dropdownDisabled = !organization || !languageId || resourcesLoading;
   console.log("🎯 Organization:", organization);
@@ -139,17 +146,44 @@ export function ReferenceSelector() {
   // Event handlers with cascading logic
   const handleOrganizationChange = (e) => {
     const newOrganization = e.target.value;
-    updateContext({ organization: newOrganization });
+    // Organization change resets all downstream selections
+    updateContext({
+      organization: newOrganization,
+      languageId: null,
+      resourceId: null,
+      reference: {
+        bookId: null,
+        chapter: null,
+        verse: null,
+      },
+    });
   };
 
   const handleLanguageChange = (e) => {
     const newLanguageId = e.target.value;
-    updateContext({ languageId: newLanguageId });
+    // Language change resets resource and reference selections
+    updateContext({
+      languageId: newLanguageId,
+      resourceId: null,
+      reference: {
+        bookId: null,
+        chapter: null,
+        verse: null,
+      },
+    });
   };
 
   const handleResourceChange = (e) => {
     const newResourceId = e.target.value;
-    updateContext({ resourceId: newResourceId });
+    // Resource change resets reference selections
+    updateContext({
+      resourceId: newResourceId,
+      reference: {
+        bookId: null,
+        chapter: null,
+        verse: null,
+      },
+    });
   };
 
   const handleBookChange = (e) => {
@@ -271,7 +305,7 @@ export function ReferenceSelector() {
           ) : (
             <>
               <option value=''>Select Language</option>
-              {languages.map((lang) => (
+              {availableLanguages.map((lang) => (
                 <option key={lang.code} value={lang.code}>
                   {lang.code.toUpperCase()} - {lang.name}
                 </option>
@@ -298,7 +332,7 @@ export function ReferenceSelector() {
           ) : (
             <>
               <option value=''>Select Bible Resource</option>
-              {resources.map((resource) => {
+              {availableResources.map((resource) => {
                 console.log("🎨 Mapping resource:", resource);
                 return (
                   <option key={resource.id} value={resource.id}>
@@ -326,7 +360,7 @@ export function ReferenceSelector() {
           ) : (
             <>
               <option value=''>Select Book</option>
-              {AVAILABLE_BOOKS.map((book) => (
+              {availableBooks.map((book) => (
                 <option key={book.id} value={book.id}>
                   {book.name}
                 </option>
@@ -351,7 +385,7 @@ export function ReferenceSelector() {
           ) : chapters.length === 0 ? (
             <option value=''>Loading...</option>
           ) : (
-            chapters.map((ch) => (
+            availableChapters.map((ch) => (
               <option key={ch} value={ch}>
                 {ch}
               </option>
@@ -375,7 +409,7 @@ export function ReferenceSelector() {
           ) : verses.length === 0 ? (
             <option value=''>Loading...</option>
           ) : (
-            verses.map((v) => (
+            availableVerses.map((v) => (
               <option key={v} value={v}>
                 {v}
               </option>

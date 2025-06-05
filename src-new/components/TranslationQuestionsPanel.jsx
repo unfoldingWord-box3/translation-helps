@@ -23,6 +23,22 @@ export function TranslationQuestionsPanel({ reference }) {
       if (!reference?.bookId || !reference?.chapter || !reference?.verse) {
         console.log("tQ: Missing reference data", reference);
         setQuestions([]);
+        setError(null); // Clear any previous errors
+        return;
+      }
+
+      // Check if we have required context
+      if (!organization || !languageId) {
+        if (!organization) {
+          setError(
+            "Please select an organization from the dropdown above to view translation questions."
+          );
+        } else if (!languageId) {
+          setError(
+            "Please select a language from the dropdown above to view translation questions."
+          );
+        }
+        setQuestions([]);
         return;
       }
 
@@ -61,7 +77,18 @@ export function TranslationQuestionsPanel({ reference }) {
         setQuestions(loadedQuestions);
       } catch (err) {
         console.error("Error loading translation questions:", err);
-        setError(`Failed to load translation questions: ${err.message}`);
+        // Provide more user-friendly error messages
+        if (err.message.includes("Not Found") || err.message.includes("404")) {
+          setError(
+            `Translation questions are not available for ${reference.bookId.toUpperCase()} ${
+              reference.chapter
+            }:${
+              reference.verse
+            } in the selected language/organization. Try selecting a different verse or language.`
+          );
+        } else {
+          setError(`Failed to load translation questions: ${err.message}`);
+        }
         setQuestions([]);
       } finally {
         setLoading(false);

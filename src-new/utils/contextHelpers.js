@@ -56,7 +56,6 @@ export function contextFromQuery() {
   // Check if URL actually has parameters
   const hasUrlParams = ownerParam || rcParam;
 
-  const organization = ownerParam || "unfoldingWord";
   const rc = rcParam || "";
   const rcArray = rc
     .slice(1)
@@ -71,8 +70,8 @@ export function contextFromQuery() {
 
   return {
     hasUrlParams: !!hasUrlParams,
-    organization,
-    languageId: languageId || "en",
+    organization: ownerParam || null, // NO defaults - return exactly what's in URL
+    languageId: languageId || null, // NO defaults - return exactly what's in URL
     resourceId: resourceId || null,
     reference: {
       bookId: bookId || null,
