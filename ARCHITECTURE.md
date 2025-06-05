@@ -1,89 +1,33 @@
-# Architecture
+# Architecture Documentation
 
-This document provides an overview of the architecture of the **unfoldingWord translationHelps Viewer** application.
+**⚠️ This file has been moved to maintain better documentation organization.**
 
-## 1. Purpose and Scope
+For the complete and up-to-date architecture documentation, please see:
 
-The translationHelps Viewer provides Just-in-Time access to unfoldingWord resources to support translation drafting and checking workflows. Users can browse translation notes, lexicon, questions, and the source text across various languages and versions.
+**[📖 docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**
 
-Refer to the core purpose and use cases:
-- Purpose and Use Cases【F:README.md†L5-L13】
+The documentation in the `docs/` folder provides comprehensive coverage of:
 
-## 2. Resource Integration & Relationships
+- High-level architecture overview
+- Component hierarchy and relationships
+- Service layer architecture
+- Data flow patterns
+- State management strategy
+- File structure organization
+- Performance considerations
+- Testing strategy
+- Error handling
+- Scalability considerations
 
-Resources are managed in Git repositories on DCS and organized via a Resource Container spec (RC). Each RC has a manifest (manifest.yaml) with metadata about included projects. Relationships between resources (ULT, tN, tA, UGNT, tW, tQ, UST, etc.) drive contextually relevant rendering.
+## Quick Navigation
 
-See the detailed resource integration spec and relationships:
-Resource Integration, Technical Overview, Relationships【F:README.md†L15-L43】
-
-## 3. High-Level Architecture
-
-The application is a client-side React web app with optional native builds via Capacitor. It consists of three primary layers:
-
-| Layer                   | Responsibilities                                                                |
-|-------------------------|---------------------------------------------------------------------------------|
-| UI Layer                | Material-UI based React components (navigation bars, workspace, content views)  |
-| State Management Layer  | React Context providers for app context, history, and resource manifests        |
-| Data Access Layer       | `gitApi` module for fetching & caching Door43 Git resources and manifests       |
-
-Web build and deployment are handled by Create React App and GitHub Pages; mobile wrappers for Android/iOS use Capacitor.
-
-## 4. Technology Stack
-
-- **React** (v16.8+), functional components & Hooks
-- **Material-UI** for layout & theming
-- **Context API**: `ContextContextProvider`, `HistoryContextProvider`, `ManifestsContextProvider`
-- **Data Fetching & Caching**: `axios-cache-adapter`, `localforage`, `JSZip`, `js-yaml-parser`
-- **Routing & Query State**: Browser History API & URL-encoded context
-- **Parsing & Rendering**: `usfm-js`, `remark`, `react-markdown`
-- **Build & Deployment**: `react-scripts`, `gh-pages`, Capacitor
-
-Dependencies and scripts are declared in package.json:
-【F:package.json†L7-L31】【F:package.json†L33-L40】
-
-## 5. Component & Module Structure
-
-Simplified directory layout (key modules only):
-```
-.  
-├── android/                     # Android native project (Capacitor)
-├── ios/                         # iOS native project (Capacitor)
-├── public/                      # Static web assets (index.html, icons)
-├── src/
-│   ├── index.js                 # React entry point
-│   ├── App.js                   # Root component + theme/provider setup
-│   ├── Context.context.js       # App context provider
-│   ├── History.context.js       # Navigation history provider
-│   ├── helpers.js               # URL & local-storage utilities
-│   ├── components/
-│   │   └── Viewer/              # Core Viewer component tree
-│   │       ├── gitApi.js        # Data access layer (fetch & cache)
-│   │       ├── Manifests.context.js
-│   │       └── Workspace/       # Workspace sub-views (Scripture, TranslationHelps, etc.)
-│   ├── styles.js                # Top-level layout styles
-│   └── theme.js                 # Material-UI theme customization
-├── package.json
-├── capacitor.config.json        # Capacitor native build configuration
-└── README.md
-```
-
-Key entry points and integration:
-- UI initialization (React + Material-UI theme)【F:src/App.js†L1-L10】
-- App context syncing and URL state【F:src/Context.context.js†L7-L23】
-- History tracking and persistence【F:src/History.context.js†L11-L20】【F:src/History.context.js†L39-L46】
-- Manifest fetch & refresh logic【F:src/components/Viewer/Manifests.context.js†L10-L18】【F:src/components/Viewer/Manifests.context.js†L21-L29】
-- Resource fetch & caching implementation【F:src/components/Viewer/gitApi.js†L1-L20】【F:src/components/Viewer/gitApi.js†L36-L50】【F:src/components/Viewer/gitApi.js†L58-L72】
-
-## 6. Build & Deployment
-
-### Web App
-- Run `npm start` for development
-- Run `npm run build` and `npm run deploy` (GitHub Pages)
-
-### Mobile
-- Capacitor config:【F:capacitor.config.json†L1-L6】
-- Native projects: `android/`, `ios/`
+- **[Architecture Overview](docs/ARCHITECTURE.md)** - Complete technical architecture
+- **[Component Map](docs/component-map.md)** - Component structure and relationships
+- **[UI Map](docs/ui-map.md)** - User interface overview
+- **[Application Lifecycle](docs/lifecycle.md)** - Startup and context flow
+- **[Separation of Concerns](docs/separation-of-concerns.md)** - Layer organization
+- **[Resource Integration](docs/Resource_Integration_Overview.md)** - Translation helps integration
 
 ---
 
-*Generated by developer request.*
+_This redirect was created as part of the documentation reorganization in v0.5.2_

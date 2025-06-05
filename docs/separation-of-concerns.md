@@ -1,4 +1,3 @@
-
 # 🧩 Separation of Concerns and Modular Design Guide
 
 This guide explains the design principles and coding standards for structuring this app around small, focused modules. The goal is to ensure maintainability, reusability, and testability—especially during a full modernization of the codebase.
@@ -17,13 +16,14 @@ To improve the developer experience and long-term sustainability of the project:
 
 ## 🧱 Module Categories and Responsibilities
 
-| Layer         | Examples                          | Responsibility                                |
-|---------------|-----------------------------------|-----------------------------------------------|
-| **UI**        | `VerseComponent`, `TranslationNotesTable` | Pure presentation based on props               |
-| **Context**   | `ResourcesContext`, `ManifestsContext`    | App-wide state management and async lifecycle  |
-| **Services**  | `twlService.js`, `tnService.js`           | Data fetching, transformation, caching         |
-| **Helpers**   | `parseTsvRow`, `getRcUriParts`           | Pure utility functions                         |
-| **Types**     | `types.js`, `types.ts`, JSDoc             | Optional typings and documentation             |
+| Layer         | Examples                                                             | Responsibility                                |
+| ------------- | -------------------------------------------------------------------- | --------------------------------------------- |
+| **UI**        | `VerseView`, `TranslationNotesPanel`, `HelpsTabs`                    | Pure presentation based on props              |
+| **Context**   | `ReferenceContext`, `ManifestsContext`, `ResourcesContext`           | App-wide state management and async lifecycle |
+| **Services**  | `twlService.js`, `tnService.js`, `dcsClient.js`, `catalogService.js` | Data fetching, transformation, caching        |
+| **Hooks**     | `useAppState.js`, `useLoadResources.js`, `useManifest.js`            | Custom React hooks for component logic        |
+| **Utilities** | `parseTsv.js`, `rcUri.js`, `markdownUtils.jsx`, `tsvUtils.js`        | Pure utility functions                        |
+| **Tests**     | `*.test.jsx`, `*.test.js`                                            | Component and utility testing                 |
 
 ---
 
@@ -45,15 +45,19 @@ To improve the developer experience and long-term sustainability of the project:
 // services/twlService.js
 export async function getTwlLinksForVerse(bookId, chapter, verse) {
   const rows = await loadTsvForBook(bookId);
-  return rows.filter(row => row.Reference === `${bookId}/${chapter}/${verse}`);
+  return rows.filter((row) => row.Reference === `${bookId}/${chapter}/${verse}`);
 }
 
 // helpers/tsv.js
 export function parseTsv(tsvText) {
-  return tsvText.trim().split('\n').slice(1).map(line => {
-    const [Reference, Quote, Occurrence, TWLink] = line.split('\t');
-    return { Reference, Quote, Occurrence, TWLink };
-  });
+  return tsvText
+    .trim()
+    .split("\n")
+    .slice(1)
+    .map((line) => {
+      const [Reference, Quote, Occurrence, TWLink] = line.split("\t");
+      return { Reference, Quote, Occurrence, TWLink };
+    });
 }
 ```
 

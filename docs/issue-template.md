@@ -124,6 +124,7 @@ When resolving an issue, follow this standardized completion checklist:
   - `status: closed`
   - `Resolved: true`
   - Add `resolved: YYYY-MM-DD` field
+  - Add `context_usage: X,XXX / 200K tokens (XX%)` field from environment details
 - [ ] **Move issue file** from `docs/issues/open/` to `docs/issues/closed/`
 - [ ] **Verify tests pass** and functionality works as expected
 

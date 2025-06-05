@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.5.2] - 2025-06-04
+
+### Documentation
+
+- **Review src-new and align documentation - COMPLETED**
+  - ✅ Updated `docs/ui-map.md` with current component names and structure
+  - ✅ Updated `docs/lifecycle.md` with modern React hooks and service architecture
+  - ✅ Updated `docs/separation-of-concerns.md` with current layer organization including hooks and utilities
+  - ✅ Created comprehensive `docs/ARCHITECTURE.md` detailing complete application architecture
+  - ✅ Updated `README.md` with modern development commands (`npm run dev`) and accurate resource list
+  - ✅ All documentation now accurately reflects service-based architecture, React Context patterns, and multi-organization support
+  - ✅ Fixed outdated component references and file paths throughout documentation
+  - ✅ Documentation fully synchronized with current `src-new` implementation
+
 ## [0.5.1] - 2025-06-04
 
 ### Fixed

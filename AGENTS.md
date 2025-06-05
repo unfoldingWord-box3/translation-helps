@@ -65,6 +65,11 @@ AGENTIC AI should:
    - Locate and update relevant code files (typically under `src-new/`)
    - Implement the requested behavior (e.g., `twlService.js`)
    - Update documentation as described (e.g., `TWL_Integration_Documentation.md`)
+   - **Review and align documentation** with code changes:
+     - Check `docs/component-map.md`, `docs/ui-map.md`, `docs/lifecycle.md` for accuracy
+     - Update `docs/ARCHITECTURE.md` if architectural patterns changed
+     - Verify file paths and component references in all documentation
+     - Ensure examples and code snippets reflect current implementation
    - Increment the version number in `package.json`
    - Prepend a new entry to `CHANGELOG.md`
    - Commit the changes with a meaningful commit message (e.g., `feat: migrate TW integration to TWL`)
