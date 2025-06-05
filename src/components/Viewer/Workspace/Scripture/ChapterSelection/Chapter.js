@@ -1,8 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import { Bookmark, BookmarkBorder } from "@material-ui/icons";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import {
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@material-ui/core';
+import {
+  Bookmark,
+  BookmarkBorder,
+} from '@material-ui/icons';
 
 export const Component = ({
   classes,
@@ -10,38 +17,43 @@ export const Component = ({
   verses,
   setContext,
   context,
-  context: { reference },
+  context: {
+    reference,
+  },
 }) => {
-  debugger;
   return (
     <ListItem
       button
       selected={reference.chapter === chapter}
       className={classes.bookListItem}
       style={{
-        paddingLeft: "2em",
-        paddingRight: "0.7em",
+        paddingLeft: '2em',
+        paddingRight: '0.7em',
       }}
       onClick={() => {
         const _reference = {
           bookId: reference.bookId,
           chapter,
         };
-        const _context = { ...context, reference: _reference };
+        const _context = {...context, reference: _reference};
         setContext(_context);
       }}
     >
       <ListItemIcon className={classes.listItemIcon}>
-        {reference.chapter === chapter ? <Bookmark /> : <BookmarkBorder />}
+        {
+          (reference.chapter === chapter) ?
+          <Bookmark /> :
+          <BookmarkBorder />
+        }
       </ListItemIcon>
       <ListItemText
         className={classes.listItemText}
-        primary={"Chapter " + chapter}
-        secondary={verses + " Verses"}
+        primary={'Chapter ' + chapter}
+        secondary={verses + ' Verses' }
       />
     </ListItem>
   );
-};
+}
 
 Component.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -49,15 +61,16 @@ Component.propTypes = {
   setContext: PropTypes.func.isRequired,
   chapter: PropTypes.number.isRequired,
   verses: PropTypes.number.isRequired,
-};
+}
 
-const styles = (theme) => ({
-  bookListItem: {},
+const styles = theme => ({
+  bookListItem: {
+  },
   listItemIcon: {
     marginRight: 0,
   },
   listItemText: {
-    paddingLeft: "0.7em",
+    paddingLeft: '0.7em',
   },
 });
 

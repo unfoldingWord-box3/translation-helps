@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.5.1] - 2025-06-04
+
+### Fixed
+
+- **Code Usage Verification and Original Implementation Restoration**
+  - ✅ Verified that application exclusively uses `/src-new` codebase with comprehensive audit
+  - ✅ Confirmed zero references to legacy `/src` directory in imports, build configuration, or entry points
+  - ✅ Successfully restored original `/src` implementation from master branch for comparison
+  - ✅ Backed up current `/src` to `src-backup-20250604-222745` for reference
+  - ✅ Documented key differences between current and original `/src` implementations
+  - ✅ Confirmed application functionality remains intact using only `/src-new` code
+  - ✅ Development server runs successfully on `http://localhost:5175/` with clean separation
+
+### Technical Details
+
+- **Code Separation**: Clean separation between legacy (`/src`) and new (`/src-new`) codebases verified
+- **Entry Point**: Application correctly uses `/src-new/main.jsx` as defined in `index.html`
+- **Build System**: Vite configuration has no references to legacy `/src` directory
+- **Key Differences Found**:
+  - Original `/src` lacks `modules/`, `services/`, and `utils/` directories present in backed-up version
+  - Backed-up version included TWL integration and service worker bug fixes
+  - Code style and component logic differences between implementations
+- **Files Modified**: `/src` directory restored from master branch, issue documentation completed
+
 ## [0.5.0] - 2025-06-04
 
 ### Added

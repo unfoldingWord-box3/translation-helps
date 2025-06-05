@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -12,7 +12,7 @@ import TranslationHelps from '../../../TranslationHelps';
 import Reference from './Reference';
 import Title from './Title';
 
-import { getLinksForVerse } from '../../../../../../services/twlService';
+import * as originalHelpers from '../../../TranslationHelps/Original/helpers';
 
 import {ResourcesContext} from '../../Resources.context';
 
@@ -37,21 +37,6 @@ export const VerseComponent = ({
       original,
     },
   } = useContext(ResourcesContext);
-
-  const [twlLinks, setTwlLinks] = useState([]);
-  useEffect(() => {
-    getLinksForVerse(bookId, chapter, verseKey)
-      .then(links =>
-        setTwlLinks(
-          links.map(link =>
-            link.replace(/^rc:\/\//, `http://${languageId}/`)
-          )
-        )
-      )
-      .catch(error => {
-        console.error(error);
-      });
-  }, [bookId, chapter, verseKey, languageId]);
 
   let tabs = [];
 
@@ -85,12 +70,16 @@ export const VerseComponent = ({
   }
   tabs.push(scriptureTab);
 
-  if (twlLinks.length > 0) {
-    const twlTab = {
-      title: 'Words',
-      words: twlLinks,
-    };
-    tabs.push(twlTab);
+  if (original.data[chapter][verseKey]) {
+    const {verseObjects} = original.data[chapter][verseKey];
+    const wordObjects = originalHelpers.taggedWords({verseObjects});
+    if (wordObjects.length > 0) {
+      const wordsTab = {
+        title: 'Words',
+        original: wordObjects,
+      };
+      tabs.push(wordsTab);
+    }
   }
   if (tn.data && tn.data[chapter] && tn.data[chapter][verseKey]) {
     const notesTab = {
