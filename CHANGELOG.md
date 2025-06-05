@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.5.3] - 2025-06-04
+
+### Added
+
+- **Document original /src implementation for historical reference and feature comparison**
+  - ✅ Created comprehensive documentation file `docs/original-src-implementation.md`
+  - ✅ Documented architectural patterns from 6-8 years ago including Material-UI v4, Context API, and Container/Component patterns
+  - ✅ Listed all major components and their purposes with component hierarchy
+  - ✅ Identified key features like auto-scroll behavior, URL synchronization, navigation history, and manifest management
+  - ✅ Included code examples of important patterns like smooth scrolling and query parameter sync
+  - ✅ Added comparison table between original and current implementations
+  - ✅ Documented unique design decisions including deep freeze patterns and progressive loading
+  - ✅ Created recommendations for potential feature ports to `src-new/` with priority levels
+  - ✅ Preserved historical reference for understanding original design decisions and architectural patterns
+  - ✅ Feature gap analysis identifies potentially missing functionality in current implementation
+
 ## [0.5.2] - 2025-06-04
 
 ### Documentation
