@@ -5,6 +5,8 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import { UsfmEditor } from "simple-text-editor-rcl";
 import { ReferenceContext } from "../../context/ReferenceContext";
+import { createMilestoneDecorators } from "../../utils/milestoneDecorators";
+import "../../components/AlignedWord/MilestoneMarkers.css";
 
 /**
  * @param {object} props
@@ -25,7 +27,7 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
     verse: true,
     chapter: true,
     // Additional options for alignment data processing
-    showWordAtts: false, // Hide word attributes for cleaner display
+    showWordAtts: true, // Enable word attributes to show alignment data
     showTitles: true,
     showHeadings: true,
     showIntroductions: true,
@@ -254,6 +256,9 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
     setTimeout(highlightVerse, 100);
   }, [selectedVerse, usfm]);
 
+  // Create mode-aware decorators based on preview setting
+  const milestoneDecorators = createMilestoneDecorators(options.preview);
+
   if (!usfm) {
     return (
       <div style={{ padding: "20px", fontStyle: "italic", color: "#666" }}>
@@ -264,6 +269,10 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
 
   return (
     <div className='usfm-renderer-container'>
+      {/* Mode indicator */}
+      <div className={`mode-indicator ${options.preview ? "preview-mode" : "source-mode"}`}>
+        Mode: {options.preview ? "Preview (Clean Text)" : "Source (All Markup)"}
+      </div>
       <style>{`
         .verse-highlighted {
           background-color: #e3f2fd !important;
@@ -402,6 +411,7 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
           content={usfm}
           options={options}
           sectionIndex={-1}
+          decorators={milestoneDecorators}
           handlers={{
             onSectionClick: handleSelectionClick,
             onBlockClick: handleBlockClick,

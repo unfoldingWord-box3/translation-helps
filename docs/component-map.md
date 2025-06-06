@@ -18,12 +18,21 @@ This document lists and describes the major components in the viewer and their r
 
 ## 📖 Scripture & Reference Components
 
-| Component           | Path                                                         | Description                                                                                                                        |
-| ------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `ScripturePanel`    | `src-new/components/ScripturePanel.jsx`                      | Displays selected scripture text (with feature flag for enhanced RCL rendering)                                                    |
-| `ScripturePanelRCL` | `src-new/components/ScripturePanelRCL/ScripturePanelRCL.jsx` | Enhanced scripture panel using simple-text-editor-rcl for rich USFM formatting                                                     |
-| `USFMRenderer`      | `src-new/components/ScripturePanelRCL/USFMRenderer.jsx`      | Enhanced USFM rendering component with comprehensive verse click navigation, visual highlighting, and ReferenceContext integration |
-| `ReferenceSelector` | `src-new/components/ReferenceSelector.jsx`                   | Reference selection component                                                                                                      |
+| Component           | Path                                                         | Description                                                                                                                                              |
+| ------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ScripturePanel`    | `src-new/components/ScripturePanel.jsx`                      | Displays selected scripture text (with feature flag for enhanced RCL rendering)                                                                          |
+| `ScripturePanelRCL` | `src-new/components/ScripturePanelRCL/ScripturePanelRCL.jsx` | Enhanced scripture panel using simple-text-editor-rcl for rich USFM formatting                                                                           |
+| `USFMRenderer`      | `src-new/components/ScripturePanelRCL/USFMRenderer.jsx`      | Enhanced USFM rendering component with comprehensive verse click navigation, visual highlighting, alignment decorators, and ReferenceContext integration |
+| `ReferenceSelector` | `src-new/components/ReferenceSelector.jsx`                   | Reference selection component                                                                                                                            |
+
+---
+
+## 🔠 Aligned Text Components
+
+| Component              | Path                                                      | Description                                                       |
+| ---------------------- | --------------------------------------------------------- | ----------------------------------------------------------------- |
+| `AlignedWordComponent` | `src-new/components/AlignedWord/AlignedWordComponent.jsx` | Interactive word component with hover tooltips for alignment data |
+| `AlignmentTooltip`     | `src-new/components/AlignedWord/AlignmentTooltip.jsx`     | Tooltip component displaying Greek/Hebrew linguistic data         |
 
 ---
 
@@ -112,19 +121,21 @@ This document lists and describes the major components in the viewer and their r
 
 ## 🧪 Utilities
 
-| Utility             | Path                                 | Description                                   |
-| ------------------- | ------------------------------------ | --------------------------------------------- |
-| `contextHelpers`    | `src-new/utils/contextHelpers.js`    | Helper functions for context management       |
-| `contextValidation` | `src-new/utils/contextValidation.js` | Validation utilities for context data         |
-| `defaultReference`  | `src-new/utils/defaultReference.js`  | Default reference values and constants        |
-| `groupByVerse`      | `src-new/utils/groupByVerse.js`      | Groups TSV rows by verse                      |
-| `markdownUtils`     | `src-new/utils/markdownUtils.jsx`    | Markdown parsing and rendering utilities      |
-| `parseTsv`          | `src-new/utils/parseTsv.js`          | TSV parsing utility                           |
-| `rcLinkUtils`       | `src-new/utils/rcLinkUtils.jsx`      | RC (Resource Container) link utilities        |
-| `rcUri`             | `src-new/utils/rcUri.js`             | RCUri parsing utility                         |
-| `tsvUtils`          | `src-new/utils/tsvUtils.js`          | TSV data processing utilities                 |
-| `usfmParser`        | `src-new/utils/usfmParser.js`        | USFM (Unified Standard Format Markers) parser |
-| `workflowHelpers`   | `src-new/utils/workflowHelpers.js`   | Helper functions for workflow management      |
+| Utility              | Path                                  | Description                                      |
+| -------------------- | ------------------------------------- | ------------------------------------------------ |
+| `contextHelpers`     | `src-new/utils/contextHelpers.js`     | Helper functions for context management          |
+| `contextValidation`  | `src-new/utils/contextValidation.js`  | Validation utilities for context data            |
+| `defaultReference`   | `src-new/utils/defaultReference.js`   | Default reference values and constants           |
+| `groupByVerse`       | `src-new/utils/groupByVerse.js`       | Groups TSV rows by verse                         |
+| `markdownUtils`      | `src-new/utils/markdownUtils.jsx`     | Markdown parsing and rendering utilities         |
+| `parseTsv`           | `src-new/utils/parseTsv.js`           | TSV parsing utility                              |
+| `rcLinkUtils`        | `src-new/utils/rcLinkUtils.jsx`       | RC (Resource Container) link utilities           |
+| `rcUri`              | `src-new/utils/rcUri.js`              | RCUri parsing utility                            |
+| `tsvUtils`           | `src-new/utils/tsvUtils.js`           | TSV data processing utilities                    |
+| `usfmParser`         | `src-new/utils/usfmParser.js`         | USFM (Unified Standard Format Markers) parser    |
+| `morphologyParser`   | `src-new/utils/morphologyParser.js`   | Greek/Hebrew morphology parsing utilities        |
+| `alignmentDecorator` | `src-new/utils/alignmentDecorator.js` | RCL decorator for USFM alignment data processing |
+| `workflowHelpers`    | `src-new/utils/workflowHelpers.js`    | Helper functions for workflow management         |
 
 ---
 

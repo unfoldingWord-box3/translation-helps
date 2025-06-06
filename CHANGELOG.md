@@ -1,5 +1,135 @@
 # Changelog
 
+## [0.11.1] - 2025-06-06
+
+### Changed
+
+- **Updated AGENTS.md with GitHub Issue Management Integration**
+  - ✅ Replaced file-based issue management with GitHub MCP integration
+  - ✅ Added GitFlow branch strategy documentation with naming conventions
+  - ✅ Integrated semantic versioning guidelines with GitHub issue labels
+  - ✅ Enhanced changelog process documentation with best practices
+  - ✅ Created comprehensive workflow for LLMs using GitHub API tools
+  - ✅ Added detailed issue creation and resolution workflows
+  - ✅ Improved documentation cross-referencing and organization
+
+## [0.11.0] - 2025-06-06
+
+### Added
+
+- **Milestone Marker Rendering with Mode-Aware Decorators - COMPLETED**
+  - ✅ Implemented comprehensive milestone marker rendering system with mode-aware decorators for USFM data
+  - ✅ Created `src-new/utils/milestoneDecorators.js` with factory function for mode-aware decorator creation
+  - ✅ Added support for all USFM milestone marker types: alignment (`\\zaln-s`, `\\zaln-e`, `\\w`), footnotes (`\\f`), endnotes (`\\fe`), cross-references (`\\x`)
+  - ✅ Implemented RCL-compatible decorator cascade pattern following simple-text-editor-rcl ordering principles
+  - ✅ Enhanced `USFMRenderer.jsx` with mode indicator and dynamic decorator switching based on preview setting
+  - ✅ Created comprehensive CSS system `src-new/components/AlignedWord/MilestoneMarkers.css` with mode-specific styling
+  - ✅ **Preview Mode**: Clean, readable text with subtle interactive elements (dotted underlines, hover tooltips)
+  - ✅ **Source Mode**: Full markup visibility with syntax highlighting and color-coded milestone types
+  - ✅ Preserved all USFM data instead of stripping milestone markers for better educational value
+  - ✅ Added interactive hover states with linguistic data tooltips for aligned words
+  - ✅ Implemented proper morphology parsing with Greek/Hebrew linguistic data extraction
+  - ✅ Enhanced mode toggle functionality with immediate decorator switching
+  - ✅ Added responsive design with mobile optimizations and accessibility support
+  - ✅ Maintained backward compatibility through legacy `alignmentDecorator.js` wrapper
+
+### Technical Implementation
+
+- **Decorator Architecture**: Mode-aware factory pattern following RCL cascade ordering (HTML escape → alignment → footnotes → endnotes → cross-refs → cleanup)
+- **CSS Design**: Complete mode-specific styling with preview (subtle blue theme) and source (syntax highlighting with colored borders)
+- **Integration**: Seamless integration with existing simple-text-editor-rcl UsfmEditor component
+- **Performance**: Instant mode switching with efficient decorator regeneration
+- **Accessibility**: Full keyboard navigation, screen reader support, and ARIA labels
+- **Documentation**: Updated component architecture with new milestone rendering capabilities
+- **Files Created**:
+  - `src-new/utils/milestoneDecorators.js` - Mode-aware decorator factory
+  - `src-new/components/AlignedWord/MilestoneMarkers.css` - Mode-specific styling
+  - `src-new/utils/alignmentDecorator.js` - Backward compatibility wrapper
+- **Files Modified**:
+  - `src-new/components/ScripturePanelRCL/USFMRenderer.jsx` - Added mode indicator and decorator integration
+  - `package.json` - Version bump to 0.11.0
+
+### User Experience Benefits
+
+- **Educational Value**: Rich linguistic data accessible through hover interactions preserves translation helps mission
+- **Flexible Viewing**: Toggle between clean preview for reading and full source for editing/analysis
+- **Professional Interface**: Modern UI with smooth transitions and intuitive mode switching
+- **Data Preservation**: No loss of valuable USFM annotation data while maintaining readability
+- **Accessibility**: Complete support for screen readers and keyboard navigation
+- **Performance**: Smooth interactions with large USFM documents containing complex milestone markers
+
+### Fixed in Implementation
+
+- **Preview Mode Rendering**: Fixed decorator implementation to properly strip all USFM markup in preview mode
+- **Comprehensive Cleanup**: Added complete decorator cascade for removing all USFM tags, alignment markers, footnotes
+- **Readable Formatting**: Chapter markers now display as formatted headings, verse numbers as clean text
+- **Decorator Ordering**: Fixed decorator ordering to ensure proper text transformation in preview mode
+
+## [0.10.1] - 2025-06-06
+
+### Reopened
+
+- **Fix Milestone Marker Rendering with Mode-Aware Decorators - REOPENED WITH COMPREHENSIVE APPROACH**
+  - ✅ Reopened aligned text rendering issue with expanded scope covering ALL milestone markers
+  - ✅ Updated approach based on RCL documentation and decorator cascade patterns
+  - ✅ Enhanced requirements to include preview vs non-preview mode-aware behavior
+  - ✅ Moved from closed issue to `docs/issues/open/fix-milestone-marker-rendering.md`
+  - ✅ Comprehensive scope: alignment data (`\zaln-s`, `\zaln-e`), footnotes (`\f`), endnotes (`\fe`), cross-references (`\x`)
+  - ✅ Mode-aware rendering: preview mode hides annotations, non-preview shows all with highlighting
+  - ✅ RCL decorator cascade pattern: proper ordering critical for functionality
+  - ✅ Reference implementation based on [simple-text-editor-rcl examples](https://github.com/unfoldingWord-box3/simple-text-editor-rcl)
+  - ✅ Visual mockups for preview mode implementing original design vision
+  - ✅ Cleaned up previous experimental implementation files as changes were committed
+  - ✅ Technical approach: milestone decorators factory, mode-aware USFMRenderer, cascading CSS
+  - ✅ Estimated effort: 4-6 days with comprehensive testing and documentation
+
+### Cleaned
+
+- **Workspace Cleanup for New Milestone Marker Approach**
+  - ✅ Removed experimental aligned word components from previous approach
+  - ✅ Removed `src-new/components/AlignedWord/` directory and related files
+  - ✅ Removed `src-new/utils/alignmentDecorator.js` and `src-new/utils/morphologyParser.js`
+  - ✅ Clean workspace ready for comprehensive milestone marker implementation
+  - ✅ Previous work was committed and preserved in git history
+
+## [0.10.0] - 2025-06-06
+
+### Added
+
+- **Aligned Text Rendering with Hover Tooltips for USFM Alignment Data**
+  - ✅ Implemented complete aligned text rendering system using simple-text-editor-rcl decorators
+  - ✅ Created `AlignedWordComponent` with interactive hover tooltips displaying Greek/Hebrew linguistic data
+  - ✅ Added `AlignmentTooltip` component with comprehensive morphology display (Strong's, lemma, part of speech, case, gender, number)
+  - ✅ Built `morphologyParser` utility for parsing Greek morphology codes and alignment attributes
+  - ✅ Developed `alignmentDecorator` for RCL integration with USFM alignment pattern detection
+  - ✅ Integrated decorator system with `USFMRenderer` component for seamless alignment data processing
+  - ✅ Preserved valuable USFM alignment data instead of stripping it for clean text display
+  - ✅ Added subtle blue theme styling (#2196F3, #E3F2FD, #1976D2) with dotted underlines for aligned words
+  - ✅ Implemented responsive design with mobile tap-to-show functionality and desktop hover interactions
+  - ✅ Added full accessibility support (keyboard navigation, screen readers, ARIA labels)
+  - ✅ Included dark mode support and high contrast accessibility features
+  - ✅ Enhanced educational value with rich linguistic data available through hover interactions
+  - ✅ Maintained existing verse navigation functionality while adding alignment features
+
+### Technical Implementation
+
+- **Component Architecture**: New `src-new/components/AlignedWord/` directory with modular component design
+- **RCL Integration**: Custom decorator system for processing USFM alignment markers (`\zaln-s`, `\w`, `\zaln-e`)
+- **CSS Implementation**: Complete styling system with animations, responsive design, and accessibility features
+- **Utility Functions**: Greek/Hebrew morphology parsing with comprehensive linguistic feature extraction
+- **Documentation**: Updated component-map.md with new aligned text components and utilities
+- **Files Created**:
+  - `src-new/components/AlignedWord/AlignedWordComponent.jsx`
+  - `src-new/components/AlignedWord/AlignmentTooltip.jsx`
+  - `src-new/components/AlignedWord/AlignedWord.css`
+  - `src-new/components/AlignedWord/index.js`
+  - `src-new/utils/morphologyParser.js`
+  - `src-new/utils/alignmentDecorator.js`
+- **Files Modified**:
+  - `src-new/components/ScripturePanelRCL/USFMRenderer.jsx` (added decorator integration)
+  - `src-new/components/ScripturePanelRCL/ScripturePanelRCL.jsx` (removed unused import)
+  - `docs/component-map.md` (added aligned text components section)
+
 ## [0.9.2] - 2025-06-06
 
 ### Fixed

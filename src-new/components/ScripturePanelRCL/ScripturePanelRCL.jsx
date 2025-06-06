@@ -6,7 +6,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { ReferenceContext } from "../../context/ReferenceContext";
 import { ManifestsContext } from "../../context/MultiManifestsContext";
 import { fetchRawUSFM } from "../../services/scriptureService";
-import { simpleWordExtraction } from "../../utils/usfmProcessor";
+
 import USFMRenderer from "./USFMRenderer";
 
 /**
