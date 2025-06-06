@@ -1,46 +1,34 @@
 /**
- * ScripturePanel.jsx
- * Responsible for displaying scripture text aligned with the selected verse.
- * Now supports enhanced rendering with simple-text-editor-rcl via feature flag.
+ * ScripturePanelRCL.jsx
+ * Enhanced scripture panel using simple-text-editor-rcl for rich USFM rendering
  */
 import React, { useState, useEffect, useContext } from "react";
-import { ReferenceContext } from "../context/ReferenceContext";
-import { ManifestsContext } from "../context/MultiManifestsContext";
-import { fetchBook } from "../services/scriptureService";
-import { getChapter, extractVersesFromChapter } from "../utils/usfmParser";
-import ScripturePanelRCL from "./ScripturePanelRCL";
-
-// Feature flag for enhanced USFM rendering
-// Set VITE_USE_ENHANCED_SCRIPTURE=true in .env to enable ScripturePanelRCL
-const USE_ENHANCED_SCRIPTURE = import.meta.env.VITE_USE_ENHANCED_SCRIPTURE === "true";
+import { ReferenceContext } from "../../context/ReferenceContext";
+import { ManifestsContext } from "../../context/MultiManifestsContext";
+import { fetchRawUSFM } from "../../services/scriptureService";
+import USFMRenderer from "./USFMRenderer";
 
 /**
  * @param {object} props
  * @param {object} props.reference - Reference object { bookId, chapter, verse }
  * @param {function} props.onVerseClick - Callback when a verse is clicked
  */
-export function ScripturePanel({ reference, onVerseClick }) {
-  // Use enhanced RCL component if feature flag is enabled
-  if (USE_ENHANCED_SCRIPTURE) {
-    return <ScripturePanelRCL reference={reference} onVerseClick={onVerseClick} />;
-  }
-
-  // Original implementation below
-  const [chapterText, setChapterText] = useState([]);
+export default function ScripturePanelRCL({ reference, onVerseClick }) {
+  const [usfmContent, setUsfmContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { organization, languageId, resourceId, updateReference } = useContext(ReferenceContext);
   const { manifests, isLoading: manifestsLoading } = useContext(ManifestsContext);
 
   useEffect(() => {
-    async function loadChapter() {
+    async function loadUSFMChapter() {
       // Clear previous content and errors when any context changes
-      setChapterText([]);
+      setUsfmContent("");
       setError(null);
 
       // Don't attempt to load if we don't have required context
       if (!reference?.bookId || !reference.chapter || !organization || !languageId) {
-        console.log("📋 ScripturePanel: Missing required context", {
+        console.log("📋 ScripturePanelRCL: Missing required context", {
           bookId: reference?.bookId,
           chapter: reference?.chapter,
           organization,
@@ -59,7 +47,7 @@ export function ScripturePanel({ reference, onVerseClick }) {
 
       // Don't attempt to load if manifests are still loading
       if (manifestsLoading) {
-        console.log("⏳ ScripturePanel: Waiting for manifests to load");
+        console.log("⏳ ScripturePanelRCL: Waiting for manifests to load");
         setLoading(true);
         return;
       }
@@ -78,7 +66,7 @@ export function ScripturePanel({ reference, onVerseClick }) {
 
       if (!selectedManifest) {
         console.log(
-          `📋 ScripturePanel: ${selectedResourceId.toUpperCase()} manifest not available`
+          `📋 ScripturePanelRCL: ${selectedResourceId.toUpperCase()} manifest not available`
         );
         // Show helpful guidance instead of technical error
         if (!resourceId) {
@@ -96,11 +84,11 @@ export function ScripturePanel({ reference, onVerseClick }) {
 
       try {
         console.log(
-          `📖 ScripturePanel: Loading ${bookId} chapter ${chapter} from ${selectedResourceId}`
+          `📖 ScripturePanelRCL: Loading ${bookId} chapter ${chapter} from ${selectedResourceId}`
         );
 
-        // Fetch and parse the book using the scripture service
-        const chapters = await fetchBook({
+        // Fetch raw USFM content
+        const rawUSFM = await fetchRawUSFM({
           languageId,
           resourceId: selectedResourceId,
           bookId,
@@ -108,35 +96,26 @@ export function ScripturePanel({ reference, onVerseClick }) {
           organization,
         });
 
-        if (!chapters) {
-          throw new Error(`Failed to fetch book ${bookId}`);
+        if (!rawUSFM) {
+          throw new Error(`Failed to fetch USFM for ${bookId}`);
         }
 
-        // Get the specific chapter
-        const chapterData = chapters[String(chapter)];
-        if (!chapterData) {
-          setError(`Chapter ${chapter} not found in book ${bookId}`);
-          setChapterText([]);
-          return;
-        }
+        // Filter USFM to show only the requested chapter
+        const chapterUSFM = extractChapterUSFM(rawUSFM, chapter);
 
-        // Extract verses from the chapter
-        const verses = extractVersesFromChapter(chapterData);
-        console.log(
-          `✅ ScripturePanel: Found ${verses.length} verses in ${bookId} chapter ${chapter}`
-        );
-        setChapterText(verses);
+        console.log(`✅ ScripturePanelRCL: Loaded USFM for ${bookId} chapter ${chapter}`);
+        setUsfmContent(chapterUSFM);
         setError(null);
       } catch (e) {
-        console.error("❌ ScripturePanel: Failed to load chapter:", e);
+        console.error("❌ ScripturePanelRCL: Failed to load chapter:", e);
         setError(`Failed to load chapter: ${e.message}`);
-        setChapterText([]);
+        setUsfmContent("");
       } finally {
         setLoading(false);
       }
     }
 
-    loadChapter();
+    loadUSFMChapter();
   }, [
     reference?.bookId,
     reference?.chapter,
@@ -157,7 +136,7 @@ export function ScripturePanel({ reference, onVerseClick }) {
   // Show loading state if manifests are loading or content is loading
   if (manifestsLoading || loading) {
     return (
-      <section data-testid='scripture-panel' style={{ padding: "20px" }}>
+      <section data-testid='scripture-panel-rcl' style={{ padding: "20px" }}>
         <h2>Scripture</h2>
         <p>Loading scripture...</p>
       </section>
@@ -167,7 +146,7 @@ export function ScripturePanel({ reference, onVerseClick }) {
   // Show message if no reference is selected
   if (!reference?.bookId) {
     return (
-      <section data-testid='scripture-panel' style={{ padding: "20px" }}>
+      <section data-testid='scripture-panel-rcl' style={{ padding: "20px" }}>
         <h2>Scripture</h2>
         <p>Please select a book and chapter to view scripture.</p>
       </section>
@@ -177,7 +156,7 @@ export function ScripturePanel({ reference, onVerseClick }) {
   // Show error state
   if (error) {
     return (
-      <section data-testid='scripture-panel' style={{ padding: "20px" }}>
+      <section data-testid='scripture-panel-rcl' style={{ padding: "20px" }}>
         <h2>{`${reference.bookId.toUpperCase()} ${reference.chapter}`}</h2>
         <p style={{ color: "#d32f2f" }}>{error}</p>
       </section>
@@ -185,43 +164,55 @@ export function ScripturePanel({ reference, onVerseClick }) {
   }
 
   return (
-    <section data-testid='scripture-panel' style={{ padding: "20px" }}>
+    <section data-testid='scripture-panel-rcl' style={{ padding: "20px" }}>
       <h2>{`${reference.bookId.toUpperCase()} ${reference.chapter}`}</h2>
-      <div className='verses-container'>
-        {chapterText.length === 0 ? (
-          <p>No verses available for this chapter.</p>
-        ) : (
-          chapterText.map(({ verse, text }) => (
-            <div
-              key={verse}
-              className='verse'
-              onClick={() => handleVerseClick(verse)}
-              style={{
-                padding: "8px",
-                margin: "4px 0",
-                cursor: "pointer",
-                backgroundColor: reference.verse === verse ? "#e3f2fd" : "transparent",
-                borderLeft:
-                  reference.verse === verse ? "4px solid #1976d2" : "4px solid transparent",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                if (reference.verse !== verse) {
-                  e.currentTarget.style.backgroundColor = "#f5f5f5";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (reference.verse !== verse) {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                }
-              }}
-            >
-              <strong style={{ marginRight: "8px", color: "#666" }}>{verse}</strong>
-              <span>{text}</span>
-            </div>
-          ))
-        )}
-      </div>
+      <USFMRenderer
+        usfm={usfmContent}
+        selectedVerse={reference.verse}
+        onVerseClick={handleVerseClick}
+      />
     </section>
   );
+}
+
+/**
+ * Extracts a specific chapter from USFM content
+ * @param {string} usfm - Full book USFM content
+ * @param {number} chapterNum - Chapter number to extract
+ * @returns {string} Chapter USFM content
+ */
+function extractChapterUSFM(usfm, chapterNum) {
+  if (!usfm) return "";
+
+  const lines = usfm.split("\n");
+  const chapterLines = [];
+  let inTargetChapter = false;
+  let foundChapter = false;
+
+  for (const line of lines) {
+    // Check for chapter markers
+    if (line.match(/^\\c\s+(\d+)/)) {
+      const currentChapter = parseInt(line.match(/^\\c\s+(\d+)/)[1]);
+
+      if (currentChapter === chapterNum) {
+        inTargetChapter = true;
+        foundChapter = true;
+        chapterLines.push(line);
+      } else if (foundChapter) {
+        // We've moved past our target chapter
+        break;
+      } else {
+        inTargetChapter = false;
+      }
+    } else if (inTargetChapter) {
+      chapterLines.push(line);
+    } else if (!foundChapter) {
+      // Keep headers and book info before the target chapter
+      if (line.match(/^\\(id|usfm|ide|h|toc|mt)/)) {
+        chapterLines.push(line);
+      }
+    }
+  }
+
+  return chapterLines.join("\n");
 }

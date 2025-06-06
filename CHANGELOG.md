@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.9.0] - 2025-06-06
+
+### Added
+
+- **Enhanced Scripture Rendering with simple-text-editor-rcl**
+  - ✅ Integrated `simple-text-editor-rcl` library for rich USFM formatting
+  - ✅ Created new `ScripturePanelRCL` component system with enhanced rendering capabilities
+  - ✅ Added `USFMRenderer` component with verse interaction and milestone marker support
+  - ✅ Implemented `fetchRawUSFM()` service function for raw USFM content retrieval
+  - ✅ Feature flag implementation (`VITE_USE_ENHANCED_SCRIPTURE`) for controlled rollout
+  - ✅ Proper paragraph formatting, poetry indentation, section headers, and quotation formatting
+  - ✅ Verse-level navigation maintained for translation helps panel synchronization
+  - ✅ Chapter extraction logic for displaying single chapters from full book USFM
+  - ✅ Enhanced error handling and user guidance messages
+  - ✅ Comprehensive test coverage with 11 test cases
+  - ✅ Backward compatibility with existing ScripturePanel as fallback
+
+### Technical Implementation
+
+- **Component Architecture**: Modular RCL system with clean separation of concerns
+- **Service Enhancement**: Extended scriptureService.js with raw USFM fetching capability
+- **Feature Flag**: Environment variable for safe testing and gradual deployment
+- **Documentation**: Updated component-map.md and comprehensive issue documentation
+- **Testing**: Full test suite ensuring reliability and functionality
+- **Performance**: Efficient USFM parsing and rendering with smooth user interactions
+
 ## [0.8.0] - 2025-01-06
 
 ### 🚀 Features

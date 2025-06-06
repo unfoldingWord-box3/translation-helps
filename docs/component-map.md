@@ -18,10 +18,12 @@ This document lists and describes the major components in the viewer and their r
 
 ## 📖 Scripture & Reference Components
 
-| Component           | Path                                       | Description                      |
-| ------------------- | ------------------------------------------ | -------------------------------- |
-| `ScripturePanel`    | `src-new/components/ScripturePanel.jsx`    | Displays selected scripture text |
-| `ReferenceSelector` | `src-new/components/ReferenceSelector.jsx` | Reference selection component    |
+| Component           | Path                                                         | Description                                                                     |
+| ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| `ScripturePanel`    | `src-new/components/ScripturePanel.jsx`                      | Displays selected scripture text (with feature flag for enhanced RCL rendering) |
+| `ScripturePanelRCL` | `src-new/components/ScripturePanelRCL/ScripturePanelRCL.jsx` | Enhanced scripture panel using simple-text-editor-rcl for rich USFM formatting  |
+| `USFMRenderer`      | `src-new/components/ScripturePanelRCL/USFMRenderer.jsx`      | USFM rendering component with verse interaction and milestone marker support    |
+| `ReferenceSelector` | `src-new/components/ReferenceSelector.jsx`                   | Reference selection component                                                   |
 
 ---
 
@@ -95,16 +97,16 @@ This document lists and describes the major components in the viewer and their r
 
 ## ⚙️ Services
 
-| Service            | Path                                   | Description                               |
-| ------------------ | -------------------------------------- | ----------------------------------------- |
-| `catalogService`   | `src-new/services/catalogService.js`   | Service for DCS catalog API access        |
-| `dcsClient`        | `src-new/services/dcsClient.js`        | Unified client for DCS content fetching   |
-| `scriptureService` | `src-new/services/scriptureService.js` | Service for scripture text retrieval      |
-| `taService`        | `src-new/services/taService.js`        | Service for translation articles (tA)     |
-| `tnService`        | `src-new/services/tnService.js`        | Service for translation notes (tN)        |
-| `tqService`        | `src-new/services/tqService.js`        | Service for translation questions (tQ)    |
-| `twService`        | `src-new/services/twService.js`        | Service for translation words (tW)        |
-| `twlService`       | `src-new/services/twlService.js`       | Service for translation words links (TWL) |
+| Service            | Path                                   | Description                                                                         |
+| ------------------ | -------------------------------------- | ----------------------------------------------------------------------------------- |
+| `catalogService`   | `src-new/services/catalogService.js`   | Service for DCS catalog API access                                                  |
+| `dcsClient`        | `src-new/services/dcsClient.js`        | Unified client for DCS content fetching                                             |
+| `scriptureService` | `src-new/services/scriptureService.js` | Service for scripture text retrieval (includes fetchRawUSFM for enhanced rendering) |
+| `taService`        | `src-new/services/taService.js`        | Service for translation articles (tA)                                               |
+| `tnService`        | `src-new/services/tnService.js`        | Service for translation notes (tN)                                                  |
+| `tqService`        | `src-new/services/tqService.js`        | Service for translation questions (tQ)                                              |
+| `twService`        | `src-new/services/twService.js`        | Service for translation words (tW)                                                  |
+| `twlService`       | `src-new/services/twlService.js`       | Service for translation words links (TWL)                                           |
 
 ---
 
