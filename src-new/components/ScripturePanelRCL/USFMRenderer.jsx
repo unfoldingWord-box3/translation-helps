@@ -2,8 +2,9 @@
  * USFMRenderer.jsx
  * Component that wraps simple-text-editor-rcl for USFM rendering
  */
-import React, { useRef, useEffect } from "react";
-import { Editor } from "simple-text-editor-rcl";
+import React, { useRef, useEffect, useState, useContext } from "react";
+import { UsfmEditor } from "simple-text-editor-rcl";
+import { ReferenceContext } from "../../context/ReferenceContext";
 
 /**
  * @param {object} props
@@ -13,6 +14,57 @@ import { Editor } from "simple-text-editor-rcl";
  */
 export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
   const editorRef = useRef(null);
+  const { updateReference } = useContext(ReferenceContext);
+
+  // UI controls for simple-text-editor-rcl options
+  const [options, setOptions] = useState({
+    sectionable: true,
+    blockable: true,
+    editable: false,
+    preview: false,
+  });
+
+  // Debug logging
+  console.log("USFMRenderer received USFM:", usfm?.substring(0, 500) + "...");
+
+  // Handle selection clicks (for chapter navigation)
+  const handleSelectionClick = (selection) => {
+    console.log("📖 Selection clicked:", selection);
+    // Look for chapter markers in the selection
+    if (selection?.content) {
+      const chapterMatch = selection.content.match(/\\c\s+(\d+)/);
+      if (chapterMatch) {
+        const chapterNum = parseInt(chapterMatch[1]);
+        console.log(`🔄 Navigating to chapter ${chapterNum}`);
+        updateReference({ chapter: chapterNum });
+      }
+    }
+  };
+
+  // Handle block clicks (for verse navigation)
+  const handleBlockClick = (block) => {
+    console.log("📝 Block clicked:", block);
+    // Look for verse markers in the block
+    if (block?.content) {
+      const verseMatch = block.content.match(/\\v\s+(\d+)/);
+      if (verseMatch) {
+        const verseNum = parseInt(verseMatch[1]);
+        console.log(`🔄 Navigating to verse ${verseNum}`);
+        updateReference({ verse: verseNum });
+        if (onVerseClick) {
+          onVerseClick(verseNum);
+        }
+      }
+    }
+  };
+
+  // Toggle option handler
+  const toggleOption = (optionName) => {
+    setOptions((prev) => ({
+      ...prev,
+      [optionName]: !prev[optionName],
+    }));
+  };
 
   // Handle verse click events by parsing the rendered output
   useEffect(() => {
@@ -159,16 +211,99 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
           margin-left: 60px;
           font-style: italic;
         }
+        
+        .usfm-controls {
+          display: flex;
+          gap: 10px;
+          margin-bottom: 15px;
+          padding: 10px;
+          background: #f8f9fa;
+          border-radius: 5px;
+          border: 1px solid #e9ecef;
+          flex-wrap: wrap;
+        }
+        
+        .control-group {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+        
+        .control-group label {
+          font-size: 14px;
+          color: #495057;
+          cursor: pointer;
+          user-select: none;
+        }
+        
+        .control-group input[type="checkbox"] {
+          cursor: pointer;
+        }
+        
+        .controls-title {
+          color: #6c757d;
+          font-size: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-right: 15px;
+          display: flex;
+          align-items: center;
+        }
       `}</style>
+
+      {/* UI Controls for simple-text-editor-rcl options */}
+      <div className='usfm-controls'>
+        <div className='controls-title'>Rendering Options:</div>
+
+        <div className='control-group'>
+          <input
+            type='checkbox'
+            id='sectionable'
+            checked={options.sectionable}
+            onChange={() => toggleOption("sectionable")}
+          />
+          <label htmlFor='sectionable'>Sectionable</label>
+        </div>
+
+        <div className='control-group'>
+          <input
+            type='checkbox'
+            id='blockable'
+            checked={options.blockable}
+            onChange={() => toggleOption("blockable")}
+          />
+          <label htmlFor='blockable'>Blockable</label>
+        </div>
+
+        <div className='control-group'>
+          <input
+            type='checkbox'
+            id='editable'
+            checked={options.editable}
+            onChange={() => toggleOption("editable")}
+          />
+          <label htmlFor='editable'>Editable</label>
+        </div>
+
+        <div className='control-group'>
+          <input
+            type='checkbox'
+            id='preview'
+            checked={options.preview}
+            onChange={() => toggleOption("preview")}
+          />
+          <label htmlFor='preview'>Preview</label>
+        </div>
+      </div>
+
       <div ref={editorRef}>
-        <Editor
-          input={usfm}
-          outputStyle='readable'
-          mode='view'
-          preview={true}
-          showLabels={false}
-          showWordAtts={false}
-          showRaw={false}
+        <UsfmEditor
+          content={usfm}
+          options={options}
+          onSelectionClick={handleSelectionClick}
+          onBlockClick={handleBlockClick}
+          sectionIndex={-1}
         />
       </div>
     </div>

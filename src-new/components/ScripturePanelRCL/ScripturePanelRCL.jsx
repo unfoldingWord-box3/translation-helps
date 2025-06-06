@@ -100,11 +100,16 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
           throw new Error(`Failed to fetch USFM for ${bookId}`);
         }
 
-        // Filter USFM to show only the requested chapter
-        const chapterUSFM = extractChapterUSFM(rawUSFM, chapter);
+        // Debug: log the full USFM content
+        console.log("📄 Full USFM content length:", rawUSFM.length);
+        console.log("📄 First 1000 chars:", rawUSFM.substring(0, 1000));
+        console.log("📄 Last 500 chars:", rawUSFM.substring(rawUSFM.length - 500));
 
-        console.log(`✅ ScripturePanelRCL: Loaded USFM for ${bookId} chapter ${chapter}`);
-        setUsfmContent(chapterUSFM);
+        // Pass the full USFM to simple-text-editor-rcl for complete book navigation
+        console.log(
+          `✅ ScripturePanelRCL: Loaded full USFM for ${bookId} (${rawUSFM.length} characters)`
+        );
+        setUsfmContent(rawUSFM);
         setError(null);
       } catch (e) {
         console.error("❌ ScripturePanelRCL: Failed to load chapter:", e);
@@ -184,21 +189,30 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
 function extractChapterUSFM(usfm, chapterNum) {
   if (!usfm) return "";
 
+  console.log(`🔍 Extracting chapter ${chapterNum} from USFM`);
   const lines = usfm.split("\n");
   const chapterLines = [];
   let inTargetChapter = false;
   let foundChapter = false;
+  let chapterCount = 0;
 
-  for (const line of lines) {
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
     // Check for chapter markers
     if (line.match(/^\\c\s+(\d+)/)) {
       const currentChapter = parseInt(line.match(/^\\c\s+(\d+)/)[1]);
+      chapterCount++;
 
-      if (currentChapter === chapterNum) {
+      console.log(`📖 Found chapter marker: \\c ${currentChapter} at line ${i}`);
+
+      if (currentChapter === parseInt(chapterNum)) {
+        console.log(`✅ Found target chapter ${chapterNum}!`);
         inTargetChapter = true;
         foundChapter = true;
         chapterLines.push(line);
       } else if (foundChapter) {
+        console.log(`🛑 Reached next chapter ${currentChapter}, stopping extraction`);
         // We've moved past our target chapter
         break;
       } else {
@@ -213,6 +227,13 @@ function extractChapterUSFM(usfm, chapterNum) {
       }
     }
   }
+
+  console.log(
+    `📊 Extraction summary: found ${chapterCount} chapters, target chapter found: ${foundChapter}`
+  );
+  console.log(
+    `📊 Extracted ${chapterLines.length} lines, ${chapterLines.join("\n").length} characters`
+  );
 
   return chapterLines.join("\n");
 }
