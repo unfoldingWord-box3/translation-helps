@@ -1,5 +1,47 @@
 # Changelog
 
+## [0.7.0] - 2025-06-06
+
+### Added
+
+- **Modern Navigation Wizard Implementation - Complete Step-by-Step User Journey**
+  - ✅ Implemented comprehensive 5-step navigation wizard replacing legacy dropdown-based system
+  - ✅ Step 1: Organization selection with visual cards and recent selections
+  - ✅ Step 2: Language selection with search functionality and proper language names
+  - ✅ Step 3: Bible resource selection categorized by translation type (ULT, UST, etc.)
+  - ✅ Step 4: Book selection with testament filtering and visual book icons
+  - ✅ Step 5: Chapter and verse selection with dynamic verse counts
+  - ✅ Visual breadcrumb navigation showing current organization, language, resource, book, and chapter:verse
+  - ✅ Modal wizard container with step indicators and progress tracking
+  - ✅ Fully responsive design optimized for both desktop and mobile devices
+  - ✅ Search functionality available on language, resource, and book selection steps
+  - ✅ Recent selections display for quick access to previously used items
+  - ✅ Keyboard navigation support with proper focus management and accessibility
+  - ✅ Loading states and error handling throughout the wizard flow
+  - ✅ Integration with existing app context and state management systems
+
+### Technical Implementation
+
+- **Component Architecture**: Modular wizard system with reusable components
+  - `NavigationWizard/` - Main wizard container and step management
+  - `NavigationBreadcrumbs.jsx` - Visual breadcrumb navigation display
+  - `StepIndicator.jsx` - Progress indicator with completion tracking
+  - `SearchableGrid.jsx`, `SelectionCard.jsx`, `RecentSelections.jsx` - Reusable UI components
+- **Custom Hooks**: Specialized hooks for wizard state, navigation history, and keyboard support
+- **Responsive Design**: Mobile-first approach with adaptive layouts and touch-optimized interactions
+- **Accessibility**: ARIA labels, proper focus management, and screen reader support
+- **Performance**: Optimized loading with client-side search and efficient state management
+- **Documentation**: Updated component-map.md and ui-map.md to reflect new navigation components
+
+### User Experience Benefits
+
+- **Guided Experience**: Clear step-by-step process vs overwhelming dropdown lists
+- **Visual Context**: Rich information display helps users make informed choices
+- **Mobile Optimization**: Touch-friendly interface for mobile Bible study
+- **Reduced Cognitive Load**: Progressive disclosure of options based on previous selections
+- **Quick Access**: Recent selections and search reduce selection time
+- **Modern Interface**: 2025-standard design patterns and visual hierarchy
+
 ## [0.6.1] - 2025-06-04
 
 ### Changed

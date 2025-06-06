@@ -6,7 +6,7 @@
 import React, { useContext, useState, useRef, createContext } from "react";
 import { ReferenceContext } from "../context/ReferenceContext";
 import { ManifestsContext } from "../context/MultiManifestsContext";
-import { ReferenceSelector } from "./ReferenceSelector";
+
 import { ScripturePanel } from "./ScripturePanel";
 import { HelpsTabs } from "./HelpsTabs";
 import { convertRcUriToUrl } from "../utils/rcLinkUtils.jsx";
@@ -141,9 +141,6 @@ export function MainView() {
       data-testid='main-view'
       style={{ height: "100vh", display: "flex", flexDirection: "column" }}
     >
-      {/* Reference Selector */}
-      <ReferenceSelector />
-
       {/* Main Content Area */}
       <div
         style={{

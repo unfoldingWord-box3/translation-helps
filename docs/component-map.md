@@ -6,12 +6,13 @@ This document lists and describes the major components in the viewer and their r
 
 ## 🔝 Top-Level Components
 
-| Component       | Path                                   | Description                                          |
-| --------------- | -------------------------------------- | ---------------------------------------------------- |
-| `App`           | `src-new/components/App.jsx`           | Entry shell that wraps the viewer in contexts        |
-| `MainView`      | `src-new/components/MainView.jsx`      | Orchestrates scripture, navigation, and helps panels |
-| `NavigationBar` | `src-new/components/NavigationBar.jsx` | Book, chapter, and verse selectors                   |
-| `ErrorBoundary` | `src-new/components/ErrorBoundary.jsx` | Error boundary for graceful error handling           |
+| Component               | Path                                           | Description                                          |
+| ----------------------- | ---------------------------------------------- | ---------------------------------------------------- |
+| `App`                   | `src-new/components/App.jsx`                   | Entry shell that wraps the viewer in contexts        |
+| `MainView`              | `src-new/components/MainView.jsx`              | Orchestrates scripture, navigation, and helps panels |
+| `NavigationBar`         | `src-new/components/NavigationBar.jsx`         | Book, chapter, and verse selectors                   |
+| `NavigationBreadcrumbs` | `src-new/components/NavigationBreadcrumbs.jsx` | Visual breadcrumb navigation with context display    |
+| `ErrorBoundary`         | `src-new/components/ErrorBoundary.jsx`         | Error boundary for graceful error handling           |
 
 ---
 
@@ -46,6 +47,24 @@ This document lists and describes the major components in the viewer and their r
 
 ---
 
+## 🧭 Navigation Components
+
+| Component          | Path                                                                  | Description                                 |
+| ------------------ | --------------------------------------------------------------------- | ------------------------------------------- |
+| `NavigationWizard` | `src-new/components/NavigationWizard/index.jsx`                       | Main wizard entry point and integration     |
+| `WizardContainer`  | `src-new/components/NavigationWizard/WizardContainer.jsx`             | Modal wizard container with step management |
+| `StepIndicator`    | `src-new/components/NavigationWizard/StepIndicator.jsx`               | Visual progress indicator for wizard steps  |
+| `OrganizationStep` | `src-new/components/NavigationWizard/steps/OrganizationStep.jsx`      | Step 1: Organization selection              |
+| `LanguageStep`     | `src-new/components/NavigationWizard/steps/LanguageStep.jsx`          | Step 2: Language selection                  |
+| `ResourceStep`     | `src-new/components/NavigationWizard/steps/ResourceStep.jsx`          | Step 3: Resource selection                  |
+| `BookStep`         | `src-new/components/NavigationWizard/steps/BookStep.jsx`              | Step 4: Book selection                      |
+| `ChapterVerseStep` | `src-new/components/NavigationWizard/steps/ChapterVerseStep.jsx`      | Step 5: Chapter and verse selection         |
+| `SearchableGrid`   | `src-new/components/NavigationWizard/components/SearchableGrid.jsx`   | Reusable grid with search functionality     |
+| `SelectionCard`    | `src-new/components/NavigationWizard/components/SelectionCard.jsx`    | Card component for selections               |
+| `RecentSelections` | `src-new/components/NavigationWizard/components/RecentSelections.jsx` | Recent selections display                   |
+
+---
+
 ## 🧠 Context Providers
 
 | Context Provider         | Path                                        | Description                           |
@@ -59,15 +78,18 @@ This document lists and describes the major components in the viewer and their r
 
 ## 🎣 Custom Hooks
 
-| Hook               | Path                                | Description                                 |
-| ------------------ | ----------------------------------- | ------------------------------------------- |
-| `useAppState`      | `src-new/hooks/useAppState.js`      | Main application state management hook      |
-| `useLanguages`     | `src-new/hooks/useLanguages.js`     | Hook for language selection and management  |
-| `useLoadResources` | `src-new/hooks/useLoadResources.js` | Hook for loading resource data              |
-| `useManifest`      | `src-new/hooks/useManifest.js`      | Hook for fetching DCS manifests             |
-| `useOrganizations` | `src-new/hooks/useOrganizations.js` | Hook for organization data management       |
-| `useResources`     | `src-new/hooks/useResources.js`     | Hook for resource data access               |
-| `useTWL`           | `src-new/hooks/useTWL.js`           | Hook for TWL (Translation Words Links) data |
+| Hook                    | Path                                                                 | Description                                 |
+| ----------------------- | -------------------------------------------------------------------- | ------------------------------------------- |
+| `useAppState`           | `src-new/hooks/useAppState.js`                                       | Main application state management hook      |
+| `useLanguages`          | `src-new/hooks/useLanguages.js`                                      | Hook for language selection and management  |
+| `useLoadResources`      | `src-new/hooks/useLoadResources.js`                                  | Hook for loading resource data              |
+| `useManifest`           | `src-new/hooks/useManifest.js`                                       | Hook for fetching DCS manifests             |
+| `useOrganizations`      | `src-new/hooks/useOrganizations.js`                                  | Hook for organization data management       |
+| `useResources`          | `src-new/hooks/useResources.js`                                      | Hook for resource data access               |
+| `useTWL`                | `src-new/hooks/useTWL.js`                                            | Hook for TWL (Translation Words Links) data |
+| `useWizardState`        | `src-new/components/NavigationWizard/hooks/useWizardState.js`        | Wizard state management hook                |
+| `useNavigationHistory`  | `src-new/components/NavigationWizard/hooks/useNavigationHistory.js`  | Navigation history tracking hook            |
+| `useKeyboardNavigation` | `src-new/components/NavigationWizard/hooks/useKeyboardNavigation.js` | Keyboard navigation support hook            |
 
 ---
 
