@@ -21,7 +21,16 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
     sectionable: true,
     blockable: true,
     editable: false,
-    preview: false,
+    preview: true, // Enable preview mode for readable text rendering
+    verse: true,
+    chapter: true,
+    // Additional options for alignment data processing
+    showWordAtts: false, // Hide word attributes for cleaner display
+    showTitles: true,
+    showHeadings: true,
+    showIntroductions: true,
+    showChapterLabels: true,
+    showVerseLabels: true,
   });
 
   // Debug logging
@@ -30,22 +39,34 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
   // Handle selection clicks (for chapter navigation)
   const handleSelectionClick = (selection) => {
     console.log("📖 Selection clicked:", selection);
-    // Look for chapter markers in the selection
+
+    // Check for chapter information in various ways
     if (selection?.content) {
+      // Look for chapter markers in raw content
       const chapterMatch = selection.content.match(/\\c\s+(\d+)/);
       if (chapterMatch) {
         const chapterNum = parseInt(chapterMatch[1]);
         console.log(`🔄 Navigating to chapter ${chapterNum}`);
         updateReference({ chapter: chapterNum });
+        return;
       }
+    }
+
+    // Check for chapter data in selection metadata
+    if (selection?.chapter) {
+      const chapterNum = parseInt(selection.chapter);
+      console.log(`🔄 Navigating to chapter ${chapterNum} from selection metadata`);
+      updateReference({ chapter: chapterNum });
     }
   };
 
   // Handle block clicks (for verse navigation)
   const handleBlockClick = (block) => {
     console.log("📝 Block clicked:", block);
-    // Look for verse markers in the block
+
+    // Check for verse information in various ways
     if (block?.content) {
+      // Look for verse markers in raw content
       const verseMatch = block.content.match(/\\v\s+(\d+)/);
       if (verseMatch) {
         const verseNum = parseInt(verseMatch[1]);
@@ -54,6 +75,17 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
         if (onVerseClick) {
           onVerseClick(verseNum);
         }
+        return;
+      }
+    }
+
+    // Check for verse data in block metadata
+    if (block?.verse) {
+      const verseNum = parseInt(block.verse);
+      console.log(`🔄 Navigating to verse ${verseNum} from block metadata`);
+      updateReference({ verse: verseNum });
+      if (onVerseClick) {
+        onVerseClick(verseNum);
       }
     }
   };
@@ -68,12 +100,13 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
 
   // Handle verse click events by parsing the rendered output
   useEffect(() => {
-    if (!editorRef.current || !onVerseClick) return;
+    if (!editorRef.current) return;
 
     const handleClick = (event) => {
       // Try to find the verse number from the clicked element or its parents
       let element = event.target;
       let verseNumber = null;
+      let chapterNumber = null;
 
       // Look up the DOM tree for verse markers
       while (element && element !== editorRef.current) {
@@ -87,24 +120,62 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
           }
         }
 
-        // Check for data attributes that might contain verse info
+        // Check for chapter markers
+        if (element.classList?.contains("c")) {
+          const chapterMatch = element.textContent?.match(/^(\d+)/);
+          if (chapterMatch) {
+            chapterNumber = parseInt(chapterMatch[1]);
+            break;
+          }
+        }
+
+        // Check for data attributes that might contain verse/chapter info
         if (element.dataset?.verse) {
           verseNumber = parseInt(element.dataset.verse);
           break;
         }
 
-        // Check for verse number in class names
-        const classMatch = element.className?.match(/verse-?(\d+)/);
-        if (classMatch) {
-          verseNumber = parseInt(classMatch[1]);
+        if (element.dataset?.chapter) {
+          chapterNumber = parseInt(element.dataset.chapter);
           break;
+        }
+
+        // Check for verse/chapter number in class names
+        const verseClassMatch = element.className?.match(/verse-?(\d+)/);
+        if (verseClassMatch) {
+          verseNumber = parseInt(verseClassMatch[1]);
+          break;
+        }
+
+        const chapterClassMatch = element.className?.match(/chapter-?(\d+)/);
+        if (chapterClassMatch) {
+          chapterNumber = parseInt(chapterClassMatch[1]);
+          break;
+        }
+
+        // Check for generic number elements that might be verses
+        if (element.tagName === "SPAN" && /^\d+$/.test(element.textContent?.trim())) {
+          const possibleVerse = parseInt(element.textContent.trim());
+          if (possibleVerse > 0 && possibleVerse <= 200) {
+            // reasonable verse range
+            verseNumber = possibleVerse;
+            break;
+          }
         }
 
         element = element.parentElement;
       }
 
-      if (verseNumber && verseNumber !== selectedVerse) {
-        onVerseClick(verseNumber);
+      // Handle navigation
+      if (chapterNumber) {
+        console.log(`🔄 DOM click: Navigating to chapter ${chapterNumber}`);
+        updateReference({ chapter: chapterNumber });
+      } else if (verseNumber && verseNumber !== selectedVerse) {
+        console.log(`🔄 DOM click: Navigating to verse ${verseNumber}`);
+        updateReference({ verse: verseNumber });
+        if (onVerseClick) {
+          onVerseClick(verseNumber);
+        }
       }
     };
 
@@ -114,7 +185,7 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
     return () => {
       editorElement.removeEventListener("click", handleClick);
     };
-  }, [selectedVerse, onVerseClick]);
+  }, [selectedVerse, onVerseClick, updateReference]);
 
   // Highlight selected verse
   useEffect(() => {

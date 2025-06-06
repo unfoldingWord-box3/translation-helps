@@ -1,5 +1,56 @@
 # Changelog
 
+## [0.9.3] - 2025-06-06
+
+### Removed
+
+- **Cleanup: Remove src-backup-20250604-222745 folder**
+  - ✅ Removed `src-backup-20250604-222745/` directory as it is no longer needed for reference
+  - ✅ Historical backup served its purpose for comparing original and new implementations
+  - ✅ Application has been stable with `/src-new` codebase with no need for legacy code
+  - ✅ All necessary information has been documented in `docs/original-src-implementation.md`
+  - ✅ Further reduces repository size and eliminates outdated backup code
+  - ✅ Clean repository structure with only active code paths
+
+## [0.9.2] - 2025-06-06
+
+### Removed
+
+- **Cleanup: Remove src-backup folder**
+  - ✅ Removed `src-backup-20250604-222745/` directory as it is no longer needed for reference
+  - ✅ Original `/src` implementation comparison completed and documented
+  - ✅ Application exclusively uses `/src-new` codebase with no dependencies on legacy backup
+  - ✅ Reduces repository size and eliminates outdated reference code
+  - ✅ All necessary historical information preserved in documentation
+
+## [0.9.1] - 2025-06-06
+
+### Fixed
+
+- **Scripture Panel RCL Navigation and Rendering Issues - COMPLETED**
+  - ✅ Fixed chapter heading and verse block click navigation not updating helps resources context
+  - ✅ Enhanced USFMRenderer with comprehensive click handling for both chapter markers and verse markers
+  - ✅ Added DOM-based click detection with improved element traversal for various USFM marker formats
+  - ✅ Integrated click handlers with ReferenceContext.updateReference for proper context synchronization
+  - ✅ Enhanced simple-text-editor-rcl integration with multiple callback handlers (onSelectionClick, onBlockClick)
+  - ✅ Added comprehensive logging for debugging navigation and rendering issues
+  - ✅ Improved click detection for generic number elements with reasonable verse range validation
+  - ✅ Ensures helps resources on the right stay in sync when clicking scripture content elements
+  - ✅ Chapter/verse navigation clicks now working correctly
+  - ✅ **FIXED TEXT RENDERING**: Enabled preview mode in simple-text-editor-rcl for proper USFM processing
+  - ✅ Text content from alignment data now renders properly as readable scripture
+  - ✅ Verses display as readable text instead of fragmented alignment markers
+  - ✅ Enhanced scripture feature is now fully functional and ready for production
+
+### Technical Implementation
+
+- **Navigation Fixed**: Multi-layered click handling with callback-based and DOM-based detection
+- **Context Integration**: Direct integration with ReferenceContext.updateReference for consistent state management
+- **Improved Click Detection**: Enhanced element traversal supporting various USFM marker class formats (.v, .c, data attributes)
+- **Debug Logging**: Comprehensive console logging for troubleshooting navigation issues
+- **Files Modified**: `src-new/components/ScripturePanelRCL/USFMRenderer.jsx`
+- **Complete Resolution**: Both navigation and text rendering issues fully resolved
+
 ## [0.9.0] - 2025-06-06
 
 ### Added

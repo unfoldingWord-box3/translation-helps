@@ -6,6 +6,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { ReferenceContext } from "../../context/ReferenceContext";
 import { ManifestsContext } from "../../context/MultiManifestsContext";
 import { fetchRawUSFM } from "../../services/scriptureService";
+import { simpleWordExtraction } from "../../utils/usfmProcessor";
 import USFMRenderer from "./USFMRenderer";
 
 /**
@@ -109,7 +110,12 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
         console.log(
           `✅ ScripturePanelRCL: Loaded full USFM for ${bookId} (${rawUSFM.length} characters)`
         );
-        setUsfmContent(rawUSFM);
+        // Process USFM to extract readable text from alignment data
+        const processedUSFM = simpleWordExtraction(rawUSFM);
+        console.log("📝 Processed USFM length:", processedUSFM.length);
+        console.log("📝 Processed first 1000 chars:", processedUSFM.substring(0, 1000));
+
+        setUsfmContent(processedUSFM);
         setError(null);
       } catch (e) {
         console.error("❌ ScripturePanelRCL: Failed to load chapter:", e);
