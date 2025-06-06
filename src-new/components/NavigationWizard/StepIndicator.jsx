@@ -1,9 +1,9 @@
 /**
  * StepIndicator.jsx
- * Progress indicator showing current wizard step and allowing navigation to previous steps
+ * Progress indicator showing current wizard step and allowing navigation to valid steps
  */
 
-import React from "react";
+import React, { useState } from "react";
 
 export function StepIndicator({
   currentStep,
@@ -12,6 +12,7 @@ export function StepIndicator({
   canJumpTo,
   isDesktop = false,
 }) {
+  const [hoveredStep, setHoveredStep] = useState(null);
   const containerStyles = {
     display: "flex",
     alignItems: "center",
@@ -33,6 +34,25 @@ export function StepIndicator({
     const isActive = index === currentStep;
     const isCompleted = index < currentStep;
     const canClick = canJumpTo && canJumpTo(index);
+    const isHovered = hoveredStep === index;
+
+    // Base styles for the dot
+    let dotBackgroundColor = "#e9ecef";
+    let dotColor = "#6c757d";
+    let dotBorder = "none";
+
+    if (isActive) {
+      dotBackgroundColor = "#007bff";
+      dotColor = "#ffffff";
+      dotBorder = "2px solid #0056b3";
+    } else if (isCompleted) {
+      dotBackgroundColor = "#28a745";
+      dotColor = "#ffffff";
+    } else if (isHovered && canClick) {
+      dotBackgroundColor = "#f8f9fa";
+      dotColor = "#007bff";
+      dotBorder = "2px solid #007bff";
+    }
 
     const dotStyles = {
       width: isDesktop ? "32px" : "24px",
@@ -45,24 +65,38 @@ export function StepIndicator({
       fontWeight: "600",
       cursor: canClick ? "pointer" : "default",
       transition: "all 0.2s ease",
-      backgroundColor: isActive ? "#007bff" : isCompleted ? "#28a745" : "#e9ecef",
-      color: isActive || isCompleted ? "#ffffff" : "#6c757d",
-      border: isActive ? "2px solid #0056b3" : "none",
+      backgroundColor: dotBackgroundColor,
+      color: dotColor,
+      border: dotBorder,
+      transform: isHovered && canClick ? "scale(1.05)" : "scale(1)",
     };
+
+    // Base styles for the label
+    let labelColor = "#6c757d";
+    if (isActive) {
+      labelColor = "#007bff";
+    } else if (isCompleted) {
+      labelColor = "#28a745";
+    } else if (isHovered && canClick) {
+      labelColor = "#007bff";
+    }
 
     const labelStyles = {
       fontSize: isDesktop ? "14px" : "12px",
       fontWeight: isActive ? "600" : "400",
-      color: isActive ? "#007bff" : isCompleted ? "#28a745" : "#6c757d",
+      color: labelColor,
       cursor: canClick ? "pointer" : "default",
       whiteSpace: "nowrap",
       display: isDesktop ? "block" : "none", // Hide labels on mobile to save space
+      transition: "color 0.2s ease",
     };
 
     const stepContent = (
       <div
         style={stepStyles}
         onClick={canClick ? () => onStepClick(index) : undefined}
+        onMouseEnter={canClick ? () => setHoveredStep(index) : undefined}
+        onMouseLeave={canClick ? () => setHoveredStep(null) : undefined}
         data-testid={`step-indicator-${index}`}
       >
         <div style={dotStyles}>{isCompleted ? "✓" : index + 1}</div>

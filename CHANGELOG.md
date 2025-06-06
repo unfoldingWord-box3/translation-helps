@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.8.0] - 2025-01-06
+
+### 🚀 Features
+
+- Enhanced DCS API integration with repository avatars for Bible resources
+- Added repository owner information and full names from DCS API
+- Implemented manifest-only book filtering (no fallback to hardcoded books)
+
+### 🐛 Bug Fixes
+
+- Fixed navigation wizard breadcrumb navigation to correct steps
+- Resolved breadcrumb button formatting issues that never reset to normal
+- Fixed chapter/verse breadcrumb synchronization with scripture rendering
+- Eliminated "stuck" button styles with clean CSS-based state management
+
+### 🎨 UI/UX Improvements
+
+- Repository avatars now display for Bible resources instead of generic emojis
+- Clean, consistent breadcrumb visual styling with proper hover effects
+- Perfect synchronization between breadcrumb state and content rendering
+- Professional repository branding integration from DCS API
+
+### 🔧 Technical Changes
+
+- Enhanced catalogService.js to fetch repository metadata (avatars, owners)
+- Updated ResourceStep.jsx to use repository avatars with emoji fallbacks
+- Modified BookStep.jsx to only show manifest-available books
+- Improved SelectionCard.jsx with proper avatar URL handling
+- Fixed WizardContainer.jsx initialStep handling for breadcrumb navigation
+- Replaced JavaScript style manipulation with CSS classes in NavigationBreadcrumbs.jsx
+
 ## [0.7.0] - 2025-06-06
 
 ### Added

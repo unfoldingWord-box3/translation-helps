@@ -72,21 +72,59 @@ async function fetchWithCache(url, cacheKey) {
 
 /**
  * Fetches available organizations/owners from DCS catalog API
- * @returns {Promise<string[]>} Array of organization names
+ * @returns {Promise<Object[]>} Array of organization objects with metadata
  */
 export async function fetchOrganizations() {
-  const fallbackOrganizations = ["unfoldingWord", "door43-catalog", "STR", "WA"];
+  const fallbackOrganizations = [
+    {
+      login: "unfoldingWord",
+      full_name: "unfoldingWord",
+      description: "Open Bible resources for every language",
+      avatar_url: null,
+      website: "https://unfoldingword.org",
+    },
+    {
+      login: "door43-catalog",
+      full_name: "Door43 Catalog",
+      description: "Community-driven translation hub",
+      avatar_url: null,
+      website: "https://door43.org",
+    },
+    {
+      login: "STR",
+      full_name: "STR",
+      description: "Scripture Translation Resources",
+      avatar_url: null,
+      website: null,
+    },
+    {
+      login: "WA",
+      full_name: "WA",
+      description: "Wycliffe Associates",
+      avatar_url: null,
+      website: null,
+    },
+  ];
 
   try {
     const url = `${BASE_CATALOG_URL}/owners`;
     const data = await fetchWithCache(url, "organizations");
 
     if (data && data.data && Array.isArray(data.data) && data.data.length > 0) {
-      // Extract organization login names from API response
+      // Extract full organization objects from API response
       const organizations = data.data
         .filter((org) => org && org.login)
-        .map((org) => org.login)
-        .sort();
+        .map((org) => ({
+          login: org.login,
+          full_name: org.full_name || org.login,
+          description: org.description || `Organization: ${org.full_name || org.login}`,
+          avatar_url: org.avatar_url || null,
+          website: org.website || null,
+          location: org.location || null,
+          repo_count: org.repo_count || 0,
+          visibility: org.visibility || "public",
+        }))
+        .sort((a, b) => (a.full_name || a.login).localeCompare(b.full_name || b.login));
 
       return organizations.length > 0 ? organizations : fallbackOrganizations;
     }
@@ -252,6 +290,8 @@ export async function fetchBibleResources(owner, language) {
           description: repo.description || repo.name,
           subject: repo.subject,
           repoUrl: repo.html_url || repo.repo_url,
+          avatarUrl: repo.avatar_url || null, // Repository avatar
+          owner: repo.owner || null, // Owner information
         }))
         .sort((a, b) => a.name.localeCompare(b.name));
 

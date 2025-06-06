@@ -18,17 +18,27 @@ export function OrganizationStep({ onNext, onStepChange, wizardData, isDesktop }
     onStepChange(1, { organization: organizationId });
   };
 
-  const filteredOrganizations = organizations.filter((org) =>
-    org.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredOrganizations = organizations.filter(
+    (org) =>
+      (org.full_name && org.full_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (org.login && org.login.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (org.description && org.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const recentOrganizations = getRecentOrganizations();
 
   const organizationOptions = filteredOrganizations.map((org) => ({
-    id: org,
-    title: org,
-    subtitle: getOrganizationDescription(org),
-    icon: getOrganizationIcon(org),
+    id: org.login,
+    title: org.full_name || org.login,
+    subtitle: org.description || `Organization: ${org.full_name || org.login}`,
+    icon: org.avatar_url,
+    fallbackIcon: getOrganizationIcon(org.login),
+    badge: org.repo_count > 0 ? `${org.repo_count} repos` : null,
+    metadata: {
+      website: org.website,
+      location: org.location,
+      visibility: org.visibility,
+    },
   }));
 
   if (loading) {

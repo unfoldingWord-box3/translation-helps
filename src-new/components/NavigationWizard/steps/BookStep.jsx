@@ -3,10 +3,11 @@
  * Fourth step of the wizard: Book selection with Testament categorization
  */
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { SearchableGrid } from "../components/SearchableGrid";
 import { RecentSelections } from "../components/RecentSelections";
 import { useNavigationHistory } from "../hooks/useNavigationHistory";
+import { fetchResourceManifest } from "../../../services/manifestService";
 
 // Bible book data with testament categorization
 const BIBLE_BOOKS = {
@@ -82,25 +83,115 @@ const BIBLE_BOOKS = {
   ],
 };
 
+// Helper function to get all books
+function getAllBooks() {
+  return [...BIBLE_BOOKS.old, ...BIBLE_BOOKS.new];
+}
+
 export function BookStep({ onNext, onPrevious, onStepChange, wizardData, isDesktop }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTestament, setSelectedTestament] = useState("all");
+  const [availableBooks, setAvailableBooks] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { getRecentBooks } = useNavigationHistory();
+
+  // Fetch available books from manifest
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadAvailableBooks = async () => {
+      if (!wizardData.organization || !wizardData.languageId || !wizardData.resourceId) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        const manifest = await fetchResourceManifest(
+          wizardData.organization,
+          wizardData.languageId,
+          wizardData.resourceId
+        );
+
+        if (isMounted && manifest && manifest.projects) {
+          // Extract book information from manifest projects
+          const manifestBooks = manifest.projects
+            .filter((project) => project && project.identifier)
+            .map((project) => {
+              const bookId = project.identifier.toLowerCase();
+              const fallbackBook = getAllBooks().find((b) => b.id === bookId);
+
+              return {
+                id: bookId,
+                name: project.title || (fallbackBook ? fallbackBook.name : bookId.toUpperCase()),
+                chapters: project.chapters?.length || (fallbackBook ? fallbackBook.chapters : 1),
+                sort:
+                  project.sort ||
+                  (fallbackBook ? getAllBooks().findIndex((b) => b.id === bookId) : 999),
+                categories: project.categories || [],
+                versification: project.versification,
+              };
+            })
+            .sort((a, b) => a.sort - b.sort);
+
+          setAvailableBooks(manifestBooks);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err.message);
+          console.warn("Failed to load manifest books:", err);
+          // No fallback - only show books that are actually available in the manifest
+          setAvailableBooks([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadAvailableBooks();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [wizardData.organization, wizardData.languageId, wizardData.resourceId]);
 
   const handleBookSelect = (bookId) => {
     onStepChange(4, { bookId });
   };
 
-  const allBooks = [...BIBLE_BOOKS.old, ...BIBLE_BOOKS.new];
+  // Only use books from the manifest - no fallback to hardcoded books
+  const currentBooks = availableBooks || [];
+  const isUsingDynamicBooks = availableBooks !== null && availableBooks.length > 0;
+
+  const { oldTestamentBooks, newTestamentBooks } = useMemo(() => {
+    if (isUsingDynamicBooks) {
+      // For dynamic books, categorize based on biblical order
+      const oldIds = BIBLE_BOOKS.old.map((b) => b.id);
+      return {
+        oldTestamentBooks: currentBooks.filter((book) => oldIds.includes(book.id)),
+        newTestamentBooks: currentBooks.filter((book) => !oldIds.includes(book.id)),
+      };
+    } else {
+      return {
+        oldTestamentBooks: BIBLE_BOOKS.old,
+        newTestamentBooks: BIBLE_BOOKS.new,
+      };
+    }
+  }, [currentBooks, isUsingDynamicBooks]);
 
   const filteredBooks = useMemo(() => {
-    let books = allBooks;
+    let books = currentBooks;
 
     // Filter by testament
     if (selectedTestament === "old") {
-      books = BIBLE_BOOKS.old;
+      books = oldTestamentBooks;
     } else if (selectedTestament === "new") {
-      books = BIBLE_BOOKS.new;
+      books = newTestamentBooks;
     }
 
     // Filter by search term
@@ -113,7 +204,7 @@ export function BookStep({ onNext, onPrevious, onStepChange, wizardData, isDeskt
     }
 
     return books;
-  }, [searchTerm, selectedTestament]);
+  }, [searchTerm, selectedTestament, currentBooks, oldTestamentBooks, newTestamentBooks]);
 
   const recentBooks = getRecentBooks().filter(
     (book) =>
@@ -131,9 +222,9 @@ export function BookStep({ onNext, onPrevious, onStepChange, wizardData, isDeskt
   }));
 
   const testamentTabs = [
-    { id: "all", label: "All Books", icon: "📖", count: allBooks.length },
-    { id: "old", label: "Old Testament", icon: "📜", count: BIBLE_BOOKS.old.length },
-    { id: "new", label: "New Testament", icon: "✝️", count: BIBLE_BOOKS.new.length },
+    { id: "all", label: "All Books", icon: "📖", count: currentBooks.length },
+    { id: "old", label: "Old Testament", icon: "📜", count: oldTestamentBooks.length },
+    { id: "new", label: "New Testament", icon: "✝️", count: newTestamentBooks.length },
   ];
 
   const tabStyles = (isActive) => ({

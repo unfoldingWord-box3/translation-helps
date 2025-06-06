@@ -3,18 +3,26 @@
  * Card component for displaying selectable items in the wizard
  */
 
-import React from "react";
+import React, { useState } from "react";
 
 export function SelectionCard({
   id,
   title,
   subtitle,
   icon,
+  fallbackIcon,
   badge,
   isSelected = false,
   onClick,
   isDesktop = false,
 }) {
+  const [imageError, setImageError] = useState(false);
+
+  // Check if icon is a URL (avatar) or emoji/text
+  const isAvatarUrl =
+    icon && typeof icon === "string" && (icon.startsWith("http") || icon.startsWith("/"));
+  const shouldShowAvatar = isAvatarUrl && !imageError;
+  const displayIcon = shouldShowAvatar ? null : icon || fallbackIcon;
   const cardStyles = {
     padding: isDesktop ? "20px" : "16px",
     border: `2px solid ${isSelected ? "#007bff" : "#e1e5e9"}`,
@@ -36,6 +44,14 @@ export function SelectionCard({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  };
+
+  const avatarStyles = {
+    width: isDesktop ? "40px" : "32px",
+    height: isDesktop ? "40px" : "32px",
+    borderRadius: "50%",
+    objectFit: "cover",
+    border: "2px solid #e1e5e9",
   };
 
   const contentStyles = {
@@ -123,7 +139,11 @@ export function SelectionCard({
         }
       }}
     >
-      {icon && <div style={iconStyles}>{icon}</div>}
+      {shouldShowAvatar ? (
+        <img src={icon} alt={title} style={avatarStyles} onError={() => setImageError(true)} />
+      ) : (
+        displayIcon && <div style={iconStyles}>{displayIcon}</div>
+      )}
 
       <div style={contentStyles}>
         <h3 style={titleStyles}>{title}</h3>

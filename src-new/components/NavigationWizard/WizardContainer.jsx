@@ -26,11 +26,33 @@ const WIZARD_STEPS = {
 
 const STEP_NAMES = ["Organization", "Language", "Resource", "Book", "Chapter & Verse"];
 
-export function WizardContainer({ onComplete, isDesktop = false, initialStep = 1 }) {
+export function WizardContainer({ onComplete, isDesktop = false, initialStep = null }) {
   const { organization, languageId, resourceId, reference, updateContext } =
     useContext(ReferenceContext);
 
-  const [currentStep, setCurrentStep] = useState(Math.max(0, Math.min(4, initialStep - 1)));
+  // Determine initial step
+  const getInitialStep = () => {
+    // If initialStep is explicitly provided, use it (from breadcrumb navigation)
+    if (initialStep !== null) {
+      return Math.max(0, Math.min(4, initialStep - 1));
+    }
+
+    // Otherwise determine step based on existing context
+    if (organization && languageId && resourceId && reference?.bookId && reference?.chapter) {
+      return WIZARD_STEPS.CHAPTER_VERSE;
+    } else if (organization && languageId && resourceId && reference?.bookId) {
+      return WIZARD_STEPS.BOOK;
+    } else if (organization && languageId && resourceId) {
+      return WIZARD_STEPS.RESOURCE;
+    } else if (organization && languageId) {
+      return WIZARD_STEPS.LANGUAGE;
+    } else if (organization) {
+      return WIZARD_STEPS.ORGANIZATION;
+    }
+    return WIZARD_STEPS.ORGANIZATION;
+  };
+
+  const [currentStep, setCurrentStep] = useState(getInitialStep());
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [wizardData, setWizardData] = useState({
     organization: organization || null,
@@ -45,8 +67,13 @@ export function WizardContainer({ onComplete, isDesktop = false, initialStep = 1
   const { saveSelection, getRecentSelections } = useNavigationHistory();
   const { validateStep, canProceed } = useWizardState(wizardData);
 
-  // Determine current step based on existing context
+  // Only auto-determine step if no explicit initialStep was provided
   useEffect(() => {
+    if (initialStep !== null) {
+      // Don't auto-change step if explicitly set by breadcrumb
+      return;
+    }
+
     if (organization && languageId && resourceId && reference?.bookId && reference?.chapter) {
       setCurrentStep(WIZARD_STEPS.CHAPTER_VERSE);
     } else if (organization && languageId && resourceId && reference?.bookId) {
@@ -58,7 +85,7 @@ export function WizardContainer({ onComplete, isDesktop = false, initialStep = 1
     } else if (organization) {
       setCurrentStep(WIZARD_STEPS.ORGANIZATION);
     }
-  }, [organization, languageId, resourceId, reference]);
+  }, [organization, languageId, resourceId, reference, initialStep]);
 
   const handleStepChange = useCallback(
     (stepIndex, data = {}) => {
@@ -136,13 +163,48 @@ export function WizardContainer({ onComplete, isDesktop = false, initialStep = 1
     }
   }, [onComplete]);
 
+  const isStepValid = useCallback(
+    (stepIndex) => {
+      // Allow navigation to any step that is at or before the current step
+      if (stepIndex <= currentStep) {
+        return true;
+      }
+
+      // For forward navigation, check if prerequisites are met
+      switch (stepIndex) {
+        case WIZARD_STEPS.ORGANIZATION:
+          return true; // Organization step is always accessible
+        case WIZARD_STEPS.LANGUAGE:
+          return wizardData.organization !== null;
+        case WIZARD_STEPS.RESOURCE:
+          return wizardData.organization !== null && wizardData.languageId !== null;
+        case WIZARD_STEPS.BOOK:
+          return (
+            wizardData.organization !== null &&
+            wizardData.languageId !== null &&
+            wizardData.resourceId !== null
+          );
+        case WIZARD_STEPS.CHAPTER_VERSE:
+          return (
+            wizardData.organization !== null &&
+            wizardData.languageId !== null &&
+            wizardData.resourceId !== null &&
+            wizardData.bookId !== null
+          );
+        default:
+          return false;
+      }
+    },
+    [wizardData, currentStep]
+  );
+
   const handleJumpToStep = useCallback(
     (stepIndex) => {
-      if (stepIndex <= currentStep) {
+      if (isStepValid(stepIndex) && !isTransitioning) {
         handleStepChange(stepIndex);
       }
     },
-    [currentStep, handleStepChange]
+    [isStepValid, isTransitioning, handleStepChange]
   );
 
   const handleWizardComplete = useCallback(() => {
@@ -210,6 +272,8 @@ export function WizardContainer({ onComplete, isDesktop = false, initialStep = 1
     flexDirection: "column",
     transition: isTransitioning ? "opacity 0.15s ease-in-out" : "none",
     opacity: isTransitioning ? 0.7 : 1,
+    overflow: "auto",
+    minHeight: 0, // Allow flex shrinking
   };
 
   return (
@@ -218,7 +282,7 @@ export function WizardContainer({ onComplete, isDesktop = false, initialStep = 1
         currentStep={currentStep}
         stepNames={STEP_NAMES}
         onStepClick={handleJumpToStep}
-        canJumpTo={(stepIndex) => stepIndex <= currentStep}
+        canJumpTo={isStepValid}
         isDesktop={isDesktop}
       />
 

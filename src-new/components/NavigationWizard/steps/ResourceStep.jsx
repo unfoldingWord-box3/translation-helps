@@ -44,8 +44,9 @@ export function ResourceStep({ onNext, onPrevious, onStepChange, wizardData, isD
   const resourceOptions = filteredResources.map((resource) => ({
     id: resource.id,
     title: resource.name || resource.id,
-    subtitle: getResourceDescription(resource),
-    icon: getResourceIcon(resource.id),
+    subtitle: resource.description || getResourceDescription(resource),
+    icon: resource.avatarUrl || getResourceIcon(resource.id), // Use repository avatar if available
+    fallbackIcon: getResourceIcon(resource.id), // Fallback emoji icon
     badge: getResourceBadge(resource),
   }));
 

@@ -43,8 +43,11 @@ export function NavigationBreadcrumbs({ onOpenWizard }) {
   };
 
   const getChapterVerse = () => {
-    if (!reference.chapter || !reference.verse) return "Chapter:Verse";
-    return `${reference.chapter}:${reference.verse}`;
+    if (!reference.chapter && !reference.verse) return "Chapter:Verse";
+    if (reference.chapter && reference.verse) return `${reference.chapter}:${reference.verse}`;
+    if (reference.chapter && !reference.verse) return `${reference.chapter}:_`;
+    if (!reference.chapter && reference.verse) return `_:${reference.verse}`;
+    return "Chapter:Verse";
   };
 
   // Navigation steps configuration
@@ -80,7 +83,7 @@ export function NavigationBreadcrumbs({ onOpenWizard }) {
     {
       id: 5,
       label: getChapterVerse(),
-      completed: !!reference.chapter && !!reference.verse,
+      completed: !!reference.chapter, // Chapter is enough for scripture rendering
       enabled: !!reference.bookId,
       icon: "📍",
     },
@@ -90,104 +93,102 @@ export function NavigationBreadcrumbs({ onOpenWizard }) {
     onOpenWizard(stepId);
   };
 
-  const getStepStyle = (step) => {
-    const baseStyle = {
-      display: "flex",
-      alignItems: "center",
-      gap: "4px",
-      padding: "6px 12px",
-      borderRadius: "4px",
-      fontSize: "14px",
-      fontWeight: "500",
-      cursor: step.enabled ? "pointer" : "default",
-      transition: "all 0.2s ease",
-      border: "1px solid transparent",
-      textDecoration: "none",
-      userSelect: "none",
-    };
-
-    if (!step.enabled) {
-      return {
-        ...baseStyle,
-        color: "rgba(255, 255, 255, 0.5)",
-        cursor: "not-allowed",
-      };
-    }
-
-    if (step.completed) {
-      return {
-        ...baseStyle,
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
-        color: "white",
-        border: "1px solid rgba(255, 255, 255, 0.3)",
-      };
-    }
-
-    return {
-      ...baseStyle,
-      backgroundColor: "rgba(255, 255, 255, 0.1)",
-      color: "rgba(255, 255, 255, 0.8)",
-      border: "1px solid rgba(255, 255, 255, 0.2)",
-    };
-  };
-
-  const getHoverStyle = (step) => {
-    if (!step.enabled) return {};
-
-    return {
-      backgroundColor: "rgba(255, 255, 255, 0.3)",
-      borderColor: "rgba(255, 255, 255, 0.5)",
-      transform: "translateY(-1px)",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    };
+  const getStepClass = (step) => {
+    if (!step.enabled) return "breadcrumb-button breadcrumb-disabled";
+    if (step.completed) return "breadcrumb-button breadcrumb-completed";
+    return "breadcrumb-button breadcrumb-default";
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "8px",
-        flexWrap: "wrap",
-      }}
-    >
-      {breadcrumbSteps.map((step, index) => (
-        <React.Fragment key={step.id}>
-          <button
-            onClick={() => step.enabled && handleBreadcrumbClick(step.id)}
-            style={getStepStyle(step)}
-            onMouseEnter={(e) => {
-              if (step.enabled) {
-                Object.assign(e.target.style, getHoverStyle(step));
+    <>
+      <style>
+        {`
+          .breadcrumb-button {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            text-decoration: none;
+            user-select: none;
+            background: none;
+          }
+          
+          .breadcrumb-disabled {
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+          }
+          
+          .breadcrumb-completed {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+          }
+          
+          .breadcrumb-default {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+          }
+          
+          .breadcrumb-completed:hover,
+          .breadcrumb-default:hover {
+            background-color: rgba(255, 255, 255, 0.3) !important;
+            border-color: rgba(255, 255, 255, 0.5) !important;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+          
+          .breadcrumb-disabled:hover {
+            transform: none;
+            box-shadow: none;
+          }
+        `}
+      </style>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          flexWrap: "wrap",
+        }}
+      >
+        {breadcrumbSteps.map((step, index) => (
+          <React.Fragment key={step.id}>
+            <button
+              onClick={() => step.enabled && handleBreadcrumbClick(step.id)}
+              className={getStepClass(step)}
+              title={
+                step.enabled ? `Click to change ${step.label}` : `Complete previous steps first`
               }
-            }}
-            onMouseLeave={(e) => {
-              if (step.enabled) {
-                Object.assign(e.target.style, getStepStyle(step));
-              }
-            }}
-            title={step.enabled ? `Click to change ${step.label}` : `Complete previous steps first`}
-            data-testid={`breadcrumb-${step.id}`}
-          >
-            <span style={{ fontSize: "16px" }}>{step.icon}</span>
-            <span>{step.label}</span>
-            {step.completed && <span style={{ fontSize: "12px", marginLeft: "4px" }}>✓</span>}
-          </button>
-
-          {/* Separator Arrow */}
-          {index < breadcrumbSteps.length - 1 && (
-            <span
-              style={{
-                color: "rgba(255, 255, 255, 0.6)",
-                fontSize: "12px",
-                userSelect: "none",
-              }}
+              data-testid={`breadcrumb-${step.id}`}
             >
-              →
-            </span>
-          )}
-        </React.Fragment>
-      ))}
-    </div>
+              <span style={{ fontSize: "16px" }}>{step.icon}</span>
+              <span>{step.label}</span>
+              {step.completed && <span style={{ fontSize: "12px", marginLeft: "4px" }}>✓</span>}
+            </button>
+
+            {/* Separator Arrow */}
+            {index < breadcrumbSteps.length - 1 && (
+              <span
+                style={{
+                  color: "rgba(255, 255, 255, 0.6)",
+                  fontSize: "12px",
+                  userSelect: "none",
+                }}
+              >
+                →
+              </span>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+    </>
   );
 }

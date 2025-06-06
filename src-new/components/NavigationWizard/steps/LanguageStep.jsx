@@ -8,6 +8,7 @@ import { useLanguages } from "../../../hooks/useLanguages";
 import { SearchableGrid } from "../components/SearchableGrid";
 import { RecentSelections } from "../components/RecentSelections";
 import { useNavigationHistory } from "../hooks/useNavigationHistory";
+import { getLanguageDisplay, hasMultipleFlags } from "../../../utils/languageMapping";
 
 export function LanguageStep({ onNext, onPrevious, onStepChange, wizardData, isDesktop }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,13 +30,23 @@ export function LanguageStep({ onNext, onPrevious, onStepChange, wizardData, isD
     (lang) => lang.organization === wizardData.organization
   );
 
-  const languageOptions = filteredLanguages.map((lang) => ({
-    id: lang.code,
-    title: lang.name,
-    subtitle: `${lang.code} • ${getLanguageDirection(lang.direction)}`,
-    icon: getLanguageIcon(lang.direction),
-    badge: lang.direction === "rtl" ? "RTL" : null,
-  }));
+  const languageOptions = filteredLanguages.map((lang) => {
+    const languageDisplay = getLanguageDisplay(lang.code, lang.name, {
+      showAllFlags: hasMultipleFlags(lang.code),
+      showDirection: true,
+    });
+
+    return {
+      id: lang.code,
+      title: lang.name,
+      subtitle: `${lang.code} • ${
+        languageDisplay.direction === "rtl" ? "Right-to-Left" : "Left-to-Right"
+      }`,
+      icon: languageDisplay.flag,
+      badge: languageDisplay.isRTL ? "RTL" : null,
+      tooltip: languageDisplay.flagsTooltip,
+    };
+  });
 
   if (loading) {
     return (
@@ -128,12 +139,18 @@ export function LanguageStep({ onNext, onPrevious, onStepChange, wizardData, isD
       {recentLanguages.length > 0 && (
         <RecentSelections
           title='Recent Languages'
-          items={recentLanguages.map((lang) => ({
-            id: lang.id,
-            title: getLanguageDisplayName(lang.id, languages),
-            subtitle: "Recently accessed",
-            icon: "🗣️",
-          }))}
+          items={recentLanguages.map((lang) => {
+            const languageDisplay = getLanguageDisplay(
+              lang.id,
+              lang.name || getLanguageDisplayName(lang.id, languages)
+            );
+            return {
+              id: lang.id,
+              title: getLanguageDisplayName(lang.id, languages),
+              subtitle: "Recently accessed",
+              icon: languageDisplay.flag,
+            };
+          })}
           onSelect={handleLanguageSelect}
           isDesktop={isDesktop}
         />
