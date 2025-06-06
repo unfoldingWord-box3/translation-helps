@@ -18,12 +18,12 @@ This document lists and describes the major components in the viewer and their r
 
 ## 📖 Scripture & Reference Components
 
-| Component           | Path                                                         | Description                                                                     |
-| ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------- |
-| `ScripturePanel`    | `src-new/components/ScripturePanel.jsx`                      | Displays selected scripture text (with feature flag for enhanced RCL rendering) |
-| `ScripturePanelRCL` | `src-new/components/ScripturePanelRCL/ScripturePanelRCL.jsx` | Enhanced scripture panel using simple-text-editor-rcl for rich USFM formatting  |
-| `USFMRenderer`      | `src-new/components/ScripturePanelRCL/USFMRenderer.jsx`      | USFM rendering component with verse interaction and milestone marker support    |
-| `ReferenceSelector` | `src-new/components/ReferenceSelector.jsx`                   | Reference selection component                                                   |
+| Component           | Path                                                         | Description                                                                                                                        |
+| ------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `ScripturePanel`    | `src-new/components/ScripturePanel.jsx`                      | Displays selected scripture text (with feature flag for enhanced RCL rendering)                                                    |
+| `ScripturePanelRCL` | `src-new/components/ScripturePanelRCL/ScripturePanelRCL.jsx` | Enhanced scripture panel using simple-text-editor-rcl for rich USFM formatting                                                     |
+| `USFMRenderer`      | `src-new/components/ScripturePanelRCL/USFMRenderer.jsx`      | Enhanced USFM rendering component with comprehensive verse click navigation, visual highlighting, and ReferenceContext integration |
+| `ReferenceSelector` | `src-new/components/ReferenceSelector.jsx`                   | Reference selection component                                                                                                      |
 
 ---
 

@@ -110,12 +110,11 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
         console.log(
           `✅ ScripturePanelRCL: Loaded full USFM for ${bookId} (${rawUSFM.length} characters)`
         );
-        // Process USFM to extract readable text from alignment data
-        const processedUSFM = simpleWordExtraction(rawUSFM);
-        console.log("📝 Processed USFM length:", processedUSFM.length);
-        console.log("📝 Processed first 1000 chars:", processedUSFM.substring(0, 1000));
+        // Try passing raw USFM first to see if UsfmEditor can handle it
+        console.log("📝 Using raw USFM length:", rawUSFM.length);
+        console.log("📝 Raw USFM first 1000 chars:", rawUSFM.substring(0, 1000));
 
-        setUsfmContent(processedUSFM);
+        setUsfmContent(rawUSFM);
         setError(null);
       } catch (e) {
         console.error("❌ ScripturePanelRCL: Failed to load chapter:", e);

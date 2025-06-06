@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.9.2] - 2025-06-06
+
+### Fixed
+
+- **Enable Verse Click Navigation in Scripture Panel to Sync Helps Resources**
+  - ✅ Enhanced verse click detection in USFMRenderer with comprehensive DOM traversal
+  - ✅ Fixed event handlers to properly trigger ReferenceContext updates when verses are clicked
+  - ✅ Added extensive debugging and logging for troubleshooting verse click events
+  - ✅ Improved click detection for various verse marker formats (.v class, data attributes, number spans)
+  - ✅ Enhanced depth-limited DOM traversal to prevent infinite loops while finding verse elements
+  - ✅ Fixed verse navigation to update helps panels (Translation Notes, Questions, Words) synchronization
+  - ✅ Added visual feedback and hover states for clickable verse elements
+  - ✅ Improved cross-chapter navigation when clicking verses from different chapters
+  - ✅ Comprehensive console logging shows click detection, element analysis, and navigation triggers
+  - ✅ Verse highlighting and scrolling behavior enhanced for better user experience
+  - ✅ Fixed simple-text-editor-rcl integration with proper event handler configuration
+
+### Technical Implementation
+
+- **Enhanced Click Detection**: Multi-layered approach checking CSS classes, data attributes, and element content
+- **Debugging Infrastructure**: Comprehensive console logging for troubleshooting click events and navigation
+- **DOM Traversal**: Intelligent parent element traversal with depth limits and multiple detection strategies
+- **Context Integration**: Direct integration with ReferenceContext.updateReference for state synchronization
+- **Files Modified**: `src-new/components/ScripturePanelRCL/USFMRenderer.jsx`
+- **Version**: Incremented to 0.9.2 following semantic versioning
+
 ## [0.9.3] - 2025-06-06
 
 ### Removed

@@ -98,24 +98,36 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
     }));
   };
 
-  // Handle verse click events by parsing the rendered output
+  // Enhanced verse click handling with comprehensive detection
   useEffect(() => {
     if (!editorRef.current) return;
 
     const handleClick = (event) => {
+      console.log("🖱️ Click detected on:", event.target);
+
       // Try to find the verse number from the clicked element or its parents
       let element = event.target;
       let verseNumber = null;
       let chapterNumber = null;
+      let maxDepth = 10; // Prevent infinite loops
+      let depth = 0;
 
       // Look up the DOM tree for verse markers
-      while (element && element !== editorRef.current) {
+      while (element && element !== editorRef.current && depth < maxDepth) {
+        console.log(`🔍 Checking element ${depth}:`, {
+          tagName: element.tagName,
+          className: element.className,
+          textContent: element.textContent?.substring(0, 50),
+          dataset: element.dataset,
+        });
+
         // Check for verse markers in various formats
         if (element.classList?.contains("v")) {
           // Look for verse number in the element or its children
           const verseMatch = element.textContent?.match(/^(\d+)/);
           if (verseMatch) {
             verseNumber = parseInt(verseMatch[1]);
+            console.log(`✅ Found verse ${verseNumber} from .v class`);
             break;
           }
         }
@@ -125,6 +137,7 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
           const chapterMatch = element.textContent?.match(/^(\d+)/);
           if (chapterMatch) {
             chapterNumber = parseInt(chapterMatch[1]);
+            console.log(`✅ Found chapter ${chapterNumber} from .c class`);
             break;
           }
         }
@@ -132,11 +145,13 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
         // Check for data attributes that might contain verse/chapter info
         if (element.dataset?.verse) {
           verseNumber = parseInt(element.dataset.verse);
+          console.log(`✅ Found verse ${verseNumber} from data-verse`);
           break;
         }
 
         if (element.dataset?.chapter) {
           chapterNumber = parseInt(element.dataset.chapter);
+          console.log(`✅ Found chapter ${chapterNumber} from data-chapter`);
           break;
         }
 
@@ -144,26 +159,36 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
         const verseClassMatch = element.className?.match(/verse-?(\d+)/);
         if (verseClassMatch) {
           verseNumber = parseInt(verseClassMatch[1]);
+          console.log(`✅ Found verse ${verseNumber} from class pattern`);
           break;
         }
 
         const chapterClassMatch = element.className?.match(/chapter-?(\d+)/);
         if (chapterClassMatch) {
           chapterNumber = parseInt(chapterClassMatch[1]);
+          console.log(`✅ Found chapter ${chapterNumber} from class pattern`);
           break;
         }
 
-        // Check for generic number elements that might be verses
+        // Check for generic number elements that might be verses (more restrictive)
         if (element.tagName === "SPAN" && /^\d+$/.test(element.textContent?.trim())) {
           const possibleVerse = parseInt(element.textContent.trim());
           if (possibleVerse > 0 && possibleVerse <= 200) {
-            // reasonable verse range
-            verseNumber = possibleVerse;
-            break;
+            // Only treat as verse if parent has verse-related class
+            const parent = element.parentElement;
+            if (
+              parent &&
+              (parent.classList?.contains("v") || parent.classList?.contains("verse"))
+            ) {
+              verseNumber = possibleVerse;
+              console.log(`✅ Found verse ${verseNumber} from number span with verse parent`);
+              break;
+            }
           }
         }
 
         element = element.parentElement;
+        depth++;
       }
 
       // Handle navigation
@@ -176,6 +201,10 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
         if (onVerseClick) {
           onVerseClick(verseNumber);
         }
+      } else {
+        console.log(
+          `ℹ️ No verse/chapter navigation triggered. Found verse: ${verseNumber}, current: ${selectedVerse}`
+        );
       }
     };
 
@@ -372,9 +401,11 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
         <UsfmEditor
           content={usfm}
           options={options}
-          onSelectionClick={handleSelectionClick}
-          onBlockClick={handleBlockClick}
           sectionIndex={-1}
+          handlers={{
+            onSectionClick: handleSelectionClick,
+            onBlockClick: handleBlockClick,
+          }}
         />
       </div>
     </div>
