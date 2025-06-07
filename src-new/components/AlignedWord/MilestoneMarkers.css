@@ -2,7 +2,7 @@
  * MilestoneMarkers.css
  * CRITICAL: This CSS implements the granular decorator solution.
  * 
- * KEY PRINCIPLE: Hide .marker and .attributes in preview mode, always show .content
+ * KEY PRINCIPLE: Hide marker and attributes tags in preview mode, always show content
  * This solves the alignment rendering problem where content was getting hidden.
  */
 
@@ -11,18 +11,18 @@
    ========================================================================== */
 
 /* CRITICAL: Hide markers and attributes in preview mode */
-.usfm .preview .marker,
-.usfm .preview .attributes {
+usfm preview marker,
+usfm preview attributes {
   display: none;
 }
 
 /* CRITICAL: Content is always visible - no hiding rule needed */
-.content {
+content {
   /* Always visible in both preview and source modes */
 }
 
 /* Word content styling for preview mode */
-.word .content {
+word > content {
   position: relative;
   cursor: help;
   transition: all 0.2s ease;
@@ -30,18 +30,18 @@
   border-radius: 2px;
 }
 
-.word:hover .content {
+word:hover > content {
   background-color: #e3f2fd;
   box-shadow: 0 1px 3px rgba(33, 150, 243, 0.1);
 }
 
 /* Milestone alignment groups */
-.milestone {
+zaln {
   display: inline;
 }
 
 /* Markers - visible with syntax highlighting in source mode */
-.marker {
+marker {
   color: #1976d2;
   font-weight: bold;
   background-color: rgba(25, 118, 210, 0.1);
@@ -55,7 +55,7 @@
 }
 
 /* Attributes - visible with gray highlighting in source mode */
-.attributes {
+attributes {
   color: #666;
   font-size: 0.8em;
   background-color: #f5f5f5;
@@ -68,111 +68,11 @@
 }
 
 /* ==========================================================================
-   LEGACY STYLES (preserved for compatibility)
-   ========================================================================== */
-
-/* ==========================================================================
    PREVIEW MODE STYLES - Clean, readable display with subtle interactivity
    ========================================================================== */
 
-/* Aligned words - subtle dotted underline with hover effects */
-.aligned-word {
-  position: relative;
-  border-bottom: 1px dotted #2196f3;
-  cursor: help;
-  transition: all 0.2s ease;
-  padding: 1px 2px;
-  border-radius: 2px;
-}
-
-.aligned-word:hover {
-  background-color: #e3f2fd;
-  border-bottom: 2px solid #1976d2;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(33, 150, 243, 0.1);
-}
-
-/* Standalone words with attributes */
-.standalone-word {
-  position: relative;
-  border-bottom: 1px dotted #4caf50;
-  cursor: help;
-  transition: all 0.2s ease;
-  padding: 1px 2px;
-  border-radius: 2px;
-}
-
-.standalone-word:hover {
-  background-color: #e8f5e8;
-  border-bottom: 2px solid #388e3c;
-}
-
-/* Footnote markers */
-.footnote-marker {
-  font-size: 0.8em;
-  vertical-align: super;
-  color: #ff9800;
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 2px;
-  transition: all 0.2s ease;
-  font-weight: bold;
-  margin: 0 2px;
-}
-
-.footnote-marker:hover {
-  background-color: #fff3e0;
-  color: #ef6c00;
-  transform: scale(1.1);
-}
-
-/* Endnote markers */
-.endnote-marker {
-  font-size: 0.8em;
-  vertical-align: super;
-  color: #9c27b0;
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 2px;
-  transition: all 0.2s ease;
-  font-weight: bold;
-  margin: 0 2px;
-}
-
-.endnote-marker:hover {
-  background-color: #f3e5f5;
-  color: #7b1fa2;
-  transform: scale(1.1);
-}
-
-/* Cross-reference markers */
-.crossref-marker {
-  font-size: 0.8em;
-  vertical-align: super;
-  color: #e91e63;
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 2px;
-  transition: all 0.2s ease;
-  font-weight: bold;
-  margin: 0 2px;
-}
-
-.crossref-marker:hover {
-  background-color: #fce4ec;
-  color: #c2185b;
-  transform: scale(1.1);
-}
-
 /* Structural markers (verse, chapter, etc.) - clean but visible */
-.structural-marker {
-  font-weight: 600;
-  color: #666;
-  margin-right: 8px;
-  user-select: none;
-}
-
-.structural-marker.v {
+v {
   color: #1976d2;
   font-size: 0.9em;
   background-color: #f5f5f5;
@@ -183,12 +83,12 @@
   transition: all 0.2s ease;
 }
 
-.structural-marker.v:hover {
+v:hover {
   background-color: #e3f2fd;
   border-color: #1976d2;
 }
 
-.structural-marker.c {
+c {
   color: #333;
   font-size: 1.2em;
   font-weight: bold;
@@ -198,137 +98,19 @@
   border-bottom: 2px solid #e0e0e0;
 }
 
-.structural-marker.p,
-.structural-marker.m {
+p,
+m {
   display: block;
   margin: 8px 0;
 }
 
-.structural-marker.q,
-.structural-marker.q1,
-.structural-marker.q2,
-.structural-marker.q3 {
+q,
+q1,
+q2,
+q3 {
   display: block;
   font-style: italic;
   color: #555;
-}
-
-/* ==========================================================================
-   NON-PREVIEW MODE STYLES - Show all markup with syntax highlighting
-   ========================================================================== */
-
-/* Alignment markers - green highlighting */
-.milestone-alignment {
-  background-color: rgba(76, 175, 80, 0.15);
-  border-left: 3px solid #4caf50;
-  padding: 3px 6px;
-  margin: 2px 1px;
-  border-radius: 3px;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-  font-size: 0.85em;
-  display: inline-block;
-  white-space: pre-wrap;
-  cursor: help;
-  transition: background-color 0.2s ease;
-}
-
-.milestone-alignment:hover {
-  background-color: rgba(76, 175, 80, 0.25);
-}
-
-/* Word markers - light green */
-.milestone-word {
-  background-color: rgba(139, 195, 74, 0.15);
-  border-left: 3px solid #8bc34a;
-  padding: 2px 4px;
-  margin: 1px;
-  border-radius: 2px;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-  font-size: 0.85em;
-  display: inline-block;
-}
-
-/* Footnote markers - orange highlighting */
-.milestone-footnote {
-  background-color: rgba(255, 152, 0, 0.15);
-  border-left: 3px solid #ff9800;
-  padding: 3px 6px;
-  margin: 2px 1px;
-  border-radius: 3px;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-  font-size: 0.85em;
-  display: inline-block;
-  white-space: pre-wrap;
-  cursor: help;
-  transition: background-color 0.2s ease;
-}
-
-.milestone-footnote:hover {
-  background-color: rgba(255, 152, 0, 0.25);
-}
-
-/* Endnote markers - purple highlighting */
-.milestone-endnote {
-  background-color: rgba(156, 39, 176, 0.15);
-  border-left: 3px solid #9c27b0;
-  padding: 3px 6px;
-  margin: 2px 1px;
-  border-radius: 3px;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-  font-size: 0.85em;
-  display: inline-block;
-  white-space: pre-wrap;
-  cursor: help;
-  transition: background-color 0.2s ease;
-}
-
-.milestone-endnote:hover {
-  background-color: rgba(156, 39, 176, 0.25);
-}
-
-/* Cross-reference markers - pink highlighting */
-.milestone-crossref {
-  background-color: rgba(233, 30, 99, 0.15);
-  border-left: 3px solid #e91e63;
-  padding: 3px 6px;
-  margin: 2px 1px;
-  border-radius: 3px;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-  font-size: 0.85em;
-  display: inline-block;
-  white-space: pre-wrap;
-  cursor: help;
-  transition: background-color 0.2s ease;
-}
-
-.milestone-crossref:hover {
-  background-color: rgba(233, 30, 99, 0.25);
-}
-
-/* Word attributes - gray highlighting */
-.word-attribute {
-  color: #666;
-  font-size: 0.8em;
-  background-color: #f5f5f5;
-  padding: 1px 4px;
-  margin: 0 1px;
-  border-radius: 2px;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-  border: 1px solid #e0e0e0;
-}
-
-/* Generic USFM markers - light gray */
-.usfm-marker {
-  color: #888;
-  font-weight: bold;
-  background-color: #f8f8f8;
-  padding: 1px 4px;
-  margin: 0 1px;
-  border-radius: 2px;
-  font-size: 0.8em;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-  border: 1px solid #ddd;
-  cursor: help;
 }
 
 /* ==========================================================================
@@ -357,55 +139,4 @@
 
 .mode-indicator.source-mode {
   background: linear-gradient(45deg, #ff9800, #ffb74d);
-}
-
-/* ==========================================================================
-   TOOLTIP STYLES - For interactive elements
-   ========================================================================== */
-
-/* Tooltip container */
-.milestone-tooltip {
-  position: absolute;
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 12px;
-  white-space: nowrap;
-  z-index: 1000;
-  pointer-events: none;
-  transform: translateY(-100%);
-  margin-top: -8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.milestone-tooltip::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 4px solid transparent;
-  border-top-color: rgba(0, 0, 0, 0.9);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .milestone-alignment,
-  .milestone-footnote,
-  .milestone-endnote,
-  .milestone-crossref {
-    font-size: 0.75em;
-    padding: 2px 4px;
-  }
-
-  .structural-marker.v {
-    font-size: 0.8em;
-    padding: 1px 4px;
-  }
-
-  .mode-indicator {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
 }

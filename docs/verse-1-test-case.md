@@ -74,8 +74,7 @@
             contenteditable="false"
           >
             <v>
-              <marker>\v </marker>
-              <number>1</number>
+              <marker>\v </marker><number>1</number>
               <zaln>
                 <marker class="zaln-s">\zaln-s </marker>
                 <attributes

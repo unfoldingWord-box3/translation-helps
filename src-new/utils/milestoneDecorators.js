@@ -28,6 +28,9 @@ export const createMilestoneDecorators = () => {
         return `<marker class="zaln-e">\\zaln-e</marker><marker class="*">\\*</marker></zaln>`;
       },
     ],
-    v: [/(\\v\s+\d+)([\s\S]*?)(?=\\v\s+\d+|\\c\s+\d+|$)/g, "<v><marker>$1</marker>$2</v>"],
+    v: [
+      /(\\v\s+)(\d+)([\s\S]*?)(?=\\v\s+\d+|\\c\s+\d+|$)/g,
+      "<v><marker>$1</marker><number>$2</number>$3</v>",
+    ],
   };
 };

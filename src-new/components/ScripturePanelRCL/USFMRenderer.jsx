@@ -78,8 +78,22 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
     );
   }
 
+  const editor = (
+    <UsfmEditor
+      content={usfm}
+      options={options}
+      sectionIndex={-1} // Show all content
+      decorators={milestoneDecorators}
+      components={components}
+      handlers={{
+        onSectionClick: handleSelectionClick,
+        onBlockClick: handleBlockClick,
+      }}
+    />
+  );
+
   return (
-    <div className={`usfm-renderer-container usfm ${options.preview ? "preview" : ""}`}>
+    <usfm>
       {/* UI Controls for simple-text-editor-rcl options */}
       <div className='usfm-controls'>
         <div className='controls-title'>Rendering Options:</div>
@@ -94,17 +108,7 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
         </div>
       </div>
 
-      <UsfmEditor
-        content={usfm}
-        options={options}
-        sectionIndex={-1} // Show all content
-        decorators={milestoneDecorators}
-        components={components}
-        handlers={{
-          onSectionClick: handleSelectionClick,
-          onBlockClick: handleBlockClick,
-        }}
-      />
-    </div>
+      {options.preview ? <preview>{editor}</preview> : editor}
+    </usfm>
   );
 }
