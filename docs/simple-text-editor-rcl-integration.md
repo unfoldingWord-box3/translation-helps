@@ -69,6 +69,18 @@ const props = {
 <UsfmEditor {...props} />;
 ```
 
+## Decorator Execution Order
+
+**CRITICAL:** The order in which decorators are defined is crucial for correct rendering of nested elements. Decorators should be ordered from the most granular (most deeply nested) to the most encompassing.
+
+The correct order is:
+
+1.  `w` (word)
+2.  `zaln` (alignment)
+3.  `v` (verse)
+
+This ensures that the smaller elements are wrapped first, and then the larger containers wrap the already-decorated content.
+
 ## Known Issues & Limitations
 
 ### 1. Alignment Data Interference

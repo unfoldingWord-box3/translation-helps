@@ -15,6 +15,10 @@
  */
 export const createMilestoneDecorators = () => {
   return {
+    w: [
+      /\\w\s([^|]+)\|([^\\*]+)\\w\*/g,
+      '<word><marker class="w">\\w </marker><content>$1</content><attributes>|$2</attributes><marker class="w*">\\w*</marker></word>',
+    ],
     zaln: [
       /\\zaln-s\s([^\\*]+)\\\*|\\zaln-e\\\*/g,
       (match, attributes) => {
@@ -24,10 +28,6 @@ export const createMilestoneDecorators = () => {
         return `<marker class="zaln-e">\\zaln-e</marker><marker class="*">\\*</marker></zaln>`;
       },
     ],
-    w: [
-      /\\w\s([^|]+)\|([^\\*]+)\\w\*/g,
-      '<word><marker class="w">\\w </marker><content>$1</content><attributes>|$2</attributes><marker class="w*">\\w*</marker></word>',
-    ],
-    v: [/\\v\s(\d+)/g, "<v><marker>\\v </marker><number>$1</number></v>"],
+    v: [/(\\v\s+\d+)([\s\S]*?)(?=\\v\s+\d+|\\c\s+\d+|$)/g, "<v><marker>$1</marker>$2</v>"],
   };
 };
