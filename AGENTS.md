@@ -40,6 +40,7 @@ description: An application for viewing unfoldingWord Bible translation resource
 
 ## 🧠 Assistant Tips (for AGENTS)
 
+- **Repo Owner:** `klappy`
 - Be concise but context-aware
 - Prioritize docs in `/docs` for any questions about resource format or architecture
 - If editing React components, respect separation of concerns (UI, state, data-fetching)

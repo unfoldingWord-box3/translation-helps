@@ -4,7 +4,6 @@
  * Mirrors the functionality from the old src/components/Viewer/Workspace/Scripture/helpers.js
  */
 import { fetchResourceFile } from "./dcsClient";
-import { parseUSFM } from "../utils/usfmParser";
 
 /**
  * Fetches raw USFM content for a scripture book
@@ -55,7 +54,7 @@ export async function fetchRawUSFM({
  * @param {string} params.bookId - Book identifier (e.g., 'gen')
  * @param {object} params.manifest - Resource manifest
  * @param {string} params.organization - Organization identifier (e.g., 'unfoldingWord')
- * @returns {Promise<object>} Parsed chapters object
+ * @returns {Promise<string>} Raw USFM content
  */
 export async function fetchBook({
   languageId,
@@ -82,11 +81,8 @@ export async function fetchBook({
     // Fetch the USFM content
     const usfm = await fetchResourceFile(languageId, resourceId, filePath, organization);
 
-    // Parse USFM to JSON
-    const json = parseUSFM(usfm);
-
-    // Return chapters object
-    return json?.chapters || null;
+    // Return raw USFM content
+    return usfm;
   } catch (error) {
     console.error(`Error fetching book ${bookId} from ${resourceId}:`, error);
     return null;
