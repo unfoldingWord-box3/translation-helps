@@ -35,8 +35,13 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
     showVerseLabels: true,
   });
 
-  // Debug logging
-  console.log("USFMRenderer received USFM:", usfm?.substring(0, 500) + "...");
+  // Create granular decorators based on preview setting
+  const milestoneDecorators = createMilestoneDecorators(options.preview);
+
+  // Debug logging - Using granular decorators for alignment data
+  console.log("📝 USFMRenderer received raw USFM length:", usfm?.length);
+  console.log("📝 USFMRenderer preview mode:", options.preview);
+  console.log("📝 USFMRenderer raw USFM (first 500 chars):", usfm?.substring(0, 500) + "...");
 
   // Handle selection clicks (for chapter navigation)
   const handleSelectionClick = (selection) => {
@@ -256,9 +261,6 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
     setTimeout(highlightVerse, 100);
   }, [selectedVerse, usfm]);
 
-  // Create mode-aware decorators based on preview setting
-  const milestoneDecorators = createMilestoneDecorators(options.preview);
-
   if (!usfm) {
     return (
       <div style={{ padding: "20px", fontStyle: "italic", color: "#666" }}>
@@ -268,7 +270,7 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
   }
 
   return (
-    <div className='usfm-renderer-container'>
+    <div className={`usfm-renderer-container usfm ${options.preview ? "preview" : ""}`}>
       {/* Mode indicator */}
       <div className={`mode-indicator ${options.preview ? "preview-mode" : "source-mode"}`}>
         Mode: {options.preview ? "Preview (Clean Text)" : "Source (All Markup)"}

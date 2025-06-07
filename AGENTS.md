@@ -27,6 +27,7 @@ description: An application for viewing unfoldingWord Bible translation resource
 - `Translation_Notes_Implementation.md`: Implementation details for Translation Notes (tN)
 - `DCS_Integration_Documentation.md`: Explains access patterns to Door43 Content Service
 - `Resource_Integration_Overview.md`: Outlines all supported translation resource types
+- `simple-text-editor-rcl-integration.md`: **CRITICAL** - simple-text-editor-rcl API usage and NO USFM PREPROCESSING requirement
 - `codex-version-guard.md`: Policy and CLI guard for verifying package versions against Codex model cutoff date
 - `changelog-process.md`: Guidelines for maintaining CHANGELOG.md
 
@@ -46,6 +47,7 @@ description: An application for viewing unfoldingWord Bible translation resource
 - UI/UX tests have been added for core components using Vitest and React Testing Library (see `src-new/__tests__/`).
 - For Dev Server issues (blank page), refer to the "Debugging Dev Server Blank Screen" section in README.md.
 - The app now uses `js-yaml` for YAML parsing (`load()` API); remove any legacy `yaml` aliasing in `vite.config.ts` and add `js-yaml` to `optimizeDeps.include` if needed.
+- **⚠️ CRITICAL: NEVER preprocess USFM when using simple-text-editor-rcl** - See `docs/simple-text-editor-rcl-integration.md` for details. Raw USFM must be passed directly to UsfmEditor component.
 
 ## 🔄 GitFlow Branch Strategy
 

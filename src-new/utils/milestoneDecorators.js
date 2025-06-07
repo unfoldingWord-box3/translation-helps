@@ -1,89 +1,120 @@
 /**
  * milestoneDecorators.js
- * Mode-aware decorators for USFM milestone markers.
- * Merges simple-text-editor-rcl's default decorators with custom overrides.
+ * Granular decorators for USFM milestone markers that separate markers, content, and attributes.
+ *
+ * CRITICAL: This implementation solves the alignment rendering problem where content gets hidden
+ * by the library's CSS rule `.usfm .preview .marker, .usfm .preview .attributes { display: none; }`
+ *
+ * IMPORTANT: ALL TEXT CONTENT from the original USFM must be preserved in the output HTML.
+ * The decorators only wrap content with spans and classes - they never remove or replace text.
+ * Both preview and non-preview modes generate IDENTICAL HTML structure.
+ * Only CSS controls visibility differences between modes.
+ *
+ * See docs/usfm-alignment-rendering-solution.md for detailed explanation.
  */
 
-import { UsfmEditor } from "simple-text-editor-rcl";
-
 /**
- * Creates mode-aware decorators for USFM milestone markers by merging
- * simple-text-editor-rcl's built-in decorator set with our custom overrides.
+ * Creates granular decorators that separate USFM structures into distinct parts:
+ * - marker: USFM markers (hidden in preview mode by CSS)
+ * - content: actual text that needs to be displayed (always visible)
+ * - attributes: metadata (hidden in preview mode by CSS)
  *
- * @param {boolean} previewMode - If true, shows clean readable text; if false, shows all markup.
+ * CRITICAL: This function always returns the SAME decorators regardless of mode.
+ * CSS handles the visibility differences, not different HTML structures.
+ *
+ * @param {boolean} previewMode - Ignored. Kept for API compatibility.
  * @returns {object} Decorator configuration for UsfmEditor.
  */
 export const createMilestoneDecorators = (previewMode = true) => {
-  const baseDecorators = (UsfmEditor.defaultProps && UsfmEditor.defaultProps.decorators) || {};
+  // CRITICAL: Same HTML structure for both preview and non-preview modes
+  // CSS controls visibility via .usfm .preview .marker { display: none; }
+  return {
+    // Step 1: Process alignment start markers - separate marker, attributes, closing marker
+    alignmentStart: [
+      /(\\zaln-s)\s+(\|[^\\]*)(\\?\*)/g,
+      '<span class="milestone"><span class="marker">$1 </span><span class="attributes">$2</span><span class="marker">$3</span>',
+    ],
 
-  if (previewMode) {
-    return {
-      // Preserve all built-in decorators, then override specific milestone patterns
-      ...baseDecorators,
+    // Step 2: Process word markers - separate marker, content, attributes, closing marker
+    wordMarker: [
+      /(\\w)\s+([^|\\]+)(\|[^\\]*)(\\w\*)/g,
+      '<span class="word"><span class="marker">$1 </span><span class="content">$2</span><span class="attributes">$3</span><span class="marker">$4</span></span>',
+    ],
 
-      // Remove alignment markers completely, keeping just the word
-      alignmentMarkers: [/\\zaln-s\s*\|[^\\]*\\\*\\w\s+([^|\\]+)\|[^\\]*\\w\*\\zaln-e\\\*/g, "$1"],
+    // Step 3: Process alignment end markers
+    alignmentEnd: [/(\\zaln-e)(\\?\*)/g, '<span class="marker">$1$2</span></span>'],
 
-      // Remove standalone word markers, keeping just the word
-      wordMarkers: [/\\w\s+([^|\\]+)\|[^\\]*\\w\*/g, "$1"],
+    // Header processing - wrap markers and content separately
+    bookTitle: [
+      /(\\h)\s+(.+?)(?=\\|$)/g,
+      '<span class="header"><span class="marker">$1 </span><span class="content"><h1 class="book-title">$2</h1></span></span>',
+    ],
 
-      // Remove any escaping cleanup for zaln start/end not handled above
-      zalnCleanup: [/\\zaln-[se][^\\]*\\\*/g, ""],
+    majorTitle: [
+      /(\\mt\d?)\s+(.+?)(?=\\|$)/g,
+      '<span class="header"><span class="marker">$1 </span><span class="content"><h2 class="major-title">$2</h2></span></span>',
+    ],
 
-      // Strip footnotes entirely
-      footnotes: [/\\f\s+[^\\]+[\s\S]*?\\f\*/g, ""],
+    // Section headings
+    sectionHeading: [
+      /(\\s\d?)\s+(.+?)(?=\\|$)/g,
+      '<span class="section"><span class="marker">$1 </span><span class="content"><h3 class="section-heading">$2</h3></span></span>',
+    ],
 
-      // Strip endnotes entirely
-      endnotes: [/\\fe\s+[^\\]+[\s\S]*?\\fe\*/g, ""],
+    // Chapter markers
+    chapterMarker: [
+      /(\\c)\s+(\d+)(?=\\|$)/g,
+      '<span class="chapter"><span class="marker">$1 </span><span class="content"><h2 class="chapter-heading">Chapter $2</h2></span></span>',
+    ],
 
-      // Strip cross-references entirely
-      crossReferences: [/\\x\s+[^\\]+[\s\S]*?\\x\*/g, ""],
+    // Verse markers - separate marker from content
+    verseMarker: [
+      /(\\v)\s+(\d+)(?=\s|\\|$)/g,
+      '<span class="verse-marker"><span class="marker">$1 </span><span class="content verse-number" data-verse="$2">$2</span></span> ',
+    ],
 
-      // Remove all non-verse/chapter markers for clean reading
-      allMarkers: [/\\([^vc]\w*\d*)(\s+[^\\]*)?\s*/g, ""],
+    // Paragraph markers
+    paragraphMarker: [
+      /(\\p)(?=\s|\\|$)/g,
+      '<span class="paragraph-marker"><span class="marker">$1</span></span>',
+    ],
 
-      // Clean verse markers to just show the verse number
-      verseMarkers: [/\\v\s+(\d+)\s*/g, "$1 "],
+    // Poetry markers
+    poetryMarker1: [
+      /(\\q1?)(?=\s|\\|$)/g,
+      '<span class="poetry-marker"><span class="marker">$1</span></span><div class="poetry-1">',
+    ],
+    poetryMarker2: [
+      /(\\q2)(?=\s|\\|$)/g,
+      '<span class="poetry-marker"><span class="marker">$1</span></span><div class="poetry-2">',
+    ],
+    poetryMarker3: [
+      /(\\q3)(?=\s|\\|$)/g,
+      '<span class="poetry-marker"><span class="marker">$1</span></span><div class="poetry-3">',
+    ],
 
-      // Format chapter markers as readable headings
-      chapterMarkers: [/\\c\s+(\d+)\s*/g, "\n\nChapter $1\n\n"],
+    // Footnotes - separate marker, content, attributes
+    footnoteMarker: [
+      /(\\f)\s+(.+?)(\\f\*)/g,
+      '<span class="footnote"><span class="marker">$1 </span><span class="content"><sup class="footnote-ref">[note]</sup></span><span class="marker">$3</span></span>',
+    ],
 
-      // Final cleanup of stray backslashes
-      backslashCleanup: [/\\/g, ""],
+    // Endnotes - separate marker, content, attributes
+    endnoteMarker: [
+      /(\\fe)\s+(.+?)(\\fe\*)/g,
+      '<span class="endnote"><span class="marker">$1 </span><span class="content"><sup class="endnote-ref">[end]</sup></span><span class="marker">$3</span></span>',
+    ],
 
-      // Collapse multiple spaces to single space
-      spaceCleanup: [/\s{2,}/g, " "],
+    // Cross-references - wrap with appropriate classes
+    crossReferences: [
+      /(\\x)\s+([^\\]+)(\\x\*)/g,
+      '<span class="crossref"><span class="marker">$1 </span><span class="content">$2</span><span class="marker">$3</span></span>',
+    ],
 
-      // Collapse multiple newlines to two newlines
-      newlineCleanup: [/\n{3,}/g, "\n\n"],
-
-      // Trim whitespace at line starts/ends
-      trimLines: [/^\s+|\s+$/gm, ""],
-    };
-  } else {
-    return {
-      // Preserve all built-in decorators, then add our enhanced markers
-      ...baseDecorators,
-
-      // Highlight alignment markers with CSS span
-      alignmentMarkers: [
-        /\\zaln-s\s*\|([^\\]*)\\\*\\w\s+([^|\\]+)\|([^\\]*)\\w\*\\zaln-e\\\*/g,
-        '<span class="milestone-alignment" title="Alignment marker">\\zaln-s |$1\\*\\w $2|$3\\w*\\zaln-e\\*</span>',
-      ],
-
-      // Highlight word markers with CSS span
-      wordMarkers: [
-        /\\w\s+([^|\\]+)\|([^\\]*)\\w\*/g,
-        '<span class="milestone-word" title="Word marker">\\w $1|$2\\w*</span>',
-      ],
-
-      // Highlight cross-references with CSS span
-      crossReferences: [
-        /(\\x\s+[^\\]+[\s\S]*?\\x\*)/g,
-        '<span class="milestone-crossref" title="Cross-reference marker">$1</span>',
-      ],
-    };
-  }
+    // Final cleanup - collapse extra whitespace but preserve structure
+    spaceCleanup: [/\s{2,}/g, " "],
+    lineCleanup: [/\n{3,}/g, "\n\n"],
+  };
 };
 
 /**

@@ -1,7 +1,75 @@
 /**
  * MilestoneMarkers.css
- * Mode-aware styling for USFM milestone markers
+ * CRITICAL: This CSS implements the granular decorator solution.
+ * 
+ * KEY PRINCIPLE: Hide .marker and .attributes in preview mode, always show .content
+ * This solves the alignment rendering problem where content was getting hidden.
  */
+
+/* ==========================================================================
+   CORE GRANULAR SOLUTION - Hide markers and attributes in preview mode
+   ========================================================================== */
+
+/* CRITICAL: Hide markers and attributes in preview mode */
+.usfm .preview .marker,
+.usfm .preview .attributes {
+  display: none;
+}
+
+/* CRITICAL: Content is always visible - no hiding rule needed */
+.content {
+  /* Always visible in both preview and source modes */
+}
+
+/* Word content styling for preview mode */
+.word .content {
+  position: relative;
+  cursor: help;
+  transition: all 0.2s ease;
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+.word:hover .content {
+  background-color: #e3f2fd;
+  box-shadow: 0 1px 3px rgba(33, 150, 243, 0.1);
+}
+
+/* Milestone alignment groups */
+.milestone {
+  display: inline;
+}
+
+/* Markers - visible with syntax highlighting in source mode */
+.marker {
+  color: #1976d2;
+  font-weight: bold;
+  background-color: rgba(25, 118, 210, 0.1);
+  padding: 1px 4px;
+  margin: 0 1px;
+  border-radius: 2px;
+  font-size: 0.85em;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  border: 1px solid rgba(25, 118, 210, 0.2);
+  cursor: help;
+}
+
+/* Attributes - visible with gray highlighting in source mode */
+.attributes {
+  color: #666;
+  font-size: 0.8em;
+  background-color: #f5f5f5;
+  padding: 1px 4px;
+  margin: 0 1px;
+  border-radius: 2px;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  border: 1px solid #e0e0e0;
+  white-space: pre-wrap;
+}
+
+/* ==========================================================================
+   LEGACY STYLES (preserved for compatibility)
+   ========================================================================== */
 
 /* ==========================================================================
    PREVIEW MODE STYLES - Clean, readable display with subtle interactivity

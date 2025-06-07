@@ -2,9 +2,8 @@ body {
   background: #eee;
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 0.9em;
@@ -13,12 +12,251 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 blockquote {
   margin-top: 0;
   margin-bottom: 0;
   margin-right: 0;
+}
+
+/* Scripture Panel Alignment Hover Tooltips */
+.aligned-word {
+  position: relative;
+  cursor: help;
+  border-bottom: 1px dotted #666;
+  padding: 1px 2px;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.aligned-word:hover {
+  background-color: #f0f8ff;
+}
+
+.aligned-word::after {
+  content: attr(data-alignment);
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: monospace;
+  white-space: nowrap;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.aligned-word:hover::after {
+  opacity: 1;
+}
+
+/* Arrow for tooltip */
+.aligned-word::before {
+  content: "";
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #333;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1001;
+}
+
+.aligned-word:hover::before {
+  opacity: 1;
+}
+
+/* Source Mode Markup Highlighting */
+.milestone-marker {
+  background-color: #e8f4fd;
+  color: #1976d2;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.word-marker {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.crossref-marker {
+  background-color: #fff3e0;
+  color: #f57c00;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+/* Scripture formatting for preview mode */
+.book-title {
+  text-align: center;
+  margin: 20px 0;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.major-title {
+  text-align: center;
+  margin: 16px 0;
+  color: #34495e;
+  font-weight: 600;
+}
+
+.section-heading {
+  margin: 14px 0 8px 0;
+  color: #5d6d7e;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+.chapter-heading {
+  margin: 20px 0 10px 0;
+  color: #2980b9;
+  font-weight: bold;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 4px;
+}
+
+.verse {
+  margin: 4px 0;
+  line-height: 1.6;
+}
+
+.verse-number {
+  font-weight: bold;
+  color: #e74c3c;
+  margin-right: 4px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.verse-number:hover {
+  background-color: #fdeaea;
+  border-radius: 2px;
+  padding: 1px 2px;
+}
+
+.paragraph {
+  margin: 8px 0;
+  text-indent: 20px;
+}
+
+.poetry-1 {
+  margin: 4px 0;
+  padding-left: 20px;
+  font-style: italic;
+}
+
+.poetry-2 {
+  margin: 4px 0;
+  padding-left: 40px;
+  font-style: italic;
+}
+
+.poetry-3 {
+  margin: 4px 0;
+  padding-left: 60px;
+  font-style: italic;
+}
+
+.footnote-ref,
+.endnote-ref {
+  color: #3498db;
+  font-size: 0.8em;
+  cursor: pointer;
+  margin: 0 2px;
+}
+
+.footnote-ref:hover,
+.endnote-ref:hover {
+  text-decoration: underline;
+}
+
+/* CRITICAL: Granular USFM Alignment Rendering Solution */
+/* See docs/usfm-alignment-rendering-solution.md for detailed explanation */
+
+/* Hide only markers and attributes in preview mode - NOT content */
+.usfm .preview .marker,
+.usfm .preview .attributes {
+  display: none;
+}
+
+/* Ensure content is always visible */
+.usfm .preview .content {
+  /* No display: none rule - content must always be visible */
+}
+
+/* Styling for granular decorators in preview mode */
+.usfm .preview .milestone {
+  /* Container for alignment milestones */
+}
+
+.usfm .preview .word {
+  /* Container for word markers */
+  display: inline;
+}
+
+.usfm .preview .word .content {
+  /* The actual word content that must always be visible */
+  display: inline;
+}
+
+/* Source mode styling - show all markup but with syntax highlighting */
+.usfm:not(.preview) .milestone-marker {
+  background-color: #e8f4fd;
+  color: #1976d2;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.usfm:not(.preview) .word-marker {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.usfm:not(.preview) .chapter-marker,
+.usfm:not(.preview) .verse-marker,
+.usfm:not(.preview) .header-marker {
+  background-color: #fff3e0;
+  color: #f57c00;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.usfm:not(.preview) .footnote-marker,
+.usfm:not(.preview) .endnote-marker {
+  background-color: #e0f2f1;
+  color: #00695c;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.usfm:not(.preview) .crossref-marker {
+  background-color: #fce4ec;
+  color: #ad1457;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 500;
 }

@@ -8,6 +8,33 @@
 
 The `simple-text-editor-rcl` library provides USFM rendering capabilities for scripture content. This document captures the correct API usage patterns discovered through investigation.
 
+## ✅ GRANULAR DECORATOR SOLUTION IMPLEMENTED
+
+**USFM Alignment Rendering Issue RESOLVED**
+
+The alignment milestone rendering problem has been solved using granular custom decorators. The issue where content was being hidden by the library's CSS rule `.usfm .preview .marker, .usfm .preview .attribute { display: none; }` has been addressed.
+
+### Solution Overview
+
+Custom granular decorators separate USFM alignment structures into distinct parts:
+
+- **marker**: USFM markers (hidden in preview mode)
+- **content**: actual text content (always visible)
+- **attributes**: metadata (hidden in preview mode)
+
+This ensures that words like "Paul" remain visible while alignment markup is properly hidden.
+
+```javascript
+// ✅ CURRENT IMPLEMENTATION: Uses granular decorators
+<UsfmEditor
+  content={rawUsfmString}
+  decorators={createMilestoneDecorators(previewMode)}
+  {...otherProps}
+/>
+```
+
+**See `docs/usfm-alignment-rendering-solution.md` for complete technical details.**
+
 ## Key Resources
 
 - **Official Documentation:** https://simple-text-editor-rcl.netlify.app/
@@ -277,8 +304,14 @@ Check that the rendered content reflects your option settings:
 
 **Likely Cause:**
 
+- **USFM was preprocessed (DO NOT DO THIS - see warning above)**
 - Alignment data interference
-- Need to preprocess USFM to remove alignment markup
+- Corrupted USFM content
+
+**Solution:**
+
+- **Ensure USFM is passed raw/unprocessed to the component**
+- Check USFM content format and structure
 
 ### Console Warnings
 
