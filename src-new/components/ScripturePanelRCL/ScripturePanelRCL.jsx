@@ -5,7 +5,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { ReferenceContext } from "../../context/ReferenceContext";
 import { ManifestsContext } from "../../context/MultiManifestsContext";
-import { fetchRawUSFM } from "../../services/scriptureService";
+import { fetchBook } from "../../services/scriptureService";
 
 import USFMRenderer from "./USFMRenderer";
 
@@ -89,7 +89,7 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
         );
 
         // Fetch raw USFM content
-        const rawUSFM = await fetchRawUSFM({
+        const rawUSFM = await fetchBook({
           languageId,
           resourceId: selectedResourceId,
           bookId,
@@ -183,62 +183,4 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
       />
     </section>
   );
-}
-
-/**
- * Extracts a specific chapter from USFM content
- * @param {string} usfm - Full book USFM content
- * @param {number} chapterNum - Chapter number to extract
- * @returns {string} Chapter USFM content
- */
-function extractChapterUSFM(usfm, chapterNum) {
-  if (!usfm) return "";
-
-  console.log(`🔍 Extracting chapter ${chapterNum} from USFM`);
-  const lines = usfm.split("\n");
-  const chapterLines = [];
-  let inTargetChapter = false;
-  let foundChapter = false;
-  let chapterCount = 0;
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-
-    // Check for chapter markers
-    if (line.match(/^\\c\s+(\d+)/)) {
-      const currentChapter = parseInt(line.match(/^\\c\s+(\d+)/)[1]);
-      chapterCount++;
-
-      console.log(`📖 Found chapter marker: \\c ${currentChapter} at line ${i}`);
-
-      if (currentChapter === parseInt(chapterNum)) {
-        console.log(`✅ Found target chapter ${chapterNum}!`);
-        inTargetChapter = true;
-        foundChapter = true;
-        chapterLines.push(line);
-      } else if (foundChapter) {
-        console.log(`🛑 Reached next chapter ${currentChapter}, stopping extraction`);
-        // We've moved past our target chapter
-        break;
-      } else {
-        inTargetChapter = false;
-      }
-    } else if (inTargetChapter) {
-      chapterLines.push(line);
-    } else if (!foundChapter) {
-      // Keep headers and book info before the target chapter
-      if (line.match(/^\\(id|usfm|ide|h|toc|mt)/)) {
-        chapterLines.push(line);
-      }
-    }
-  }
-
-  console.log(
-    `📊 Extraction summary: found ${chapterCount} chapters, target chapter found: ${foundChapter}`
-  );
-  console.log(
-    `📊 Extracted ${chapterLines.length} lines, ${chapterLines.join("\n").length} characters`
-  );
-
-  return chapterLines.join("\n");
 }

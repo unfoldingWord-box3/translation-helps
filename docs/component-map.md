@@ -6,13 +6,13 @@ This document lists and describes the major components in the viewer and their r
 
 ## 🔝 Top-Level Components
 
-| Component               | Path                                           | Description                                          |
-| ----------------------- | ---------------------------------------------- | ---------------------------------------------------- |
-| `App`                   | `src-new/components/App.jsx`                   | Entry shell that wraps the viewer in contexts        |
-| `MainView`              | `src-new/components/MainView.jsx`              | Orchestrates scripture, navigation, and helps panels |
-| `NavigationBar`         | `src-new/components/NavigationBar.jsx`         | Book, chapter, and verse selectors                   |
-| `NavigationBreadcrumbs` | `src-new/components/NavigationBreadcrumbs.jsx` | Visual breadcrumb navigation with context display    |
-| `ErrorBoundary`         | `src-new/components/ErrorBoundary.jsx`         | Error boundary for graceful error handling           |
+| Component               | Path                                           | Description                                              |
+| ----------------------- | ---------------------------------------------- | -------------------------------------------------------- |
+| `App`                   | `src-new/components/App.jsx`                   | Entry shell that wraps the viewer in contexts            |
+| `MainView`              | `src-new/components/MainView.jsx`              | Orchestrates scripture, navigation, and helps panels     |
+| `NavigationBar`         | `src-new/components/NavigationBar.jsx`         | Application header with title and navigation breadcrumbs |
+| `NavigationBreadcrumbs` | `src-new/components/NavigationBreadcrumbs.jsx` | Visual breadcrumb navigation with context display        |
+| `ErrorBoundary`         | `src-new/components/ErrorBoundary.jsx`         | Error boundary for graceful error handling               |
 
 ---
 

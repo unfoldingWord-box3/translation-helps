@@ -63,6 +63,8 @@ describe("fetchBibleResources", () => {
       description: "unfoldingWord Literal Text",
       subject: "Aligned Bible",
       repoUrl: "https://git.door43.org/unfoldingWord/en_ult",
+      avatarUrl: null,
+      owner: null,
     });
   });
 
@@ -138,14 +140,22 @@ describe("fetchBibleResources", () => {
     expect(resources[0]).toEqual({
       id: "ult",
       name: "ult",
+      fullName: "unfoldingWord/en_ult",
       description: "unfoldingWord Literal Text",
       subject: "Aligned Bible",
+      repoUrl: "https://git.door43.org/unfoldingWord/en_ult",
+      avatarUrl: null,
+      owner: null,
     });
     expect(resources[1]).toEqual({
       id: "ust",
       name: "ust",
+      fullName: "unfoldingWord/en_ust",
       description: "unfoldingWord Simplified Text",
       subject: "Aligned Bible",
+      repoUrl: "https://git.door43.org/unfoldingWord/en_ust",
+      avatarUrl: null,
+      owner: null,
     });
   });
 

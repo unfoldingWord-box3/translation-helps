@@ -30,9 +30,39 @@ describe("catalogService", () => {
           { login: "door43-catalog", full_name: "Door43 Catalog" },
           { login: "test-org", full_name: "Test Organization" },
         ],
-        ok: true,
       };
-      const expectedOrganizations = ["door43-catalog", "test-org", "unfoldingWord"];
+      const expectedOrganizations = [
+        {
+          login: "door43-catalog",
+          full_name: "Door43 Catalog",
+          description: "Organization: Door43 Catalog",
+          avatar_url: null,
+          website: null,
+          location: null,
+          repo_count: 0,
+          visibility: "public",
+        },
+        {
+          login: "test-org",
+          full_name: "Test Organization",
+          description: "Organization: Test Organization",
+          avatar_url: null,
+          website: null,
+          location: null,
+          repo_count: 0,
+          visibility: "public",
+        },
+        {
+          login: "unfoldingWord",
+          full_name: "unfoldingWord",
+          description: "Organization: unfoldingWord",
+          avatar_url: null,
+          website: null,
+          location: null,
+          repo_count: 0,
+          visibility: "public",
+        },
+      ];
 
       fetch.mockResolvedValueOnce({
         ok: true,
@@ -49,8 +79,37 @@ describe("catalogService", () => {
       fetch.mockRejectedValueOnce(new Error("Network error"));
 
       const result = await fetchOrganizations();
-
-      expect(result).toEqual(["unfoldingWord", "door43-catalog", "STR", "WA"]);
+      const fallbackOrganizations = [
+        {
+          login: "unfoldingWord",
+          full_name: "unfoldingWord",
+          description: "Open Bible resources for every language",
+          avatar_url: null,
+          website: "https://unfoldingword.org",
+        },
+        {
+          login: "door43-catalog",
+          full_name: "Door43 Catalog",
+          description: "Community-driven translation hub",
+          avatar_url: null,
+          website: "https://door43.org",
+        },
+        {
+          login: "STR",
+          full_name: "STR",
+          description: "Scripture Translation Resources",
+          avatar_url: null,
+          website: null,
+        },
+        {
+          login: "WA",
+          full_name: "WA",
+          description: "Wycliffe Associates",
+          avatar_url: null,
+          website: null,
+        },
+      ];
+      expect(result).toEqual(fallbackOrganizations);
     });
 
     it("should return fallback organizations if API returns invalid structure", async () => {
@@ -60,8 +119,37 @@ describe("catalogService", () => {
       });
 
       const result = await fetchOrganizations();
-
-      expect(result).toEqual(["unfoldingWord", "door43-catalog", "STR", "WA"]);
+      const fallbackOrganizations = [
+        {
+          login: "unfoldingWord",
+          full_name: "unfoldingWord",
+          description: "Open Bible resources for every language",
+          avatar_url: null,
+          website: "https://unfoldingword.org",
+        },
+        {
+          login: "door43-catalog",
+          full_name: "Door43 Catalog",
+          description: "Community-driven translation hub",
+          avatar_url: null,
+          website: "https://door43.org",
+        },
+        {
+          login: "STR",
+          full_name: "STR",
+          description: "Scripture Translation Resources",
+          avatar_url: null,
+          website: null,
+        },
+        {
+          login: "WA",
+          full_name: "WA",
+          description: "Wycliffe Associates",
+          avatar_url: null,
+          website: null,
+        },
+      ];
+      expect(result).toEqual(fallbackOrganizations);
     });
 
     it("should handle missing login field in organization data", async () => {
@@ -71,7 +159,6 @@ describe("catalogService", () => {
           { full_name: "Invalid Org - No Login" }, // Missing login field
           { login: "", full_name: "Empty Login" }, // Empty login field
         ],
-        ok: true,
       };
 
       fetch.mockResolvedValueOnce({
@@ -81,7 +168,18 @@ describe("catalogService", () => {
 
       const result = await fetchOrganizations();
 
-      expect(result).toEqual(["valid-org"]);
+      expect(result).toEqual([
+        {
+          login: "valid-org",
+          full_name: "Valid Org",
+          description: "Organization: Valid Org",
+          avatar_url: null,
+          website: null,
+          location: null,
+          repo_count: 0,
+          visibility: "public",
+        },
+      ]);
     });
 
     it("should cache results and not call API on second request", async () => {
@@ -90,7 +188,6 @@ describe("catalogService", () => {
           { login: "unfoldingWord", full_name: "unfoldingWord" },
           { login: "door43-catalog", full_name: "Door43 Catalog" },
         ],
-        ok: true,
       };
 
       fetch.mockResolvedValueOnce({
@@ -116,7 +213,6 @@ describe("catalogService", () => {
           { lc: "es", ln: "español", ang: "Spanish" },
           { lc: "fr", ln: "français", ang: "French" },
         ],
-        ok: true,
       };
       const expectedLanguages = [
         {
@@ -190,10 +286,7 @@ describe("catalogService", () => {
     });
 
     it("should handle special characters in owner name with URL encoding", async () => {
-      const mockApiResponse = {
-        data: [{ lc: "en", ln: "English" }],
-        ok: true,
-      };
+      const mockApiResponse = { data: [{ lc: "en", ln: "English" }] };
 
       fetch.mockResolvedValueOnce({
         ok: true,
@@ -214,7 +307,6 @@ describe("catalogService", () => {
           { ln: "Invalid - No lc field" }, // Missing lc field
           { lc: "", ln: "Empty lc field" }, // Empty lc field
         ],
-        ok: true,
       };
 
       fetch.mockResolvedValueOnce({
@@ -244,7 +336,6 @@ describe("catalogService", () => {
           "Translation Notes",
           "Translation Questions",
         ],
-        ok: true,
       };
 
       fetch.mockResolvedValueOnce({
@@ -284,7 +375,6 @@ describe("catalogService", () => {
     it("should sort resources alphabetically", async () => {
       const mockApiResponse = {
         data: ["Translation Words", "Bible", "Aligned Bible", "Translation Notes"],
-        ok: true,
       };
 
       fetch.mockResolvedValueOnce({
@@ -298,10 +388,7 @@ describe("catalogService", () => {
     });
 
     it("should handle special characters in parameters with URL encoding", async () => {
-      const mockApiResponse = {
-        data: ["Translation Notes"],
-        ok: true,
-      };
+      const mockApiResponse = { data: ["Translation Notes"] };
 
       fetch.mockResolvedValueOnce({
         ok: true,
@@ -318,7 +405,6 @@ describe("catalogService", () => {
     it("should filter out non-string resources", async () => {
       const mockApiResponse = {
         data: ["Translation Notes", null, undefined, "", "Translation Words", 123],
-        ok: true,
       };
 
       fetch.mockResolvedValueOnce({
@@ -336,7 +422,6 @@ describe("catalogService", () => {
     it("should preload organizations", async () => {
       const mockApiResponse = {
         data: [{ login: "unfoldingWord", full_name: "unfoldingWord" }],
-        ok: true,
       };
 
       fetch.mockResolvedValueOnce({
@@ -352,12 +437,8 @@ describe("catalogService", () => {
     it("should preload organizations and languages when owner provided", async () => {
       const mockOrgResponse = {
         data: [{ login: "unfoldingWord", full_name: "unfoldingWord" }],
-        ok: true,
       };
-      const mockLangResponse = {
-        data: [{ lc: "en", ln: "English" }],
-        ok: true,
-      };
+      const mockLangResponse = { data: [{ lc: "en", ln: "English" }] };
 
       fetch
         .mockResolvedValueOnce({
@@ -391,7 +472,6 @@ describe("catalogService", () => {
     it("should use cached data on subsequent calls", async () => {
       const mockApiResponse = {
         data: [{ login: "unfoldingWord", full_name: "unfoldingWord" }],
-        ok: true,
       };
 
       fetch.mockResolvedValueOnce({
@@ -410,7 +490,6 @@ describe("catalogService", () => {
     it("should clear cache when clearCatalogCache is called", async () => {
       const mockApiResponse = {
         data: [{ login: "unfoldingWord", full_name: "unfoldingWord" }],
-        ok: true,
       };
 
       fetch.mockResolvedValue({
@@ -437,8 +516,37 @@ describe("catalogService", () => {
       });
 
       const result = await fetchOrganizations();
-
-      expect(result).toEqual(["unfoldingWord", "door43-catalog", "STR", "WA"]);
+      const fallbackOrganizations = [
+        {
+          login: "unfoldingWord",
+          full_name: "unfoldingWord",
+          description: "Open Bible resources for every language",
+          avatar_url: null,
+          website: "https://unfoldingword.org",
+        },
+        {
+          login: "door43-catalog",
+          full_name: "Door43 Catalog",
+          description: "Community-driven translation hub",
+          avatar_url: null,
+          website: "https://door43.org",
+        },
+        {
+          login: "STR",
+          full_name: "STR",
+          description: "Scripture Translation Resources",
+          avatar_url: null,
+          website: null,
+        },
+        {
+          login: "WA",
+          full_name: "WA",
+          description: "Wycliffe Associates",
+          avatar_url: null,
+          website: null,
+        },
+      ];
+      expect(result).toEqual(fallbackOrganizations);
     });
 
     it("should handle network errors", async () => {
@@ -480,8 +588,37 @@ describe("catalogService", () => {
       });
 
       const result = await fetchOrganizations();
-
-      expect(result).toEqual(["unfoldingWord", "door43-catalog", "STR", "WA"]);
+      const fallbackOrganizations = [
+        {
+          login: "unfoldingWord",
+          full_name: "unfoldingWord",
+          description: "Open Bible resources for every language",
+          avatar_url: null,
+          website: "https://unfoldingword.org",
+        },
+        {
+          login: "door43-catalog",
+          full_name: "Door43 Catalog",
+          description: "Community-driven translation hub",
+          avatar_url: null,
+          website: "https://door43.org",
+        },
+        {
+          login: "STR",
+          full_name: "STR",
+          description: "Scripture Translation Resources",
+          avatar_url: null,
+          website: null,
+        },
+        {
+          login: "WA",
+          full_name: "WA",
+          description: "Wycliffe Associates",
+          avatar_url: null,
+          website: null,
+        },
+      ];
+      expect(result).toEqual(fallbackOrganizations);
     });
   });
 
@@ -494,7 +631,37 @@ describe("catalogService", () => {
       });
 
       let result = await fetchOrganizations();
-      expect(result).toEqual(["unfoldingWord", "door43-catalog", "STR", "WA"]);
+      const fallbackOrganizations = [
+        {
+          login: "unfoldingWord",
+          full_name: "unfoldingWord",
+          description: "Open Bible resources for every language",
+          avatar_url: null,
+          website: "https://unfoldingword.org",
+        },
+        {
+          login: "door43-catalog",
+          full_name: "Door43 Catalog",
+          description: "Community-driven translation hub",
+          avatar_url: null,
+          website: "https://door43.org",
+        },
+        {
+          login: "STR",
+          full_name: "STR",
+          description: "Scripture Translation Resources",
+          avatar_url: null,
+          website: null,
+        },
+        {
+          login: "WA",
+          full_name: "WA",
+          description: "Wycliffe Associates",
+          avatar_url: null,
+          website: null,
+        },
+      ];
+      expect(result).toEqual(fallbackOrganizations);
 
       // Test with missing data field
       fetch.mockResolvedValueOnce({
@@ -503,7 +670,7 @@ describe("catalogService", () => {
       });
 
       result = await fetchOrganizations();
-      expect(result).toEqual(["unfoldingWord", "door43-catalog", "STR", "WA"]);
+      expect(result).toEqual(fallbackOrganizations);
     });
 
     it("should validate languages API response structure", async () => {

@@ -38,7 +38,7 @@ This document explains the layout and function of each major area of the user in
 
 - `App` → top-level application shell with context providers
 - `MainView` → main layout orchestrating all panels
-- `NavigationBar` → book/chapter/verse selection interface
+- `NavigationBar` → Application header with title and navigation breadcrumbs
 - `NavigationBreadcrumbs` → visual breadcrumb navigation display
 - `NavigationWizard` → modal step-by-step selection wizard
 - `ScripturePanel` → displays selected scripture text

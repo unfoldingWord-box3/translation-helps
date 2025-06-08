@@ -9,26 +9,26 @@ import { ReferenceContext } from "../../context/ReferenceContext";
 import { WizardContainer } from "./WizardContainer";
 
 // Mock the hooks
-jest.mock("./hooks/useWizardState", () => ({
+vi.mock("./hooks/useWizardState", () => ({
   useWizardState: () => ({
-    validateStep: jest.fn(() => true),
-    canProceed: jest.fn(() => true),
+    validateStep: vi.fn(() => true),
+    canProceed: vi.fn(() => true),
   }),
 }));
 
-jest.mock("./hooks/useNavigationHistory", () => ({
+vi.mock("./hooks/useNavigationHistory", () => ({
   useNavigationHistory: () => ({
-    saveSelection: jest.fn(),
-    getRecentSelections: jest.fn(() => []),
+    saveSelection: vi.fn(),
+    getRecentSelections: vi.fn(() => []),
   }),
 }));
 
-jest.mock("./hooks/useKeyboardNavigation", () => ({
-  useKeyboardNavigation: jest.fn(),
+vi.mock("./hooks/useKeyboardNavigation", () => ({
+  useKeyboardNavigation: vi.fn(),
 }));
 
 // Mock the step components
-jest.mock("./steps/OrganizationStep", () => ({
+vi.mock("./steps/OrganizationStep", () => ({
   OrganizationStep: ({ onNext, onPrevious }) => (
     <div data-testid='organization-step'>
       <button onClick={onPrevious}>Previous</button>
@@ -37,7 +37,7 @@ jest.mock("./steps/OrganizationStep", () => ({
   ),
 }));
 
-jest.mock("./steps/LanguageStep", () => ({
+vi.mock("./steps/LanguageStep", () => ({
   LanguageStep: ({ onNext, onPrevious }) => (
     <div data-testid='language-step'>
       <button onClick={onPrevious}>Previous</button>
@@ -51,7 +51,7 @@ const mockContextValue = {
   languageId: null,
   resourceId: null,
   reference: null,
-  updateContext: jest.fn(),
+  updateContext: vi.fn(),
 };
 
 const TestWrapper = ({ children, contextValue = mockContextValue }) => (
@@ -60,7 +60,7 @@ const TestWrapper = ({ children, contextValue = mockContextValue }) => (
 
 describe("WizardContainer", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("renders the navigation wizard", () => {
@@ -90,7 +90,7 @@ describe("WizardContainer", () => {
       </TestWrapper>
     );
 
-    expect(screen.getByText("Organization")).toBeInTheDocument();
+    expect(screen.getAllByText("Organization")[0]).toBeInTheDocument();
     expect(screen.getByText("Language")).toBeInTheDocument();
     expect(screen.getByText("Resource")).toBeInTheDocument();
     expect(screen.getByText("Book")).toBeInTheDocument();
@@ -98,7 +98,7 @@ describe("WizardContainer", () => {
   });
 
   it("calls onComplete when provided", () => {
-    const onComplete = jest.fn();
+    const onComplete = vi.fn();
 
     render(
       <TestWrapper>

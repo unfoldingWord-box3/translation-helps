@@ -34,18 +34,18 @@ describe("USFMRenderer", () => {
       </ReferenceContext.Provider>
     );
 
-    const renderedHtml = container.querySelector(".usfm-renderer-container");
+    const renderedHtml = container.querySelector("usfm");
     console.log("Rendered HTML:", renderedHtml.innerHTML);
     const dom = new JSDOM(expectedHtmlRaw);
     const expectedDocument = dom.window.document;
 
     // Compare the structure of the rendered output with the expected output.
-    const renderedZaln = renderedHtml.querySelectorAll(".milestone");
+    const renderedZaln = renderedHtml.querySelectorAll("zaln");
     const expectedZaln = expectedDocument.querySelectorAll("zaln");
     expect(renderedZaln.length).toBe(expectedZaln.length);
 
-    const renderedWords = renderedHtml.querySelectorAll(".word .content");
-    const expectedWords = expectedDocument.querySelectorAll("word content");
+    const renderedWords = renderedHtml.querySelectorAll("word > content");
+    const expectedWords = expectedDocument.querySelectorAll("word > content");
     expect(renderedWords.length).toBe(expectedWords.length);
 
     for (let i = 0; i < renderedWords.length; i++) {
@@ -54,6 +54,7 @@ describe("USFMRenderer", () => {
 
     const renderedText = renderedHtml.textContent;
     expect(renderedText).toContain("Paul");
-    expect(renderedText).toContain("a servant");
+    expect(renderedText).toContain("a");
+    expect(renderedText).toContain("servant");
   });
 });

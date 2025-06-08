@@ -256,12 +256,25 @@ export async function fetchBibleResources(owner, language) {
   }
 
   const fallbackResources = [
-    { id: "ult", name: "ult", description: "unfoldingWord Literal Text", subject: "Aligned Bible" },
+    {
+      id: "ult",
+      name: "ult",
+      fullName: "unfoldingWord/en_ult",
+      description: "unfoldingWord Literal Text",
+      subject: "Aligned Bible",
+      repoUrl: "https://git.door43.org/unfoldingWord/en_ult",
+      avatarUrl: null,
+      owner: null,
+    },
     {
       id: "ust",
       name: "ust",
+      fullName: "unfoldingWord/en_ust",
       description: "unfoldingWord Simplified Text",
       subject: "Aligned Bible",
+      repoUrl: "https://git.door43.org/unfoldingWord/en_ust",
+      avatarUrl: null,
+      owner: null,
     },
   ];
 

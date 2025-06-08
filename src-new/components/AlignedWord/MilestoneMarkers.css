@@ -1,142 +1,184 @@
-/**
- * MilestoneMarkers.css
- * CRITICAL: This CSS implements the granular decorator solution.
- * 
- * KEY PRINCIPLE: Hide marker and attributes tags in preview mode, always show content
- * This solves the alignment rendering problem where content was getting hidden.
- */
-
-/* ==========================================================================
-   CORE GRANULAR SOLUTION - Hide markers and attributes in preview mode
-   ========================================================================== */
-
-/* CRITICAL: Hide markers and attributes in preview mode */
-usfm preview marker,
-usfm preview attributes {
-  display: none;
+.usfm .document {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-/* CRITICAL: Content is always visible - no hiding rule needed */
-content {
-  /* Always visible in both preview and source modes */
+.usfm .section {
+  width: 100%;
 }
 
-/* Word content styling for preview mode */
-word > content {
-  position: relative;
-  cursor: help;
-  transition: all 0.2s ease;
-  padding: 1px 2px;
-  border-radius: 2px;
+.usfm .marker {
+  font-weight: bolder;
+  font-size: 0.9em;
 }
 
-word:hover > content {
-  background-color: #e3f2fd;
-  box-shadow: 0 1px 3px rgba(33, 150, 243, 0.1);
+.usfm .c .number {
+  font-size: 2.2em;
+  color: initial;
 }
 
-/* Milestone alignment groups */
-zaln {
+.usfm .c .marker,
+.usfm .v .marker {
+  color: blue;
+}
+
+.usfm .v .marker,
+.usfm .v .number {
+  font-size: 0.9em;
+  vertical-align: super;
+}
+
+.usfm .v .number {
+  color: initial;
+}
+
+.usfm .p .marker,
+.usfm .s .marker,
+.usfm .s1 .marker,
+.usfm .s2 .marker,
+.usfm .s3 .marker,
+.usfm .s4 .marker,
+.usfm .s5 .marker,
+.usfm .ts .marker {
+  color: green;
+}
+
+.usfm .pseudo-block.s,
+.usfm .pseudo-block.s1,
+.usfm .pseudo-block.s2 {
+  font-size: 1.2em;
+  font-weight: bolder;
+  text-align: center;
+  padding: 0.05em 0.2em;
+}
+
+.usfm .footnote,
+.usfm .endnote {
+  font-weight: lighter;
+  font-size: small;
+  vertical-align: super;
+}
+
+.usfm .f {
+  color: orange;
+}
+
+.usfm .fe {
+  color: coral;
+}
+
+.usfm .fk,
+.usfm .ft,
+.usfm .fr {
+  color: orangered;
+}
+
+.usfm .w,
+.usfm .zaln-s,
+.usfm .zaln-e {
+  color: purple;
+}
+
+.usfm .pseudo-block {
+  display: block;
+}
+
+.usfm .tr,
+.usfm .tl {
+  color: red;
+}
+
+.usfm .attribute {
+  font-size: 0.8em;
+  font-style: italic;
+}
+
+.usfm .block {
+  border-bottom: gray 1px solid;
+  padding: 0.05em 0.2em;
+}
+
+.usfm .preview .block {
+  border-bottom: none;
+}
+
+.usfm .preview .pseudo-block.v {
+  white-space: normal;
   display: inline;
 }
 
-/* Markers - visible with syntax highlighting in source mode */
-marker {
-  color: #1976d2;
-  font-weight: bold;
-  background-color: rgba(25, 118, 210, 0.1);
-  padding: 1px 4px;
-  margin: 0 1px;
-  border-radius: 2px;
-  font-size: 0.85em;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-  border: 1px solid rgba(25, 118, 210, 0.2);
-  cursor: help;
+.usfm .preview .pseudo-block.c {
+  margin-top: 2em;
+  white-space: normal;
 }
 
-/* Attributes - visible with gray highlighting in source mode */
-attributes {
-  color: #666;
-  font-size: 0.8em;
-  background-color: #f5f5f5;
-  padding: 1px 4px;
-  margin: 0 1px;
-  border-radius: 2px;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-  border: 1px solid #e0e0e0;
-  white-space: pre-wrap;
+.usfm .preview .pseudo-block.c ~ .s {
+  margin-top: 2em;
 }
 
-/* ==========================================================================
-   PREVIEW MODE STYLES - Clean, readable display with subtle interactivity
-   ========================================================================== */
-
-/* Structural markers (verse, chapter, etc.) - clean but visible */
-v {
-  color: #1976d2;
-  font-size: 0.9em;
-  background-color: #f5f5f5;
-  padding: 2px 6px;
-  border-radius: 3px;
-  border: 1px solid #e0e0e0;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.usfm .preview .pseudo-block.s + .c {
+  margin-top: unset;
 }
 
-v:hover {
-  background-color: #e3f2fd;
-  border-color: #1976d2;
+.usfm .preview .pseudo-block.c + .p {
+  display: none;
 }
 
-c {
-  color: #333;
-  font-size: 1.2em;
-  font-weight: bold;
-  display: block;
-  margin: 16px 0 8px 0;
-  padding: 8px 0;
-  border-bottom: 2px solid #e0e0e0;
+.usfm .preview .pseudo-block.c .number {
+  margin: 0 0.2em;
+  float: left;
 }
 
-p,
-m {
-  display: block;
-  margin: 8px 0;
+.usfm .preview .marker,
+.usfm .preview .attribute {
+  display: none;
 }
 
-q,
-q1,
-q2,
-q3 {
-  display: block;
-  font-style: italic;
-  color: #555;
+.usfm .preview .rtl .pseudo-block.c .number {
+  float: right;
 }
 
-/* ==========================================================================
-   MODE INDICATOR AND CONTROLS
-   ========================================================================== */
-
-.mode-indicator {
-  position: sticky;
-  top: 0;
-  background: linear-gradient(45deg, #1976d2, #42a5f5);
-  color: white;
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 600;
+.usfm .preview .header {
+  font-weight: bolder;
   text-align: center;
-  z-index: 100;
-  border-radius: 0 0 4px 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  display: block;
 }
 
-.mode-indicator.preview-mode {
-  background: linear-gradient(45deg, #4caf50, #66bb6a);
+.usfm .preview .header.id,
+.usfm .preview .header.ide {
+  display: none;
 }
 
-.mode-indicator.source-mode {
-  background: linear-gradient(45deg, #ff9800, #ffb74d);
+.usfm .preview .header.h,
+.usfm .preview .header.toc1 {
+  font-size: 2em;
+  margin-top: 2em;
+}
+
+.usfm .preview .header.toc2,
+.usfm .preview .header.toc3 {
+  font-size: 1.5em;
+  margin-top: 1.5em;
+}
+
+.zaln {
+  display: inline-block;
+  margin: 0 0.2em;
+  padding: 0.1em 0.3em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+}
+
+.zaln .word {
+  display: inline-block;
+  margin: 0 0.1em;
+}
+
+.zaln .word .content {
+  font-weight: bold;
+}
+
+.zaln .word .attributes {
+  font-size: 0.8em;
+  color: #666;
 }

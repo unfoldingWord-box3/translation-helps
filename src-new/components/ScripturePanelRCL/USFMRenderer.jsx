@@ -27,7 +27,7 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
     chapter: true,
     showWordAtts: false, // Keep this false for default behavior
     showTitles: true,
-    showHeadings: true,
+    showHeadings: false,
     showIntroductions: true,
     showChapterLabels: true,
     showVerseLabels: true,
@@ -105,6 +105,24 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
             onChange={() => toggleOption("preview")}
           />
           <label htmlFor='preview'>Preview Mode</label>
+        </div>
+        <div className='control-group'>
+          <input
+            type='checkbox'
+            id='sectionable'
+            checked={options.sectionable}
+            onChange={() => toggleOption("sectionable")}
+          />
+          <label htmlFor='sectionable'>Sectionable</label>
+        </div>
+        <div className='control-group'>
+          <input
+            type='checkbox'
+            id='blockable'
+            checked={options.blockable}
+            onChange={() => toggleOption("blockable")}
+          />
+          <label htmlFor='blockable'>Blockable</label>
         </div>
       </div>
 

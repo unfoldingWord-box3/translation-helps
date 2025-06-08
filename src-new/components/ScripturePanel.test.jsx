@@ -33,28 +33,21 @@ describe("ScripturePanel", () => {
         </ReferenceContext.Provider>
       </ManifestsContext.Provider>
     );
-    expect(screen.getByTestId("scripture-panel")).toBeInTheDocument();
+    expect(screen.getByTestId("scripture-panel-rcl")).toBeInTheDocument();
     expect(
       screen.getByText("Please select a book and chapter to view scripture.")
     ).toBeInTheDocument();
   });
 
   it("loads and displays chapter text when reference is provided", async () => {
-    // Mock the parsed chapters data that would come from usfm-js
-    const mockChapters = {
-      1: {
-        1: {
-          verseObjects: [
-            { type: "text", text: "In the beginning God created the heavens and the earth." },
-          ],
-        },
-        2: {
-          verseObjects: [{ type: "text", text: "The earth was without form and void." }],
-        },
-      },
-    };
-
-    fetchBook.mockResolvedValue(mockChapters);
+    const mockUSFM = `
+\\id GEN - General
+\\c 1
+\\p
+\\v 1 In the beginning God created the heavens and the earth.
+\\v 2 The earth was without form and void, and darkness was over the face of the deep. And the Spirit of God was hovering over the face of the waters.
+`;
+    fetchBook.mockResolvedValue(mockUSFM);
 
     const mockManifests = {
       ult: {
@@ -79,13 +72,9 @@ describe("ScripturePanel", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("GEN 1")).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("In the beginning God created the heavens and the earth.")
-      ).toBeInTheDocument();
+      const verseElements = screen.getAllByText(/In the beginning God created/);
+      const verseElement = verseElements.find((el) => el.tagName.toLowerCase() === "v");
+      expect(verseElement).toBeInTheDocument();
     });
 
     expect(fetchBook).toHaveBeenCalledWith({

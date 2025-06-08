@@ -1,53 +1,13 @@
 /**
  * scriptureService.js
- * Service for fetching and parsing scripture resources
- * Mirrors the functionality from the old src/components/Viewer/Workspace/Scripture/helpers.js
+ * Service for fetching scripture resources.
+ * This service is responsible for fetching raw USFM content from the DCS.
+ * It no longer parses USFM directly, as that is now handled by the `simple-text-editor-rcl` component.
  */
 import { fetchResourceFile } from "./dcsClient";
 
 /**
- * Fetches raw USFM content for a scripture book
- * @param {object} params
- * @param {string} params.languageId - Language identifier (e.g., 'en')
- * @param {string} params.resourceId - Resource identifier (e.g., 'ult', 'ust')
- * @param {string} params.bookId - Book identifier (e.g., 'gen')
- * @param {object} params.manifest - Resource manifest
- * @param {string} params.organization - Organization identifier (e.g., 'unfoldingWord')
- * @returns {Promise<string>} Raw USFM content
- */
-export async function fetchRawUSFM({
-  languageId,
-  resourceId,
-  bookId,
-  manifest,
-  organization = "unfoldingWord",
-}) {
-  try {
-    // Find the project for this book in the manifest
-    const project = manifest.projects?.find((p) => p.identifier === bookId);
-    if (!project) {
-      console.warn(`Book ${bookId} not found in ${resourceId} manifest`);
-      return null;
-    }
-
-    // Get the file path from the manifest
-    const filePath = project.path?.replace("./", "");
-    if (!filePath) {
-      console.error(`No file path found for ${bookId} in ${resourceId} manifest`);
-      return null;
-    }
-
-    // Fetch the raw USFM content
-    const usfm = await fetchResourceFile(languageId, resourceId, filePath, organization);
-    return usfm;
-  } catch (error) {
-    console.error(`Error fetching raw USFM for ${bookId} from ${resourceId}:`, error);
-    return null;
-  }
-}
-
-/**
- * Fetches and parses a scripture book
+ * Fetches a scripture book as raw USFM content.
  * @param {object} params
  * @param {string} params.languageId - Language identifier (e.g., 'en')
  * @param {string} params.resourceId - Resource identifier (e.g., 'ult', 'ust')
@@ -192,20 +152,4 @@ export async function fetchOriginalBook({ languageId, bookId, uhbManifest, ugntM
   }
 
   return null;
-}
-
-/**
- * Gets a specific verse from parsed chapters data
- * @param {object} chapters - Parsed chapters object
- * @param {string|number} chapter - Chapter number
- * @param {string|number} verse - Verse number
- * @returns {object|null} Verse data or null
- */
-export function getVerse(chapters, chapter, verse) {
-  if (!chapters) return null;
-
-  const chapterData = chapters[String(chapter)];
-  if (!chapterData) return null;
-
-  return chapterData[String(verse)] || null;
 }

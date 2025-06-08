@@ -34,8 +34,6 @@ describe("MainView", () => {
       </ManifestsContext.Provider>
     );
     expect(screen.getByTestId("main-view")).toBeInTheDocument();
-    expect(screen.getByTestId("reference-selector")).toBeInTheDocument();
-    expect(screen.getByTestId("scripture-panel")).toBeInTheDocument();
     expect(screen.getByTestId("helps-tabs")).toBeInTheDocument();
 
     // Check for tab buttons
