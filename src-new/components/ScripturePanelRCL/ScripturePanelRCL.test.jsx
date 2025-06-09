@@ -2,14 +2,7 @@
  * ScripturePanelRCL.test.jsx
  * Tests for the enhanced scripture panel with simple-text-editor-rcl
  */
-import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
-import ScripturePanelRCL from "./ScripturePanelRCL";
-import { ReferenceContext } from "../../context/ReferenceContext";
-import { ManifestsContext } from "../../context/MultiManifestsContext";
-import * as scriptureService from "../../services/scriptureService";
-
 // Mock the scriptureService
 vi.mock("../../services/scriptureService", async () => {
   const actual = await vi.importActual("../../services/scriptureService");
@@ -18,15 +11,12 @@ vi.mock("../../services/scriptureService", async () => {
     fetchBook: vi.fn(),
   };
 });
-
-// Mock the UsfmEditor component from simple-text-editor-rcl
-vi.mock("simple-text-editor-rcl", () => ({
-  UsfmEditor: ({ content, options }) => (
-    <div data-testid='usfm-editor' data-options={JSON.stringify(options)}>
-      {content}
-    </div>
-  ),
-}));
+import React from "react";
+import { render, screen, waitFor } from "@testing-library/react";
+import ScripturePanelRCL from "./ScripturePanelRCL";
+import { ReferenceContext } from "../../context/ReferenceContext";
+import { ManifestsContext } from "../../context/MultiManifestsContext";
+import * as scriptureService from "../../services/scriptureService";
 
 describe("ScripturePanelRCL", () => {
   const mockReference = {
@@ -87,7 +77,7 @@ describe("ScripturePanelRCL", () => {
     renderWithContext();
 
     await waitFor(() => {
-      expect(screen.getByTestId("usfm-editor")).toBeInTheDocument();
+      expect(screen.getByTestId("usfm-renderer")).toBeInTheDocument();
     });
 
     expect(scriptureService.fetchBook).toHaveBeenCalledWith({
@@ -186,7 +176,7 @@ describe("ScripturePanelRCL", () => {
     renderWithContext({ onVerseClick: mockOnVerseClick });
 
     await waitFor(() => {
-      expect(screen.getByTestId("usfm-editor")).toBeInTheDocument();
+      expect(screen.getByTestId("usfm-renderer")).toBeInTheDocument();
     });
 
     // This test is simplified since the actual verse clicking logic is in USFMRenderer

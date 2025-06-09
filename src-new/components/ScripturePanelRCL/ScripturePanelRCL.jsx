@@ -136,10 +136,13 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
     manifestsLoading,
   ]);
 
-  const handleVerseClick = (verseNum) => {
-    updateReference({ verse: verseNum });
+  // Accept both chapter and verse for context update
+  const handleVerseClick = (verseNum, chapterNum) => {
+    // If chapterNum is not provided, use the current reference
+    const newChapter = chapterNum || reference?.chapter;
+    updateReference({ chapter: newChapter, verse: verseNum });
     if (onVerseClick) {
-      onVerseClick(verseNum);
+      onVerseClick(verseNum, newChapter);
     }
   };
 

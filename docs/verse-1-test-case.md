@@ -79,8 +79,8 @@
                 <marker class="zaln-s">\zaln-s </marker>
                 <attributes
                   >|x-strong="G39720" x-lemma="Παῦλος" x-morph="Gr,N,,,,,NMS," x-occurrence="1"
-                  x-occurrences="1" x-content="Παῦλος"
-                </attributes>
+                  x-occurrences="1" x-content="Παῦλος"</attributes
+                >
                 <marker class="*">\*</marker>
                 <word>
                   <marker class="w">\w </marker>
@@ -95,8 +95,8 @@
                 <marker class="zaln-s">\zaln-s </marker>
                 <attributes
                   >|x-strong="G14010" x-lemma="δοῦλος" x-morph="Gr,N,,,,,NMS," x-occurrence="1"
-                  x-occurrences="1" x-content="δοῦλος"
-                </attributes>
+                  x-occurrences="1" x-content="δοῦλος"</attributes
+                >
                 <marker class="*">\*</marker>
                 <word>
                   <marker class="w">\w </marker>

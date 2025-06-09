@@ -3,10 +3,10 @@
  * Component that wraps simple-text-editor-rcl for USFM rendering
  */
 import React, { useState, useContext } from "react";
-import { UsfmEditor } from "simple-text-editor-rcl";
+import UsfmEditor from "./CustomUsfmEditor";
 import { ReferenceContext } from "../../context/ReferenceContext";
-import { createMilestoneDecorators } from "../../utils/milestoneDecorators";
-import "../../components/AlignedWord/MilestoneMarkers.css";
+import { createUsfmDecorators } from "../../utils/usfmDecorators";
+import "../../components/AlignedWord/usfm-custom-tags.css";
 
 /**
  * @param {object} props
@@ -19,7 +19,7 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
 
   // UI controls for simple-text-editor-rcl options
   const [options, setOptions] = useState({
-    sectionable: true,
+    sectionable: false,
     blockable: true,
     editable: false,
     preview: true, // Enable preview mode for readable text rendering
@@ -34,7 +34,7 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
   });
 
   // Create the decorators
-  const milestoneDecorators = createMilestoneDecorators();
+  const usfmDecorators = createUsfmDecorators();
 
   // Custom block component to override default styles
   const components = {
@@ -55,9 +55,11 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
     console.log("📝 Block clicked:", block);
     if (block?.verse) {
       const verseNum = parseInt(block.verse);
-      updateReference({ verse: verseNum });
+      // Try to get chapter from block, fallback to selectedVerse or context
+      const chapterNum = block.chapter ? parseInt(block.chapter) : undefined;
+      updateReference({ chapter: chapterNum, verse: verseNum });
       if (onVerseClick) {
-        onVerseClick(verseNum);
+        onVerseClick(verseNum, chapterNum);
       }
     }
   };
@@ -83,7 +85,7 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
       content={usfm}
       options={options}
       sectionIndex={-1} // Show all content
-      decorators={milestoneDecorators}
+      decorators={usfmDecorators}
       components={components}
       handlers={{
         onSectionClick: handleSelectionClick,
@@ -93,7 +95,7 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
   );
 
   return (
-    <usfm>
+    <>
       {/* UI Controls for simple-text-editor-rcl options */}
       <div className='usfm-controls'>
         <div className='controls-title'>Rendering Options:</div>
@@ -126,7 +128,7 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
         </div>
       </div>
 
-      {options.preview ? <preview>{editor}</preview> : editor}
-    </usfm>
+      {editor}
+    </>
   );
 }
