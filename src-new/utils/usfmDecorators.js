@@ -38,14 +38,16 @@ export const createUsfmDecorators = () => {
     // 5. Endnotes (\fe ... \fe*)
     fe: [/\\fe\s+([^\\]+)\\fe\*/g, "<endnote>$1</endnote>"],
     // 6. Verse decorator: wraps alignment and words, applied last
-    v: [/\\v\s+(\d+)/g, "<v><marker>\\v </marker><number>$1</number>"],
+    v: [
+      /\\v\s+(\d+)\s+([\s\S]*?)(?=(\\v\s+\d+|\\c\s+\d+|$))/g,
+      "<v><marker>\\v </marker><number>$1</number>$2</v>",
+    ],
     // 7. Paragraph marker (\p)
     p: [/\\p/g, "<p><marker>\\p</marker></p>"],
     // 8. Section headings (\s, \s1, \s2)
-    s: [
-      /\\s\d?\s+([^\n]+)/g,
-      '<header class="s"><marker class="marker s">\\s </marker>$1</header>',
-    ],
+    s: [/(\\s\d?\s+)/g, "<s><marker>$1</marker></s>"],
+    // 8.1. Section headings (\s, \s1, \s2)
+    ts: [/(\\ts\\\*\s+)/g, "<ts><marker>$1</marker></ts>"],
     // 9. Chapter marker (\c)
     c: [/\\c\s+(\d+)/g, "<c><marker>\\c </marker><number>$1</number></c>"],
 

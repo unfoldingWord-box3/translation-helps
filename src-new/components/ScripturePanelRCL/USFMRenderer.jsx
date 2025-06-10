@@ -1,11 +1,15 @@
 /**
  * USFMRenderer.jsx
  * Component that wraps simple-text-editor-rcl for USFM rendering
+ *
+ * All custom component overrides and handlers for UsfmEditor are defined here.
+ * CustomUsfmEditor is a thin wrapper only.
  */
 import React, { useState, useContext } from "react";
 import UsfmEditor from "./CustomUsfmEditor";
 import { ReferenceContext } from "../../context/ReferenceContext";
 import { createUsfmDecorators } from "../../utils/usfmDecorators";
+import { segmenter } from "../../utils/segmenter";
 import "../../components/AlignedWord/usfm-custom-tags.css";
 
 /**
@@ -38,29 +42,55 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
 
   // Custom block component to override default styles
   const components = {
-    block: ({ ...props }) => <div {...props} style={{ whiteSpace: "normal" }} />,
+    // _props may include event handlers such as onClick
+    block: (props) => <div className='block' {...props} style={{ width: "100%" }} />,
   };
 
   // Handle selection clicks (for chapter navigation)
-  const handleSelectionClick = (selection) => {
-    console.log("📖 Selection clicked:", selection);
-    if (selection?.chapter) {
-      const chapterNum = parseInt(selection.chapter);
+  // Now expects { content, index }
+  const onSectionClick = ({ content, index }) => {
+    console.log("📖 Section clicked:", { content, index });
+    // Try to extract chapter from content (string or object)
+    let chapterNum;
+    if (typeof content === "object" && content?.chapter) {
+      chapterNum = parseInt(content.chapter);
+    } else if (typeof content === "string") {
+      // Try to extract chapter number from string (e.g., "\c 1")
+      const match = content.match(/\\c\s+(\d+)/);
+      if (match) {
+        chapterNum = parseInt(match[1]);
+      }
+    }
+    if (chapterNum) {
       updateReference({ chapter: chapterNum });
     }
   };
 
   // Handle block clicks (for verse navigation)
-  const handleBlockClick = (block) => {
-    console.log("📝 Block clicked:", block);
-    if (block?.verse) {
-      const verseNum = parseInt(block.verse);
-      // Try to get chapter from block, fallback to selectedVerse or context
-      const chapterNum = block.chapter ? parseInt(block.chapter) : undefined;
+  // Now expects { content, index }
+  const onBlockClick = ({ content, index }) => {
+    console.log("🟢 VERSE CLICKED:", { content, index });
+    // Try to extract verse and chapter from content (string or object)
+    let verseNum, chapterNum;
+    if (typeof content === "object") {
+      if (content.verse) verseNum = parseInt(content.verse);
+      if (content.chapter) chapterNum = parseInt(content.chapter);
+    } else if (typeof content === "string") {
+      // Try to extract verse number from string (e.g., "\v 1 ...")
+      const verseMatch = content.match(/\\v\s+(\d+)/);
+      if (verseMatch) verseNum = parseInt(verseMatch[1]);
+      const chapterMatch = content.match(/\\c\s+(\d+)/);
+      if (chapterMatch) chapterNum = parseInt(chapterMatch[1]);
+    }
+    console.log("🔄 Updating reference to:", { chapter: chapterNum, verse: verseNum });
+    if (verseNum) {
       updateReference({ chapter: chapterNum, verse: verseNum });
       if (onVerseClick) {
+        console.log("📞 Calling onVerseClick with:", verseNum, chapterNum);
         onVerseClick(verseNum, chapterNum);
       }
+    } else {
+      console.log("⚠️ Block click did not contain a verse number:", { content, index });
     }
   };
 
@@ -80,18 +110,34 @@ export default function USFMRenderer({ usfm, selectedVerse, onVerseClick }) {
     );
   }
 
+  // Custom parsers and joiners for USFM segmentation
+  const parsers = {
+    section: (_content) =>
+      segmenter({ content: _content, regex: /(^|\\c +\d+)(\n|.)+?(\n|$)?(?=(\\c +\d+|$))/g }),
+    block: (_content) =>
+      segmenter({ content: _content, regex: /(^|\\[cspv])(\n|.)+?(\n|$)?(?=(\\[cspv]|$))/g }),
+  };
+  const joiners = {
+    section: "",
+    block: "",
+  };
+
   const editor = (
-    <UsfmEditor
-      content={usfm}
-      options={options}
-      sectionIndex={-1} // Show all content
-      decorators={usfmDecorators}
-      components={components}
-      handlers={{
-        onSectionClick: handleSelectionClick,
-        onBlockClick: handleBlockClick,
-      }}
-    />
+    <div data-testid='usfm-renderer'>
+      <UsfmEditor
+        content={usfm}
+        options={options}
+        sectionIndex={-1} // Show all content
+        decorators={usfmDecorators}
+        components={components}
+        handlers={{
+          onSectionClick,
+          onBlockClick,
+        }}
+        parsers={parsers}
+        joiners={joiners}
+      />
+    </div>
   );
 
   return (

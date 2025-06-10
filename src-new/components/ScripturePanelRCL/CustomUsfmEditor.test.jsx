@@ -1,19 +1,49 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import React from "react";
 import CustomUsfmEditor from "./CustomUsfmEditor";
-import { createMilestoneDecorators } from "../../utils/milestoneDecorators";
+import { createUsfmDecorators } from "../../utils/usfmDecorators";
 
 describe("CustomUsfmEditor", () => {
-  it("should render the USFM content with custom tags", () => {
+  it("should render the USFM content with custom tags (with full app props)", () => {
     const usfm = "\\id GEN\n\\c 1\n\\v 1 \\w In|in\\w* \\w the|the\\w* \\w beginning|beginning\\w*";
-    const milestoneDecorators = createMilestoneDecorators();
-    const { container } = render(
-      <CustomUsfmEditor content={usfm} decorators={milestoneDecorators} />
-    );
+    const usfmDecorators = createUsfmDecorators();
+    const options = {
+      sectionable: false,
+      blockable: true,
+      editable: false,
+      preview: true,
+      verse: true,
+      chapter: true,
+      showWordAtts: false,
+      showTitles: true,
+      showHeadings: false,
+      showIntroductions: true,
+      showChapterLabels: true,
+      showVerseLabels: true,
+    };
+    const components = {
+      block: ({ content, ...props }) => (
+        <div {...props} style={{ whiteSpace: "normal" }}>
+          {content}
+        </div>
+      ),
+    };
+    const handlers = {
+      onSectionClick: () => {},
+      onBlockClick: () => {},
+    };
+    const sectionIndex = -1;
 
-    // Debug: print the actual HTML output
-    // eslint-disable-next-line no-console
-    console.log(container.innerHTML);
+    const { container } = render(
+      <CustomUsfmEditor
+        content={usfm}
+        options={options}
+        sectionIndex={sectionIndex}
+        decorators={usfmDecorators}
+        components={components}
+        handlers={handlers}
+      />
+    );
 
     // Check for the custom tags
     const verse = container.querySelector("v");

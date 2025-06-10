@@ -1,5 +1,17 @@
 # USFM Decorators in simple-text-editor-rcl
 
+> **Migration Note (2025-06):**  
+> The previous `milestoneDecorators` utility has been **removed**. All milestone and custom USFM tag handling is now managed by the unified `usfmDecorators` module (`src-new/utils/usfmDecorators.js`).  
+> This change consolidates all decorator logic, supports both standard and custom tags, and enables easier future enhancements.
+>
+> - All references to `milestoneDecorators` have been removed.
+> - If you previously used or extended `milestoneDecorators`, migrate your logic to the new `usfmDecorators` API.
+> - See the API documentation below for usage examples and extension points.
+>
+> | Old Utility         | Status  | Replacement    | Notes                                  |
+> | ------------------- | ------- | -------------- | -------------------------------------- |
+> | milestoneDecorators | Removed | usfmDecorators | Unified, extensible, supports all tags |
+
 > **NOTE:** The following section documents the legacy decorator mappings (class-based).  
 > For the current implementation using custom tags, see the section **Custom Tag Decorator Mappings (Current)** below.
 
@@ -208,21 +220,21 @@ Decorators must be sorted from smallest scope (most deeply nested) to largest sc
 ## Migration Guidance
 
 - When porting or updating decorators, always refer to the "Custom Tag Decorator Mappings (Current)" section and `verse-1-test-case.md`.
-- The canonical implementation is in [`src-new/utils/milestoneDecorators.js`](../src-new/utils/milestoneDecorators.js).
+- The canonical implementation is in [`src-new/utils/usfmDecorators.js`](../src-new/utils/usfmDecorators.js).
 
 ## See Also
 
 - [`docs/verse-1-test-case.md`](./verse-1-test-case.md) (source of truth for output)
-- [`src-new/utils/milestoneDecorators.js`](../src-new/utils/milestoneDecorators.js) (implementation)
+- [`src-new/utils/usfmDecorators.js`](../src-new/utils/usfmDecorators.js) (implementation)
 
 ---
 
 ## Migration Checklist for New Tag Implementation
 
-- [ ] **Decorator Implementation:** All USFM markers in the new mapping are implemented in `src-new/utils/milestoneDecorators.js`.
-- [ ] **Rendering Pipeline:** Rendering components (`CustomUsfmEditor.jsx`, `USFMRenderer.jsx`, etc.) pass the new decorators and do not escape custom tags.
-- [ ] **CSS/Styling:** CSS is updated or created for new tags (e.g., `usfm-custom-tags.css`), and legacy class-based CSS is removed or refactored.
-- [ ] **Tests:** All tests for USFM rendering assert on custom tags, not legacy spans. Add new tests for any new markers or edge cases.
-- [ ] **Documentation:** This file and related docs are kept up to date as the single source of truth for both legacy and new mappings.
+- [x] **Decorator Implementation:** All USFM markers in the new mapping are implemented in `src-new/utils/usfmDecorators.js`.
+- [x] **Rendering Pipeline:** Rendering components (`CustomUsfmEditor.jsx`, `USFMRenderer.jsx`, etc.) pass the new decorators and do not escape custom tags.
+- [x] **CSS/Styling:** CSS is updated or created for new tags (e.g., `usfm-custom-tags.css`), and legacy class-based CSS is removed or refactored.
+- [x] **Tests:** All tests for USFM rendering assert on custom tags, not legacy spans. Add new tests for any new markers or edge cases.
+- [x] **Documentation:** This file and related docs are kept up to date as the single source of truth for both legacy and new mappings.
 - [ ] **Downstream Consumers:** Any downstream code or tools that expect the old structure are updated to work with new custom tags.
-- [ ] **Migration/Transition:** All references to legacy decorators are clearly marked, and migration notes or TODOs are added as needed.
+- [x] **Migration/Transition:** All references to legacy decorators are clearly marked, and migration notes or TODOs are added as needed.

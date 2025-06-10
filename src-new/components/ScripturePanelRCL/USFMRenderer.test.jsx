@@ -25,10 +25,49 @@ describe("USFMRenderer", () => {
     expect(verse).toBeInTheDocument();
     const zaln = verse.querySelector("zaln");
     expect(zaln).toBeInTheDocument();
-    const word = zaln.querySelector("w");
+    const word = zaln.querySelector("word");
     expect(word).toBeInTheDocument();
 
     // Check for the text content
     expect(word).toHaveTextContent("Paul");
+  });
+
+  it("should wrap a single verse (no following marker) in a <v> tag", () => {
+    const usfm = "\\id TIT\n\\c 1\n\\v 1 In the beginning God created the heavens and the earth.";
+    const reference = {
+      bookId: "tit",
+      chapter: 1,
+      verse: 1,
+    };
+
+    const { container } = render(
+      <ReferenceContext.Provider value={{ reference, updateReference: () => {} }}>
+        <USFMRenderer usfm={usfm} selectedVerse={1} onVerseClick={() => {}} />
+      </ReferenceContext.Provider>
+    );
+
+    const verse = container.querySelector("v");
+    expect(verse).toBeInTheDocument();
+    expect(verse).toHaveTextContent("In the beginning God created the heavens and the earth.");
+  });
+
+  it("should wrap the last verse at end of input in a <v> tag", () => {
+    const usfm = "\\id TIT\n\\c 1\n\\v 1 First verse.\n\\v 2 Last verse.";
+    const reference = {
+      bookId: "tit",
+      chapter: 1,
+      verse: 2,
+    };
+
+    const { container } = render(
+      <ReferenceContext.Provider value={{ reference, updateReference: () => {} }}>
+        <USFMRenderer usfm={usfm} selectedVerse={2} onVerseClick={() => {}} />
+      </ReferenceContext.Provider>
+    );
+
+    const verses = container.querySelectorAll("v");
+    expect(verses.length).toBe(2);
+    expect(verses[0]).toHaveTextContent("First verse.");
+    expect(verses[1]).toHaveTextContent("Last verse.");
   });
 });
