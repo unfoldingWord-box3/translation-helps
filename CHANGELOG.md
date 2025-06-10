@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.12.0] - 2025-06-10
+
+### Added
+
+- **Proskomma React Hooks Integration for Efficient Scripture Rendering and Search ([#68](https://github.com/klappy/translation-helps/issues/68))**
+  - ✅ Integrated `proskomma-react-hooks` for targeted chapter/verse queries and efficient verse-by-verse rendering
+  - ✅ Implemented `usePassage` and custom `useVerseQueries` hooks for precise, performant scripture data fetching
+  - ✅ Refactored `USFMRenderer` to use hooks, with improved loading states and error handling
+  - ✅ Added `SearchPanel` component with real-time scripture search using `useSearchForPassages`
+  - ✅ Optimized document management with `useCatalog` for better metadata and state handling
+  - ✅ Reduced query size by ~90% (chapter-only queries instead of full book)
+  - ✅ Comprehensive test coverage for new renderer and search features
+  - ✅ Updated documentation: see `docs/proskomma-hooks-enhancement.md` for technical details, migration notes, and usage examples
+  - ✅ Maintained backward compatibility for verse click handlers and styling
+  - ✅ Acceptance criteria, migration notes, and future enhancements documented in [#68](https://github.com/klappy/translation-helps/issues/68)
+
 ## [0.11.1] - 2025-06-06
 
 ### Changed

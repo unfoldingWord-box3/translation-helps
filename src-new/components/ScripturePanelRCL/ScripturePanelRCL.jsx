@@ -2,10 +2,11 @@
  * ScripturePanelRCL.jsx
  * Enhanced scripture panel using simple-text-editor-rcl for rich USFM rendering
  */
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { ReferenceContext } from "../../context/ReferenceContext";
 import { ManifestsContext } from "../../context/MultiManifestsContext";
 import { fetchBook } from "../../services/scriptureService";
+import { useProskomma, useImport } from "proskomma-react-hooks";
 
 import USFMRenderer from "./USFMRenderer";
 import SearchPanel from "./SearchPanel";
@@ -23,6 +24,28 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
   const { organization, languageId, resourceId, updateReference } = useContext(ReferenceContext);
   const { manifests, isLoading: manifestsLoading } = useContext(ManifestsContext);
 
+  // Shared proskomma instance for both USFMRenderer and SearchPanel
+  const proskommaHook = useProskomma({ verbose: false });
+
+  // Create document configuration when USFM content is available
+  const document = useMemo(() => {
+    if (!usfmContent || !organization || !languageId || !reference?.bookId) return null;
+    return [
+      {
+        selectors: { org: organization, lang: languageId, abbr: reference.bookId },
+        data: usfmContent,
+        bookCode: reference.bookId,
+      },
+    ];
+  }, [usfmContent, organization, languageId, reference?.bookId]);
+
+  // Import document into proskomma when document is ready
+  const importHook = useImport({
+    ...proskommaHook,
+    documents: document || [], // Ensure we always pass an array
+    verbose: false,
+  });
+
   // Debug: Log render
   console.log("[ScripturePanelRCL] Rendering with:", {
     reference,
@@ -32,6 +55,8 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
     manifestsLoading,
     hasManifests: !!manifests,
     usfmContentLength: usfmContent?.length,
+    hasDocument: !!document,
+    importDone: importHook.done,
   });
 
   useEffect(() => {
@@ -240,6 +265,8 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
           abbr={reference.bookId ? reference.bookId.toUpperCase() : ""}
           usfm={usfmContent}
           onResultClick={handleVerseClick}
+          proskommaHook={proskommaHook}
+          importHook={importHook}
         />
       )}
 
@@ -251,6 +278,8 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
         chapter={reference.chapter}
         selectedVerse={reference.verse}
         onVerseClick={handleVerseClick}
+        proskommaHook={proskommaHook}
+        importHook={importHook}
       />
     </section>
   );
