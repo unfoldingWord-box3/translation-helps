@@ -6,7 +6,7 @@ import React, { useState, useEffect, useContext, useMemo } from "react";
 import { ReferenceContext } from "../../context/ReferenceContext";
 import { ManifestsContext } from "../../context/MultiManifestsContext";
 import { fetchBook } from "../../services/scriptureService";
-import { useProskomma, useImport } from "proskomma-react-hooks";
+import { useProskomma, useImport, useCatalog } from "proskomma-react-hooks";
 
 import USFMRenderer from "./USFMRenderer";
 import SearchPanel from "./SearchPanel";
@@ -27,9 +27,46 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
   // Shared proskomma instance for both USFMRenderer and SearchPanel
   const proskommaHook = useProskomma({ verbose: false });
 
-  // Create document configuration when USFM content is available
+  // Check what's already imported to prevent duplicate imports
+  const catalogHook = useCatalog({
+    ...proskommaHook,
+    verbose: false,
+  });
+
+  // Check if the current book is already imported
+  const isBookAlreadyImported = useMemo(() => {
+    if (!organization || !languageId || !reference?.bookId || !catalogHook.catalog) {
+      return false;
+    }
+
+    const docSetId = `${organization}/${languageId}_${reference.bookId}`;
+    const docSets = catalogHook.catalog.docSets || [];
+
+    // Check if this docSet exists and has documents
+    const existingDocSet = docSets.find((ds) => ds.id === docSetId);
+    const hasDocuments = existingDocSet && existingDocSet.nDocuments > 0;
+
+    console.log("📚 Checking if book is already imported:", {
+      docSetId,
+      existingDocSet: !!existingDocSet,
+      hasDocuments,
+      availableDocSets: docSets.map((ds) => ds.id),
+    });
+
+    return hasDocuments;
+  }, [organization, languageId, reference?.bookId, catalogHook.catalog]);
+
+  // Create document configuration only when USFM content is available AND book is not already imported
   const document = useMemo(() => {
     if (!usfmContent || !organization || !languageId || !reference?.bookId) return null;
+
+    // Don't create document config if book is already imported
+    if (isBookAlreadyImported) {
+      console.log("📚 Book already imported, skipping document creation");
+      return null;
+    }
+
+    console.log("📚 Creating new document config for import");
     return [
       {
         selectors: { org: organization, lang: languageId, abbr: reference.bookId },
@@ -37,7 +74,7 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
         bookCode: reference.bookId,
       },
     ];
-  }, [usfmContent, organization, languageId, reference?.bookId]);
+  }, [usfmContent, organization, languageId, reference?.bookId, isBookAlreadyImported]);
 
   // Import document into proskomma when document is ready
   const importHook = useImport({
@@ -61,10 +98,6 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
 
   useEffect(() => {
     async function loadUSFMChapter() {
-      // Clear previous content and errors when any context changes
-      setUsfmContent("");
-      setError(null);
-
       // Don't attempt to load if we don't have required context
       if (!reference?.bookId || !reference.chapter || !organization || !languageId) {
         console.log("📋 ScripturePanelRCL: Missing required context", {
@@ -73,7 +106,9 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
           organization,
           languageId,
         });
-        // Set helpful guidance message instead of just returning
+        // Clear content and set helpful guidance message
+        setUsfmContent("");
+        setError(null);
         if (!organization) {
           setError("Please select an organization from the dropdown above to view scripture.");
         } else if (!languageId) {
@@ -90,6 +125,21 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
         setLoading(true);
         return;
       }
+
+      // If book is already imported, we don't need to re-fetch the USFM content
+      // The existing content can be used for all chapters in the same book
+      if (isBookAlreadyImported && usfmContent) {
+        console.log("📚 Book already imported and content available, skipping fetch");
+        setError(null);
+        setLoading(false);
+        return;
+      }
+
+      // Clear previous content and errors when we need to load new content
+      if (!isBookAlreadyImported) {
+        setUsfmContent("");
+      }
+      setError(null);
 
       // Use the selected resource or fallback to 'ult'
       const selectedResourceId = resourceId || "ult";
@@ -172,6 +222,8 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
     organization,
     manifests,
     manifestsLoading,
+    isBookAlreadyImported,
+    usfmContent,
   ]);
 
   // Accept both chapter and verse for context update
