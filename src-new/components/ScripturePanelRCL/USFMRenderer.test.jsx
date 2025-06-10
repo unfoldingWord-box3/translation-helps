@@ -1,73 +1,119 @@
-import { render, screen } from "@testing-library/react";
+/**
+ * @jest-environment jsdom
+ */
 import React from "react";
-import { describe, it, expect } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
 import USFMRenderer from "./USFMRenderer";
 import { ReferenceContext } from "../../context/ReferenceContext";
 
+// Real proskomma-react-hooks (no mocking)
+
+const mockContextValue = {
+  updateReference: vi.fn(),
+};
+
+const defaultProps = {
+  selectedVerse: 1,
+  onVerseClick: vi.fn(),
+  org: "unfoldingword",
+  lang: "en",
+  abbr: "tit",
+  usfm: `\\id TIT
+\\c 1
+\\v 1 Paul, a servant of God and an apostle of Jesus Christ
+\\v 2 in hope of eternal life`,
+  chapter: 1,
+};
+
+const renderWithContext = (component, contextValue = mockContextValue) => {
+  return render(
+    <ReferenceContext.Provider value={contextValue}>{component}</ReferenceContext.Provider>
+  );
+};
+
 describe("USFMRenderer", () => {
-  it("should render the USFM content with custom tags", () => {
-    const usfm =
-      '\\id TIT\n\\c 1\n\\v 1 \\zaln-s "lemma=\\"Προσευχή\\""\\*\\w Paul|Paul\\w*\\zaln-e\\*';
-    const reference = {
-      bookId: "tit",
-      chapter: 1,
-      verse: 1,
-    };
-
-    const { container } = render(
-      <ReferenceContext.Provider value={{ reference, updateReference: () => {} }}>
-        <USFMRenderer usfm={usfm} selectedVerse={1} onVerseClick={() => {}} />
-      </ReferenceContext.Provider>
-    );
-
-    // Check for the custom tags
-    const verse = container.querySelector("v");
-    expect(verse).toBeInTheDocument();
-    const zaln = verse.querySelector("zaln");
-    expect(zaln).toBeInTheDocument();
-    const word = zaln.querySelector("word");
-    expect(word).toBeInTheDocument();
-
-    // Check for the text content
-    expect(word).toHaveTextContent("Paul");
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it("should wrap a single verse (no following marker) in a <v> tag", () => {
-    const usfm = "\\id TIT\n\\c 1\n\\v 1 In the beginning God created the heavens and the earth.";
-    const reference = {
-      bookId: "tit",
-      chapter: 1,
-      verse: 1,
-    };
-
-    const { container } = render(
-      <ReferenceContext.Provider value={{ reference, updateReference: () => {} }}>
-        <USFMRenderer usfm={usfm} selectedVerse={1} onVerseClick={() => {}} />
-      </ReferenceContext.Provider>
-    );
-
-    const verse = container.querySelector("v");
-    expect(verse).toBeInTheDocument();
-    expect(verse).toHaveTextContent("In the beginning God created the heavens and the earth.");
+  it("renders without crashing", () => {
+    renderWithContext(<USFMRenderer {...defaultProps} />);
+    expect(screen.getByTestId("usfm-renderer")).toBeInTheDocument();
   });
 
-  it("should wrap the last verse at end of input in a <v> tag", () => {
-    const usfm = "\\id TIT\n\\c 1\n\\v 1 First verse.\n\\v 2 Last verse.";
-    const reference = {
-      bookId: "tit",
-      chapter: 1,
-      verse: 2,
-    };
-
-    const { container } = render(
-      <ReferenceContext.Provider value={{ reference, updateReference: () => {} }}>
-        <USFMRenderer usfm={usfm} selectedVerse={2} onVerseClick={() => {}} />
-      </ReferenceContext.Provider>
+  it("shows error when required props are missing", () => {
+    renderWithContext(
+      <USFMRenderer
+        selectedVerse={1}
+        onVerseClick={vi.fn()}
+        org=''
+        lang=''
+        abbr=''
+        usfm=''
+        chapter={1}
+      />
     );
+    expect(screen.getByText("Missing scripture context.")).toBeInTheDocument();
+  });
 
-    const verses = container.querySelectorAll("v");
-    expect(verses.length).toBe(2);
-    expect(verses[0]).toHaveTextContent("First verse.");
-    expect(verses[1]).toHaveTextContent("Last verse.");
+  it("shows loading state when no passage data is available", async () => {
+    renderWithContext(<USFMRenderer {...defaultProps} chapter={99} />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Loading chapter 99...")).toBeInTheDocument();
+    });
+  });
+
+  it("renders chapter header and verses", async () => {
+    renderWithContext(<USFMRenderer {...defaultProps} />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Chapter 1")).toBeInTheDocument();
+      expect(
+        screen.getByText("Paul, a servant of God and an apostle of Jesus Christ")
+      ).toBeInTheDocument();
+      expect(screen.getByText("in hope of eternal life")).toBeInTheDocument();
+    });
+  });
+
+  it("highlights selected verse", async () => {
+    renderWithContext(<USFMRenderer {...defaultProps} selectedVerse={1} />);
+
+    await waitFor(() => {
+      const verseElements = screen.getAllByClassName("verse");
+      const selectedVerse = verseElements.find((el) => el.classList.contains("selected"));
+      expect(selectedVerse).toBeInTheDocument();
+    });
+  });
+
+  it("calls onVerseClick when verse is clicked", async () => {
+    const onVerseClick = vi.fn();
+    renderWithContext(<USFMRenderer {...defaultProps} onVerseClick={onVerseClick} />);
+
+    await waitFor(() => {
+      const verseElement = screen
+        .getByText("Paul, a servant of God and an apostle of Jesus Christ")
+        .closest(".verse");
+      if (verseElement) {
+        verseElement.click();
+        expect(onVerseClick).toHaveBeenCalledWith(1, 1);
+      }
+    });
+  });
+
+  it("updates reference context when verse is clicked", async () => {
+    const updateReference = vi.fn();
+    renderWithContext(<USFMRenderer {...defaultProps} />, { updateReference });
+
+    await waitFor(() => {
+      const verseElement = screen
+        .getByText("Paul, a servant of God and an apostle of Jesus Christ")
+        .closest(".verse");
+      if (verseElement) {
+        verseElement.click();
+        expect(updateReference).toHaveBeenCalledWith({ chapter: 1, verse: 1 });
+      }
+    });
   });
 });

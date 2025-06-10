@@ -8,6 +8,7 @@ import { ManifestsContext } from "../../context/MultiManifestsContext";
 import { fetchBook } from "../../services/scriptureService";
 
 import USFMRenderer from "./USFMRenderer";
+import SearchPanel from "./SearchPanel";
 
 /**
  * @param {object} props
@@ -18,8 +19,20 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
   const [usfmContent, setUsfmContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showSearch, setShowSearch] = useState(false);
   const { organization, languageId, resourceId, updateReference } = useContext(ReferenceContext);
   const { manifests, isLoading: manifestsLoading } = useContext(ManifestsContext);
+
+  // Debug: Log render
+  console.log("[ScripturePanelRCL] Rendering with:", {
+    reference,
+    organization,
+    languageId,
+    resourceId,
+    manifestsLoading,
+    hasManifests: !!manifests,
+    usfmContentLength: usfmContent?.length,
+  });
 
   useEffect(() => {
     async function loadUSFMChapter() {
@@ -176,11 +189,66 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
     );
   }
 
+  // Strip language prefix from resourceId for manifest lookup
+  const selectedResourceId = resourceId || "ult";
+  let manifestKey = selectedResourceId;
+  if (selectedResourceId && languageId && selectedResourceId.startsWith(`${languageId}_`)) {
+    manifestKey = selectedResourceId.substring(languageId.length + 1);
+  }
+  const selectedManifest = manifests[manifestKey];
+
+  // Debug: Log before rendering provider
+  console.log("[ScripturePanelRCL] About to render provider with:", {
+    usfmContentLength: usfmContent?.length,
+    usfmFirst100: usfmContent?.substring(0, 100),
+    hasSelectedManifest: !!selectedManifest,
+    manifestKey,
+    selectedManifest,
+  });
+
   return (
     <section data-testid='scripture-panel-rcl' style={{ padding: "20px" }}>
-      <h2>{`${reference.bookId.toUpperCase()} ${reference.chapter}`}</h2>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "10px",
+        }}
+      >
+        <h2>{`${reference.bookId.toUpperCase()} ${reference.chapter}`}</h2>
+        <button
+          onClick={() => setShowSearch(!showSearch)}
+          style={{
+            padding: "6px 12px",
+            background: showSearch ? "#007bff" : "#f8f9fa",
+            color: showSearch ? "white" : "#333",
+            border: "1px solid #dee2e6",
+            borderRadius: "4px",
+            cursor: "pointer",
+            fontSize: "14px",
+          }}
+        >
+          {showSearch ? "Hide Search" : "Search Scripture"}
+        </button>
+      </div>
+
+      {showSearch && (
+        <SearchPanel
+          org={organization}
+          lang={languageId}
+          abbr={reference.bookId ? reference.bookId.toUpperCase() : ""}
+          usfm={usfmContent}
+          onResultClick={handleVerseClick}
+        />
+      )}
+
       <USFMRenderer
+        org={organization}
+        lang={languageId}
+        abbr={reference.bookId ? reference.bookId.toUpperCase() : ""}
         usfm={usfmContent}
+        chapter={reference.chapter}
         selectedVerse={reference.verse}
         onVerseClick={handleVerseClick}
       />

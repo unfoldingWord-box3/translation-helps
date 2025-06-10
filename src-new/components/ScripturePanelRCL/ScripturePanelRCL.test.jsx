@@ -11,6 +11,46 @@ vi.mock("../../services/scriptureService", async () => {
     fetchBook: vi.fn(),
   };
 });
+vi.mock("proskomma-react-hooks", async () => {
+  const actual = await vi.importActual("proskomma-react-hooks");
+  // Minimal mock Proskomma API for the test USFM
+  const mockProskomma = {
+    bookIds: () => ["GEN"],
+    gqlQuerySync: () => ({
+      docSet: {
+        document: {
+          bookCode: "GEN",
+          headers: [],
+          mainSequence: {
+            blocks: [
+              {
+                scopeLabels: ["chapter/1", "verse/1"],
+                text: "In the beginning God created the heavens and the earth.",
+              },
+              {
+                scopeLabels: ["chapter/1", "verse/2"],
+                text: "The earth was without form and void, and darkness was over the face of the deep.",
+              },
+            ],
+          },
+        },
+      },
+    }),
+  };
+  return {
+    ...actual,
+    useProskomma: () => ({
+      proskomma: mockProskomma,
+      state: { docSetIds: ["docSet1"] },
+      error: null,
+    }),
+    useImport: () => ({
+      importing: false,
+      done: true,
+      errors: [],
+    }),
+  };
+});
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import ScripturePanelRCL from "./ScripturePanelRCL";
@@ -79,6 +119,17 @@ describe("ScripturePanelRCL", () => {
     await waitFor(() => {
       expect(screen.getByTestId("usfm-renderer")).toBeInTheDocument();
     });
+
+    // Explicitly check for the verse text in the DOM
+    let verseNode;
+    try {
+      verseNode = screen.getByText(/In the beginning God created the heavens and the earth\./);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log("DOM at failure:", document.body.innerHTML);
+      throw e;
+    }
+    expect(verseNode).toBeInTheDocument();
 
     expect(scriptureService.fetchBook).toHaveBeenCalledWith({
       languageId: "en",
@@ -179,9 +230,23 @@ describe("ScripturePanelRCL", () => {
       expect(screen.getByTestId("usfm-renderer")).toBeInTheDocument();
     });
 
-    // This test is simplified since the actual verse clicking logic is in USFMRenderer
-    // We're just verifying the prop is passed through
-    expect(mockOnVerseClick).not.toHaveBeenCalled();
+    // Wait for the first .verse element to appear, then simulate clicking it
+    let verseSpan;
+    await waitFor(
+      () => {
+        verseSpan = document.querySelector(".verse");
+        if (!verseSpan) {
+          // Debug: print the current HTML
+          // eslint-disable-next-line no-console
+          console.log(document.body.innerHTML);
+        }
+        expect(verseSpan).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+    verseSpan.click();
+
+    expect(mockOnVerseClick).toHaveBeenCalledWith(1, 1);
   });
 
   it("handles manifests loading state", () => {

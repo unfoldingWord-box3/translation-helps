@@ -72,7 +72,7 @@ describe("ScripturePanel", () => {
     );
 
     await waitFor(() => {
-      const verse = container.querySelector("v");
+      const verse = container.querySelector(".verse");
       expect(verse).toBeInTheDocument();
       expect(verse).toHaveTextContent(/In the beginning God created/);
     });
