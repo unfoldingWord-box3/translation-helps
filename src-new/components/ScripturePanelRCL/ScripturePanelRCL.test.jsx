@@ -3,54 +3,21 @@
  * Tests for the enhanced scripture panel with simple-text-editor-rcl
  */
 import { vi } from "vitest";
+import {
+  waitForOptions,
+  createMockProskommaHooks,
+  createMockScriptureService,
+  testCleanup,
+  TEST_TIMEOUT,
+  slowWaitForOptions,
+} from "./test-utils";
+
 // Mock the scriptureService
-vi.mock("../../services/scriptureService", async () => {
-  const actual = await vi.importActual("../../services/scriptureService");
-  return {
-    ...actual,
-    fetchBook: vi.fn(),
-  };
-});
-vi.mock("proskomma-react-hooks", async () => {
-  const actual = await vi.importActual("proskomma-react-hooks");
-  // Minimal mock Proskomma API for the test USFM
-  const mockProskomma = {
-    bookIds: () => ["GEN"],
-    gqlQuerySync: () => ({
-      docSet: {
-        document: {
-          bookCode: "GEN",
-          headers: [],
-          mainSequence: {
-            blocks: [
-              {
-                scopeLabels: ["chapter/1", "verse/1"],
-                text: "In the beginning God created the heavens and the earth.",
-              },
-              {
-                scopeLabels: ["chapter/1", "verse/2"],
-                text: "The earth was without form and void, and darkness was over the face of the deep.",
-              },
-            ],
-          },
-        },
-      },
-    }),
-  };
-  return {
-    ...actual,
-    useProskomma: () => ({
-      proskomma: mockProskomma,
-      state: { docSetIds: ["docSet1"] },
-      error: null,
-    }),
-    useImport: () => ({
-      importing: false,
-      done: true,
-      errors: [],
-    }),
-  };
-});
+vi.mock("../../services/scriptureService", () => createMockScriptureService());
+
+// Mock proskomma-react-hooks with timeout handling
+vi.mock("proskomma-react-hooks", () => createMockProskommaHooks());
+
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import ScripturePanelRCL from "./ScripturePanelRCL";
@@ -64,6 +31,10 @@ describe("ScripturePanelRCL", () => {
     chapter: 1,
     verse: 1,
   };
+
+  beforeEach(() => {
+    vi.setConfig({ testTimeout: TEST_TIMEOUT });
+  });
 
   const mockReferenceContext = {
     organization: "unfoldingWord",
@@ -95,7 +66,11 @@ describe("ScripturePanelRCL", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    scriptureService.fetchBook.mockResolvedValue(mockUSFMContent);
+    scriptureService.fetchBook = vi.fn().mockResolvedValue(mockUSFMContent);
+  });
+
+  afterEach(async () => {
+    await testCleanup();
   });
 
   const renderWithContext = (props = {}) => {
@@ -118,7 +93,7 @@ describe("ScripturePanelRCL", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("usfm-renderer")).toBeInTheDocument();
-    });
+    }, waitForOptions);
 
     // Explicitly check for the verse text in the DOM
     let verseNode;
@@ -145,7 +120,7 @@ describe("ScripturePanelRCL", () => {
 
     await waitFor(() => {
       expect(screen.getByText("GEN 1")).toBeInTheDocument();
-    });
+    }, waitForOptions);
   });
 
   it("shows guidance when no reference is selected", () => {
@@ -219,7 +194,7 @@ describe("ScripturePanelRCL", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Failed to load chapter: Network error")).toBeInTheDocument();
-    });
+    }, waitForOptions);
   });
 
   it("calls onVerseClick when verse is clicked", async () => {
@@ -228,22 +203,19 @@ describe("ScripturePanelRCL", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("usfm-renderer")).toBeInTheDocument();
-    });
+    }, waitForOptions);
 
     // Wait for the first .verse element to appear, then simulate clicking it
     let verseSpan;
-    await waitFor(
-      () => {
-        verseSpan = document.querySelector(".verse");
-        if (!verseSpan) {
-          // Debug: print the current HTML
-          // eslint-disable-next-line no-console
-          console.log(document.body.innerHTML);
-        }
-        expect(verseSpan).toBeInTheDocument();
-      },
-      { timeout: 3000 }
-    );
+    await waitFor(() => {
+      verseSpan = document.querySelector(".verse");
+      if (!verseSpan) {
+        // Debug: print the current HTML
+        // eslint-disable-next-line no-console
+        console.log(document.body.innerHTML);
+      }
+      expect(verseSpan).toBeInTheDocument();
+    }, waitForOptions);
     verseSpan.click();
 
     expect(mockOnVerseClick).toHaveBeenCalledWith(1, 1);

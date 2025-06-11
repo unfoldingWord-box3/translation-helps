@@ -22,8 +22,12 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
   const [error, setError] = useState(null);
   const [showSearch, setShowSearch] = useState(false);
   const [importingBooks, setImportingBooks] = useState(new Set());
+  const [fetchTimeout, setFetchTimeout] = useState(null);
   const { organization, languageId, resourceId, updateReference } = useContext(ReferenceContext);
   const { manifests, isLoading: manifestsLoading } = useContext(ManifestsContext);
+
+  // Timeout constants
+  const FETCH_TIMEOUT = 10000; // 10 seconds for fetching book content
 
   // Check what's already imported to prevent duplicate imports
   const catalogHook = useCatalog({
@@ -97,8 +101,22 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
     isBookAlreadyImported,
   });
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (fetchTimeout) {
+        clearTimeout(fetchTimeout);
+      }
+    };
+  }, [fetchTimeout]);
+
   useEffect(() => {
     async function loadUSFMChapter() {
+      // Clear any existing timeout
+      if (fetchTimeout) {
+        clearTimeout(fetchTimeout);
+        setFetchTimeout(null);
+      }
       // Don't attempt to load if we don't have required context
       if (!reference?.bookId || !reference.chapter || !organization || !languageId) {
         console.log("📋 ScripturePanelRCL: Missing required context", {
@@ -156,7 +174,9 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
 
       if (!selectedManifest) {
         console.log(
-          `📋 ScripturePanelRCL: ${selectedResourceId.toUpperCase()} manifest not available`
+          `📋 ScripturePanelRCL: ${
+            selectedResourceId?.toUpperCase() || "Unknown"
+          } manifest not available`
         );
         // Show helpful guidance instead of technical error
         if (!resourceId) {
@@ -172,19 +192,44 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
       setLoading(true);
       const { bookId, chapter } = reference;
 
+      // Create an AbortController for the fetch operation
+      const abortController = new AbortController();
+
+      // Set up timeout for fetch operation
+      const timeoutId = setTimeout(() => {
+        abortController.abort();
+        setError(
+          `Loading scripture timed out after ${FETCH_TIMEOUT / 1000} seconds. Please try again.`
+        );
+        setLoading(false);
+      }, FETCH_TIMEOUT);
+
+      setFetchTimeout(timeoutId);
+
       try {
         console.log(
           `📖 ScripturePanelRCL: Loading ${bookId} chapter ${chapter} from ${selectedResourceId}`
         );
 
-        // Fetch raw USFM content
-        const rawUSFM = await fetchBook({
+        // Fetch raw USFM content with timeout protection
+        const fetchPromise = fetchBook({
           languageId,
           resourceId: selectedResourceId,
           bookId,
           manifest: selectedManifest,
           organization,
+          signal: abortController.signal, // Pass abort signal if supported
         });
+
+        // Race between fetch and timeout
+        const rawUSFM = await Promise.race([
+          fetchPromise,
+          new Promise((_, reject) => {
+            abortController.signal.addEventListener("abort", () => {
+              reject(new Error("Fetch aborted due to timeout"));
+            });
+          }),
+        ]);
 
         if (!rawUSFM) {
           throw new Error(`Failed to fetch USFM for ${bookId}`);
@@ -207,9 +252,17 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
         setError(null);
       } catch (e) {
         console.error("❌ ScripturePanelRCL: Failed to load chapter:", e);
-        setError(`Failed to load chapter: ${e.message}`);
+        // Don't override timeout error if it's already set
+        if (!error || !error.includes("timed out")) {
+          setError(`Failed to load chapter: ${e.message}`);
+        }
         setUsfmContent("");
       } finally {
+        // Clear timeout on completion
+        if (fetchTimeout) {
+          clearTimeout(fetchTimeout);
+          setFetchTimeout(null);
+        }
         setLoading(false);
       }
     }

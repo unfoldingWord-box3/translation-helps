@@ -6,8 +6,16 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import USFMRenderer from "./USFMRenderer";
 import { ReferenceContext } from "../../context/ReferenceContext";
+import {
+  waitForOptions,
+  testCleanup,
+  TEST_TIMEOUT,
+  slowWaitForOptions,
+  createMockProskommaHooks,
+} from "./test-utils";
 
-// Real proskomma-react-hooks (no mocking)
+// Mock proskomma-react-hooks with timeout protection
+vi.mock("proskomma-react-hooks", () => createMockProskommaHooks());
 
 const mockContextValue = {
   updateReference: vi.fn(),
@@ -35,6 +43,12 @@ const renderWithContext = (component, contextValue = mockContextValue) => {
 describe("USFMRenderer", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Set test timeout
+    vi.setConfig({ testTimeout: TEST_TIMEOUT });
+  });
+
+  afterEach(async () => {
+    await testCleanup();
   });
 
   it("renders without crashing", () => {
@@ -58,11 +72,19 @@ describe("USFMRenderer", () => {
   });
 
   it("shows loading state when no passage data is available", async () => {
+    // Mock loading state
+    const proskommaHooks = require("proskomma-react-hooks");
+    proskommaHooks.usePassage.mockReturnValue({
+      loading: true,
+      data: null,
+      errors: [],
+    });
+
     renderWithContext(<USFMRenderer {...defaultProps} chapter={99} />);
 
     await waitFor(() => {
       expect(screen.getByText("Loading chapter 99...")).toBeInTheDocument();
-    });
+    }, waitForOptions);
   });
 
   it("renders chapter header and verses", async () => {
@@ -74,7 +96,7 @@ describe("USFMRenderer", () => {
         screen.getByText("Paul, a servant of God and an apostle of Jesus Christ")
       ).toBeInTheDocument();
       expect(screen.getByText("in hope of eternal life")).toBeInTheDocument();
-    });
+    }, waitForOptions);
   });
 
   it("highlights selected verse", async () => {
@@ -84,7 +106,7 @@ describe("USFMRenderer", () => {
       const verseElements = screen.getAllByClassName("verse");
       const selectedVerse = verseElements.find((el) => el.classList.contains("selected"));
       expect(selectedVerse).toBeInTheDocument();
-    });
+    }, waitForOptions);
   });
 
   it("calls onVerseClick when verse is clicked", async () => {
@@ -99,7 +121,7 @@ describe("USFMRenderer", () => {
         verseElement.click();
         expect(onVerseClick).toHaveBeenCalledWith(1, 1);
       }
-    });
+    }, waitForOptions);
   });
 
   it("updates reference context when verse is clicked", async () => {
@@ -114,6 +136,6 @@ describe("USFMRenderer", () => {
         verseElement.click();
         expect(updateReference).toHaveBeenCalledWith({ chapter: 1, verse: 1 });
       }
-    });
+    }, waitForOptions);
   });
 });

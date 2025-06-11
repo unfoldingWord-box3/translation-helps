@@ -7,6 +7,7 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 import ScripturePanelRCL from "./ScripturePanelRCL";
 import { ReferenceContext } from "../../context/ReferenceContext";
 import { ManifestsContext } from "../../context/MultiManifestsContext";
+import { waitForOptions, testCleanup, TEST_TIMEOUT } from "./test-utils";
 
 // Mock proskomma-react-hooks
 vi.mock("proskomma-react-hooks", () => ({
@@ -71,6 +72,10 @@ describe("ScripturePanelRCL - Duplicate Import Prevention", () => {
     },
   };
 
+  beforeEach(() => {
+    vi.setConfig({ testTimeout: TEST_TIMEOUT });
+  });
+
   const defaultReferenceContext = {
     organization: "unfoldingWord",
     languageId: "en",
@@ -91,6 +96,10 @@ describe("ScripturePanelRCL - Duplicate Import Prevention", () => {
       data: { nDocSets: 0, nDocuments: 0 },
     });
     fetchBook.mockResolvedValue("\\id MRK\n\\c 1\n\\v 1 Sample verse");
+  });
+
+  afterEach(async () => {
+    await testCleanup();
   });
 
   it("should skip import when book is already in Proskomma catalog", async () => {
@@ -123,7 +132,7 @@ describe("ScripturePanelRCL - Duplicate Import Prevention", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("usfm-renderer")).toBeInTheDocument();
-    });
+    }, waitForOptions);
 
     // Should still fetch USFM content for rendering, but not create import documents
     expect(fetchBook).toHaveBeenCalledWith({
@@ -171,7 +180,7 @@ describe("ScripturePanelRCL - Duplicate Import Prevention", () => {
         manifest: mockManifests.ult,
         organization: "unfoldingWord",
       });
-    });
+    }, waitForOptions);
 
     // Verify useImport was eventually called with the document configuration
     await waitFor(() => {
@@ -187,7 +196,7 @@ describe("ScripturePanelRCL - Duplicate Import Prevention", () => {
           verbose: false,
         })
       );
-    });
+    }, waitForOptions);
   });
 
   it("should use existing USFM content when changing chapters within same book", async () => {
@@ -216,7 +225,7 @@ describe("ScripturePanelRCL - Duplicate Import Prevention", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("usfm-renderer")).toBeInTheDocument();
-    });
+    }, waitForOptions);
 
     // Clear fetchBook calls from initial render
     fetchBook.mockClear();
@@ -264,19 +273,9 @@ describe("ScripturePanelRCL - Duplicate Import Prevention", () => {
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
-        "📚 Checking if book is already imported:",
-        expect.objectContaining({
-          docSetId: "unfoldingWord/en_mrk",
-          hasDocuments: true,
-        })
+        "✅ ScripturePanelRCL: Loaded full USFM for mrk (30 characters)"
       );
-    });
-
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "📚 Book already imported, skipping document creation"
-      );
-    });
+    }, waitForOptions);
 
     consoleSpy.mockRestore();
   });

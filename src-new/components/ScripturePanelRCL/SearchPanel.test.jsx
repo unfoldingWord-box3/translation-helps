@@ -6,6 +6,13 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import SearchPanel from "./SearchPanel";
 import { ReferenceContext } from "../../context/ReferenceContext";
+import {
+  waitForOptions,
+  testCleanup,
+  TEST_TIMEOUT,
+  slowWaitForOptions,
+  createMockSearchHook,
+} from "./test-utils";
 
 // Mock proskomma-react-hooks to prevent hanging
 import * as proskommaHooks from "proskomma-react-hooks";
@@ -55,10 +62,16 @@ const renderWithContext = (component, contextValue = mockContextValue) => {
 describe("SearchPanel", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Set test timeout
+    vi.setConfig({ testTimeout: TEST_TIMEOUT });
     // Set up default mocks
     proskommaHooks.useProskomma.mockImplementation(mockUseProskomma);
     proskommaHooks.useImport.mockImplementation(() => mockUseImport({ shouldComplete: true }));
     proskommaHooks.useSearchForPassages.mockImplementation(() => mockUseSearchForPassages());
+  });
+
+  afterEach(async () => {
+    await testCleanup();
   });
 
   it("renders search form", () => {
@@ -121,16 +134,13 @@ describe("SearchPanel", () => {
     const searchButton = screen.getByText("Search");
     fireEvent.click(searchButton);
 
-    await waitFor(
-      () => {
-        expect(screen.getByText('Found 1 result(s) for "Paul"')).toBeInTheDocument();
-        expect(screen.getByText("TIT 1:1")).toBeInTheDocument();
-        expect(
-          screen.getByText("Paul, a servant of God and an apostle of Jesus Christ")
-        ).toBeInTheDocument();
-      },
-      { timeout: 3000 }
-    );
+    await waitFor(() => {
+      expect(screen.getByText('Found 1 result(s) for "Paul"')).toBeInTheDocument();
+      expect(screen.getByText("TIT 1:1")).toBeInTheDocument();
+      expect(
+        screen.getByText("Paul, a servant of God and an apostle of Jesus Christ")
+      ).toBeInTheDocument();
+    }, waitForOptions);
   });
 
   it("shows no results message when search finds nothing", async () => {
@@ -146,12 +156,9 @@ describe("SearchPanel", () => {
     const searchButton = screen.getByText("Search");
     fireEvent.click(searchButton);
 
-    await waitFor(
-      () => {
-        expect(screen.getByText('No results found for "nonexistent"')).toBeInTheDocument();
-      },
-      { timeout: 3000 }
-    );
+    await waitFor(() => {
+      expect(screen.getByText('No results found for "nonexistent"')).toBeInTheDocument();
+    }, waitForOptions);
   });
 
   it("calls onResultClick when search result is clicked", async () => {
@@ -174,16 +181,13 @@ describe("SearchPanel", () => {
     const searchButton = screen.getByText("Search");
     fireEvent.click(searchButton);
 
-    await waitFor(
-      () => {
-        const resultElement = screen.getByText(
-          "Paul, a servant of God and an apostle of Jesus Christ"
-        );
-        fireEvent.click(resultElement);
-        expect(onResultClick).toHaveBeenCalledWith(1, 1, expect.any(Object));
-      },
-      { timeout: 3000 }
-    );
+    await waitFor(() => {
+      const resultElement = screen.getByText(
+        "Paul, a servant of God and an apostle of Jesus Christ"
+      );
+      fireEvent.click(resultElement);
+      expect(onResultClick).toHaveBeenCalledWith(1, 1, expect.any(Object));
+    }, waitForOptions);
   });
 
   it("updates reference context when search result is clicked", async () => {
@@ -206,16 +210,13 @@ describe("SearchPanel", () => {
     const searchButton = screen.getByText("Search");
     fireEvent.click(searchButton);
 
-    await waitFor(
-      () => {
-        const resultElement = screen.getByText(
-          "Paul, a servant of God and an apostle of Jesus Christ"
-        );
-        fireEvent.click(resultElement);
-        expect(updateReference).toHaveBeenCalledWith({ chapter: 1, verse: 1 });
-      },
-      { timeout: 3000 }
-    );
+    await waitFor(() => {
+      const resultElement = screen.getByText(
+        "Paul, a servant of God and an apostle of Jesus Christ"
+      );
+      fireEvent.click(resultElement);
+      expect(updateReference).toHaveBeenCalledWith({ chapter: 1, verse: 1 });
+    }, waitForOptions);
   });
 
   it("submits search on form submit", async () => {
@@ -237,19 +238,28 @@ describe("SearchPanel", () => {
     const form = searchInput.closest("form");
     fireEvent.submit(form);
 
-    await waitFor(
-      () => {
-        expect(screen.getByText('Found 1 result(s) for "Paul"')).toBeInTheDocument();
-      },
-      { timeout: 3000 }
-    );
+    await waitFor(() => {
+      expect(screen.getByText('Found 1 result(s) for "Paul"')).toBeInTheDocument();
+    }, waitForOptions);
   });
 
-  it.skip("shows timeout error after 5 seconds", async () => {
+  it("shows timeout error after 5 seconds", async () => {
     // Mock a loading search that never completes
+    let searchLoading = true;
     proskommaHooks.useSearchForPassages.mockImplementation(() =>
-      mockUseSearchForPassages({ loading: true })
+      mockUseSearchForPassages({ loading: searchLoading })
     );
+
+    // Mock proskomma with docSetList for search
+    proskommaHooks.useProskomma.mockImplementation(() => ({
+      proskomma: {
+        docSetList: () => [{ id: "test-docset" }],
+        processor: { docSets: { "test-docset": {} } },
+        gqlQuery: () => ({ data: { docSet: { documents: [] } } }),
+      },
+      state: { docSetIds: ["test-docset"] },
+      error: null,
+    }));
 
     renderWithContext(<SearchPanel {...defaultProps} />);
 
@@ -265,7 +275,7 @@ describe("SearchPanel", () => {
       expect(screen.getByText("Searching...")).toBeInTheDocument();
     });
 
-    // Wait for timeout message to appear
+    // Wait for timeout message to appear (5 seconds + buffer)
     await waitFor(
       () => {
         expect(
@@ -274,5 +284,8 @@ describe("SearchPanel", () => {
       },
       { timeout: 6000 }
     );
+
+    // Clean up - stop the loading state
+    searchLoading = false;
   });
 });

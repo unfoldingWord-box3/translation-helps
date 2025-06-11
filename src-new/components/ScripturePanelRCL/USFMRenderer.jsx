@@ -3,9 +3,13 @@
  * Enhanced USFM renderer using proskomma-react-hooks for optimized verse-by-verse rendering
  * Uses usePassage with individual verse queries for precise verse-level control
  */
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, useEffect, useState } from "react";
 import { ReferenceContext } from "../../context/ReferenceContext";
 import { useProskomma, useImport, usePassage } from "proskomma-react-hooks";
+
+// Timeout constants
+const IMPORT_TIMEOUT = 5000; // 5 seconds for import
+const PASSAGE_TIMEOUT = 3000; // 3 seconds for passage queries
 
 // Custom hook for managing multiple verse queries
 function useVerseQueries(proskommaHook, abbr, chapter, maxVerses = 16) {
@@ -76,6 +80,8 @@ export default function USFMRenderer({
   chapter,
 }) {
   const { updateReference } = useContext(ReferenceContext);
+  const [importTimedOut, setImportTimedOut] = useState(false);
+  const [passageTimedOut, setPassageTimedOut] = useState(false);
 
   // Create proskomma instance
   const proskommaHook = useProskomma({ verbose: false });
@@ -99,6 +105,21 @@ export default function USFMRenderer({
     verbose: false,
   });
 
+  // Set up import timeout
+  useEffect(() => {
+    if (importHook.importing && !importHook.done) {
+      const timeoutId = setTimeout(() => {
+        if (importHook.importing && !importHook.done) {
+          setImportTimedOut(true);
+        }
+      }, IMPORT_TIMEOUT);
+
+      return () => clearTimeout(timeoutId);
+    } else {
+      setImportTimedOut(false);
+    }
+  }, [importHook.importing, importHook.done]);
+
   // Use our custom verse queries hook with proskomma instance
   const {
     verses,
@@ -111,11 +132,34 @@ export default function USFMRenderer({
     16 // Max verses for Titus 1
   );
 
+  // Set up passage query timeout
+  useEffect(() => {
+    if (versesLoading && Object.keys(verses).length === 0) {
+      const timeoutId = setTimeout(() => {
+        if (versesLoading && Object.keys(verses).length === 0) {
+          setPassageTimedOut(true);
+        }
+      }, PASSAGE_TIMEOUT);
+
+      return () => clearTimeout(timeoutId);
+    } else {
+      setPassageTimedOut(false);
+    }
+  }, [versesLoading, verses]);
+
   // Handle loading states
   if (!usfm || !org || !lang || !abbr) {
     return (
       <div data-testid='usfm-renderer' style={{ padding: "20px", color: "red" }}>
         Missing scripture context.
+      </div>
+    );
+  }
+
+  if (importTimedOut) {
+    return (
+      <div data-testid='usfm-renderer' style={{ padding: "20px", color: "red" }}>
+        Scripture import timed out. Please try again.
       </div>
     );
   }
@@ -135,6 +179,14 @@ export default function USFMRenderer({
     return (
       <div data-testid='usfm-renderer' style={{ padding: "20px", color: "red" }}>
         Error importing scripture: {importHook.errors[0].message || String(importHook.errors[0])}
+      </div>
+    );
+  }
+
+  if (passageTimedOut) {
+    return (
+      <div data-testid='usfm-renderer' style={{ padding: "20px", color: "red" }}>
+        Loading chapter timed out. Please try again.
       </div>
     );
   }
