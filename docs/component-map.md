@@ -27,13 +27,6 @@ This document lists and describes the major components in the viewer and their r
 
 ---
 
-## 🔠 Aligned Text Components
-
-| Component              | Path                                                      | Description                                                       |
-| ---------------------- | --------------------------------------------------------- | ----------------------------------------------------------------- |
-| `AlignedWordComponent` | `src-new/components/AlignedWord/AlignedWordComponent.jsx` | Interactive word component with hover tooltips for alignment data |
-| `AlignmentTooltip`     | `src-new/components/AlignedWord/AlignmentTooltip.jsx`     | Tooltip component displaying Greek/Hebrew linguistic data         |
-
 ---
 
 ## 🔢 Verse Navigation & Views
@@ -121,21 +114,21 @@ This document lists and describes the major components in the viewer and their r
 
 ## 🧪 Utilities
 
-| Utility              | Path                                  | Description                                      |
-| -------------------- | ------------------------------------- | ------------------------------------------------ |
-| `contextHelpers`     | `src-new/utils/contextHelpers.js`     | Helper functions for context management          |
-| `contextValidation`  | `src-new/utils/contextValidation.js`  | Validation utilities for context data            |
-| `defaultReference`   | `src-new/utils/defaultReference.js`   | Default reference values and constants           |
-| `groupByVerse`       | `src-new/utils/groupByVerse.js`       | Groups TSV rows by verse                         |
-| `markdownUtils`      | `src-new/utils/markdownUtils.jsx`     | Markdown parsing and rendering utilities         |
-| `parseTsv`           | `src-new/utils/parseTsv.js`           | TSV parsing utility                              |
-| `rcLinkUtils`        | `src-new/utils/rcLinkUtils.jsx`       | RC (Resource Container) link utilities           |
-| `rcUri`              | `src-new/utils/rcUri.js`              | RCUri parsing utility                            |
-| `tsvUtils`           | `src-new/utils/tsvUtils.js`           | TSV data processing utilities                    |
-| `usfmParser`         | `src-new/utils/usfmParser.js`         | USFM (Unified Standard Format Markers) parser    |
-| `morphologyParser`   | `src-new/utils/morphologyParser.js`   | Greek/Hebrew morphology parsing utilities        |
-| `alignmentDecorator` | `src-new/utils/alignmentDecorator.js` | RCL decorator for USFM alignment data processing |
-| `workflowHelpers`    | `src-new/utils/workflowHelpers.js`    | Helper functions for workflow management         |
+| Utility             | Path                                 | Description                                      |
+| ------------------- | ------------------------------------ | ------------------------------------------------ |
+| `contextHelpers`    | `src-new/utils/contextHelpers.js`    | Helper functions for context management          |
+| `contextValidation` | `src-new/utils/contextValidation.js` | Validation utilities for context data            |
+| `defaultReference`  | `src-new/utils/defaultReference.js`  | Default reference values and constants           |
+| `groupByVerse`      | `src-new/utils/groupByVerse.js`      | Groups TSV rows by verse                         |
+| `markdownUtils`     | `src-new/utils/markdownUtils.jsx`    | Markdown parsing and rendering utilities         |
+| `parseTsv`          | `src-new/utils/parseTsv.js`          | TSV parsing utility                              |
+| `rcLinkUtils`       | `src-new/utils/rcLinkUtils.jsx`      | RC (Resource Container) link utilities           |
+| `rcUri`             | `src-new/utils/rcUri.js`             | RCUri parsing utility                            |
+| `tsvUtils`          | `src-new/utils/tsvUtils.js`          | TSV data processing utilities                    |
+| `CustomProskomma`   | `src-new/utils/CustomProskomma.js`   | Custom Proskomma implementation for USFM parsing |
+| `languageMapping`   | `src-new/utils/languageMapping.js`   | Language code mapping utilities                  |
+| `segmenter`         | `src-new/utils/segmenter.js`         | Text segmentation utilities                      |
+| `workflowHelpers`   | `src-new/utils/workflowHelpers.js`   | Helper functions for workflow management         |
 
 ---
 

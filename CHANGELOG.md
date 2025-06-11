@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.12.1] - 2025-06-11
+
+### Removed
+
+- **Documentation and Code Cleanup - Legacy Decorator System Removal**
+  - ✅ Removed obsolete `src-new/utils/alignmentDecorator.js` and `src-new/utils/milestoneDecorators.js` files
+  - ✅ Removed `src-new/components/AlignedWord/` directory containing legacy decorator components and CSS
+  - ✅ Removed outdated `docs/usfm-decorators.md` documentation file
+  - ✅ Cleaned up stale import reference to deleted AlignedWord CSS in USFMRenderer.jsx
+  - ✅ Updated AGENTS.md to reference current Proskomma React Hooks architecture instead of legacy decorators
+  - ✅ Updated ARCHITECTURE.md file structure to reflect current utilities (CustomProskomma, languageMapping, segmenter)
+  - ✅ Updated component-map.md to remove references to deleted AlignedWord components and utilities
+  - ✅ Documentation now accurately reflects the current Proskomma-based USFM rendering system
+  - ✅ Eliminated confusion between legacy decorator approach and current proskomma-react-hooks implementation
+  - ✅ Clean codebase with no orphaned files or outdated documentation
+
+### Technical Details
+
+- **Cleanup Scope**: Removed all traces of the previous USFM decorator approach that was replaced by Proskomma React Hooks
+- **Documentation Sync**: All documentation files now accurately reflect the current architecture and implementation
+- **Code Hygiene**: Eliminated dead code, broken imports, and outdated component references
+- **Architecture Clarity**: Clear separation between current Proskomma-based system and removed legacy approaches
+
 ## [0.12.0] - 2025-06-10
 
 ### Added

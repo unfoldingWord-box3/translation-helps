@@ -6,7 +6,6 @@
 import React, { useContext, useMemo } from "react";
 import { ReferenceContext } from "../../context/ReferenceContext";
 import { useProskomma, useImport, usePassage } from "proskomma-react-hooks";
-import "../../components/AlignedWord/usfm-custom-tags.css";
 
 // Custom hook for managing multiple verse queries
 function useVerseQueries(proskommaHook, abbr, chapter, maxVerses = 16) {
