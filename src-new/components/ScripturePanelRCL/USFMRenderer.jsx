@@ -65,8 +65,6 @@ function useVerseQueries(proskommaHook, abbr, chapter, maxVerses = 16) {
  * @param {string} props.abbr - Book abbreviation
  * @param {string} props.usfm - USFM content
  * @param {number} props.chapter - Current chapter to display
- * @param {object} props.proskommaHook - Shared proskomma hook from parent
- * @param {object} props.importHook - Shared import hook from parent
  */
 export default function USFMRenderer({
   selectedVerse,
@@ -76,12 +74,32 @@ export default function USFMRenderer({
   abbr,
   usfm,
   chapter,
-  proskommaHook,
-  importHook,
 }) {
   const { updateReference } = useContext(ReferenceContext);
 
-  // Step 3: Use our custom verse queries hook with shared proskomma instance
+  // Create proskomma instance
+  const proskommaHook = useProskomma({ verbose: false });
+
+  // Create document configuration for import
+  const document = useMemo(() => {
+    if (!usfm || !org || !lang || !abbr) return null;
+    return [
+      {
+        selectors: { org, lang, abbr },
+        data: usfm,
+        bookCode: abbr,
+      },
+    ];
+  }, [usfm, org, lang, abbr]);
+
+  // Import document
+  const importHook = useImport({
+    ...proskommaHook,
+    documents: document || [],
+    verbose: false,
+  });
+
+  // Use our custom verse queries hook with proskomma instance
   const {
     verses,
     loading: versesLoading,

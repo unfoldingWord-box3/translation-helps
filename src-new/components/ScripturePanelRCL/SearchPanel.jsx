@@ -13,18 +13,8 @@ import { useProskomma, useImport, useSearchForPassages } from "proskomma-react-h
  * @param {string} props.abbr - Book abbreviation
  * @param {string} props.usfm - USFM content
  * @param {function} props.onResultClick - Callback when a search result is clicked
- * @param {object} props.proskommaHook - Shared proskomma hook from parent
- * @param {object} props.importHook - Shared import hook from parent
  */
-export default function SearchPanel({
-  org,
-  lang,
-  abbr,
-  usfm,
-  onResultClick,
-  proskommaHook,
-  importHook,
-}) {
+export default function SearchPanel({ org, lang, abbr, usfm, onResultClick }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [timeoutError, setTimeoutError] = useState("");
@@ -32,6 +22,28 @@ export default function SearchPanel({
   const searchTimeoutRef = useRef(null);
   const debounceTimeoutRef = useRef(null);
   const { updateReference } = useContext(ReferenceContext);
+
+  // Create proskomma instance
+  const proskommaHook = useProskomma({ verbose: false });
+
+  // Create document configuration for import
+  const document = useMemo(() => {
+    if (!usfm || !org || !lang || !abbr) return null;
+    return [
+      {
+        selectors: { org, lang, abbr },
+        data: usfm,
+        bookCode: abbr,
+      },
+    ];
+  }, [usfm, org, lang, abbr]);
+
+  // Import document
+  const importHook = useImport({
+    ...proskommaHook,
+    documents: document || [],
+    verbose: false,
+  });
 
   // Debounce search term to prevent search on every keystroke
   useEffect(() => {
