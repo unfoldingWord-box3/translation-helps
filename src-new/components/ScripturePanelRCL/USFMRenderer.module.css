@@ -1,0 +1,216 @@
+/**
+ * USFMRenderer Component Styles
+ * Verse-by-verse rendering with card-based design inspired by helps resources
+ */
+
+.usfm-renderer {
+  font-family: var(--font-family);
+  line-height: var(--line-height-relaxed);
+}
+
+.chapter {
+  margin-bottom: var(--spacing-8);
+}
+
+.chapter-header {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-chapter-header);
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-3);
+  border-bottom: 2px solid var(--color-border);
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .chapter-header {
+    font-size: var(--font-size-xl);
+    text-align: left;
+  }
+}
+
+.verses {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.verse {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  background-color: var(--color-verse-background);
+  border: 1px solid var(--color-verse-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: var(--verse-min-height);
+  box-shadow: var(--shadow-sm);
+
+  /* Ensure proper touch targets on mobile */
+  min-height: var(--touch-target-min);
+}
+
+.verse:hover {
+  background-color: var(--color-verse-background-hover);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.verse:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.verse.selected {
+  background-color: var(--color-verse-background-selected);
+  border-color: var(--color-verse-border-selected);
+  border-width: 2px;
+  box-shadow: var(--shadow-md);
+}
+
+.verse.selected:hover {
+  background-color: var(--color-verse-background-selected);
+  border-color: var(--color-verse-border-selected);
+}
+
+.verse-number {
+  flex-shrink: 0;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  color: var(--color-verse-number);
+  background-color: var(--color-primary-light);
+  border-radius: var(--radius-full);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px; /* Slight alignment adjustment */
+}
+
+.verse.selected .verse-number {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.verse-text {
+  flex: 1;
+  font-size: var(--font-size-md);
+  color: var(--color-verse-text);
+  line-height: var(--line-height-relaxed);
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 767px) {
+  .verses {
+    gap: var(--spacing-2);
+  }
+
+  .verse {
+    padding: var(--spacing-3);
+    gap: var(--spacing-2);
+  }
+
+  .verse-number {
+    width: 24px;
+    height: 24px;
+    font-size: var(--font-size-xs);
+  }
+
+  .verse-text {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Large screen adjustments */
+@media (min-width: 1024px) {
+  .verse {
+    padding: var(--spacing-5);
+  }
+
+  .verse-text {
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* Loading states */
+.loading-additional {
+  padding: var(--spacing-4);
+  text-align: center;
+  font-style: italic;
+  color: var(--color-text-muted);
+  background-color: var(--color-background);
+  border-radius: var(--radius-md);
+  margin-top: var(--spacing-4);
+}
+
+/* Error and empty states */
+.error-state {
+  padding: var(--spacing-6);
+  text-align: center;
+  color: var(--color-error);
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  margin: var(--spacing-4) 0;
+}
+
+.empty-state {
+  padding: var(--spacing-6);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-style: italic;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+/* Focus and accessibility improvements */
+.verse:focus-visible .verse-number {
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+/* Animation for loading new verses */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.verse {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .verse {
+    border-width: 2px;
+  }
+
+  .verse.selected {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .verse {
+    transition: none;
+    animation: none;
+    transform: none;
+  }
+
+  .verse:hover {
+    transform: none;
+  }
+}

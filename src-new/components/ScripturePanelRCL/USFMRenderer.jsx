@@ -6,6 +6,7 @@
 import React, { useContext, useMemo, useEffect, useState } from "react";
 import { ReferenceContext } from "../../context/ReferenceContext";
 import { useProskomma, useImport, usePassage } from "proskomma-react-hooks";
+import styles from "./USFMRenderer.module.css";
 
 // Timeout constants
 const IMPORT_TIMEOUT = 5000; // 5 seconds for import
@@ -150,7 +151,7 @@ export default function USFMRenderer({
   // Handle loading states
   if (!usfm || !org || !lang || !abbr) {
     return (
-      <div data-testid='usfm-renderer' style={{ padding: "20px", color: "red" }}>
+      <div data-testid='usfm-renderer' className={styles["error-state"]}>
         Missing scripture context.
       </div>
     );
@@ -158,7 +159,7 @@ export default function USFMRenderer({
 
   if (importTimedOut) {
     return (
-      <div data-testid='usfm-renderer' style={{ padding: "20px", color: "red" }}>
+      <div data-testid='usfm-renderer' className={styles["error-state"]}>
         Scripture import timed out. Please try again.
       </div>
     );
@@ -166,10 +167,7 @@ export default function USFMRenderer({
 
   if (importHook.importing || !importHook.done) {
     return (
-      <div
-        data-testid='usfm-renderer'
-        style={{ padding: "20px", fontStyle: "italic", color: "#666" }}
-      >
+      <div data-testid='usfm-renderer' className={styles["loading-additional"]}>
         Loading scripture...
       </div>
     );
@@ -177,7 +175,7 @@ export default function USFMRenderer({
 
   if (importHook.errors && importHook.errors.length > 0) {
     return (
-      <div data-testid='usfm-renderer' style={{ padding: "20px", color: "red" }}>
+      <div data-testid='usfm-renderer' className={styles["error-state"]}>
         Error importing scripture: {importHook.errors[0].message || String(importHook.errors[0])}
       </div>
     );
@@ -185,7 +183,7 @@ export default function USFMRenderer({
 
   if (passageTimedOut) {
     return (
-      <div data-testid='usfm-renderer' style={{ padding: "20px", color: "red" }}>
+      <div data-testid='usfm-renderer' className={styles["error-state"]}>
         Loading chapter timed out. Please try again.
       </div>
     );
@@ -193,10 +191,7 @@ export default function USFMRenderer({
 
   if (versesLoading && Object.keys(verses).length === 0) {
     return (
-      <div
-        data-testid='usfm-renderer'
-        style={{ padding: "20px", fontStyle: "italic", color: "#666" }}
-      >
+      <div data-testid='usfm-renderer' className={styles["loading-additional"]}>
         Loading chapter {chapter}...
       </div>
     );
@@ -204,7 +199,7 @@ export default function USFMRenderer({
 
   if (verseErrors.length > 0) {
     return (
-      <div data-testid='usfm-renderer' style={{ padding: "20px", color: "red" }}>
+      <div data-testid='usfm-renderer' className={styles["error-state"]}>
         Error loading verses: {verseErrors[0]}
       </div>
     );
@@ -212,46 +207,35 @@ export default function USFMRenderer({
 
   // Render verse-by-verse using proskomma-react-hooks data
   return (
-    <div className='usfm-renderer' data-testid='usfm-renderer'>
+    <div className={styles["usfm-renderer"]} data-testid='usfm-renderer'>
       {chapter && Object.keys(verses).length > 0 ? (
-        <div className='chapter' key={chapter}>
-          <div className='chapter-header'>Chapter {chapter}</div>
-          <div className='verses'>
+        <div className={styles.chapter} key={chapter}>
+          <div className={styles["chapter-header"]}>Chapter {chapter}</div>
+          <div className={styles.verses}>
             {Object.values(verses)
               .sort((a, b) => a.verse - b.verse)
               .map((verseData) => (
-                <span
-                  className={`verse${verseData.verse === selectedVerse ? " selected" : ""}`}
+                <div
+                  className={`${styles.verse} ${
+                    verseData.verse === selectedVerse ? styles.selected : ""
+                  }`}
                   key={verseData.verse}
-                  style={{
-                    cursor: "pointer",
-                    background: verseData.verse === selectedVerse ? "#e0f7fa" : undefined,
-                    padding: "2px 4px",
-                    margin: "0 2px",
-                    borderRadius: "3px",
-                    display: "inline-block",
-                  }}
                   onClick={() => {
                     updateReference({ chapter: chapter, verse: verseData.verse });
                     if (onVerseClick) onVerseClick(verseData.verse, chapter);
                   }}
                 >
-                  <span className='verse-number'>{verseData.verse}</span>{" "}
-                  <span className='verse-text'>{verseData.text}</span>
-                </span>
+                  <span className={styles["verse-number"]}>{verseData.verse}</span>
+                  <span className={styles["verse-text"]}>{verseData.text}</span>
+                </div>
               ))}
           </div>
           {versesLoading && (
-            <div style={{ padding: "10px", fontStyle: "italic", color: "#666" }}>
-              Loading additional verses...
-            </div>
+            <div className={styles["loading-additional"]}>Loading additional verses...</div>
           )}
         </div>
       ) : (
-        <div
-          data-testid='usfm-renderer'
-          style={{ padding: "20px", fontStyle: "italic", color: "#666" }}
-        >
+        <div data-testid='usfm-renderer' className={styles["empty-state"]}>
           {chapter ? `No verses found for chapter ${chapter}` : "Please select a chapter to view"}
         </div>
       )}

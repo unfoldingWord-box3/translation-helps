@@ -5,6 +5,7 @@
 import React, { useState, useContext, useRef, useCallback, useMemo, useEffect } from "react";
 import { ReferenceContext } from "../../context/ReferenceContext";
 import { useProskomma, useImport, useSearchForPassages } from "proskomma-react-hooks";
+import styles from "./SearchPanel.module.css";
 
 /**
  * @param {object} props
@@ -320,13 +321,11 @@ export default function SearchPanel({ org, lang, abbr, usfm, onResultClick }) {
 
   // Don't show search if import isn't complete
   if (!importHook.done) {
-    return (
-      <div style={{ padding: "10px", fontStyle: "italic", color: "#666" }}>Preparing search...</div>
-    );
+    return <div className={styles["loading-state"]}>Preparing search...</div>;
   }
 
   return (
-    <div className='search-panel' style={{ padding: "10px", borderTop: "1px solid #eee" }}>
+    <div className={styles["search-panel"]}>
       <form onSubmit={handleSearch} style={{ marginBottom: "10px" }}>
         <div style={{ display: "flex", gap: "8px" }}>
           <input

@@ -10,6 +10,7 @@ import { useCatalog } from "proskomma-react-hooks";
 
 import USFMRenderer from "./USFMRenderer";
 import SearchPanel from "./SearchPanel";
+import styles from "./ScripturePanelRCL.module.css";
 
 /**
  * @param {object} props
@@ -291,9 +292,9 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
   // Show loading state if manifests are loading or content is loading
   if (manifestsLoading || loading) {
     return (
-      <section data-testid='scripture-panel-rcl' style={{ padding: "20px" }}>
-        <h2>Scripture</h2>
-        <p>Loading scripture...</p>
+      <section data-testid='scripture-panel-rcl' className={styles["scripture-panel"]}>
+        <h2 className={styles.title}>Scripture</h2>
+        <div className={styles["loading-state"]}>Loading scripture...</div>
       </section>
     );
   }
@@ -301,9 +302,11 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
   // Show message if no reference is selected
   if (!reference?.bookId) {
     return (
-      <section data-testid='scripture-panel-rcl' style={{ padding: "20px" }}>
-        <h2>Scripture</h2>
-        <p>Please select a book and chapter to view scripture.</p>
+      <section data-testid='scripture-panel-rcl' className={styles["scripture-panel"]}>
+        <h2 className={styles.title}>Scripture</h2>
+        <div className={styles["empty-state"]}>
+          Please select a book and chapter to view scripture.
+        </div>
       </section>
     );
   }
@@ -311,9 +314,9 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
   // Show error state
   if (error) {
     return (
-      <section data-testid='scripture-panel-rcl' style={{ padding: "20px" }}>
-        <h2>{`${reference.bookId.toUpperCase()} ${reference.chapter}`}</h2>
-        <p style={{ color: "#d32f2f" }}>{error}</p>
+      <section data-testid='scripture-panel-rcl' className={styles["scripture-panel"]}>
+        <h2 className={styles.title}>{`${reference.bookId.toUpperCase()} ${reference.chapter}`}</h2>
+        <div className={styles["error-state"]}>{error}</div>
       </section>
     );
   }
@@ -335,40 +338,27 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
   });
 
   return (
-    <section data-testid='scripture-panel-rcl' style={{ padding: "20px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "10px",
-        }}
-      >
-        <h2>{`${reference.bookId.toUpperCase()} ${reference.chapter}`}</h2>
+    <section data-testid='scripture-panel-rcl' className={styles["scripture-panel"]}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>{`${reference.bookId.toUpperCase()} ${reference.chapter}`}</h2>
         <button
           onClick={() => setShowSearch(!showSearch)}
-          style={{
-            padding: "6px 12px",
-            background: showSearch ? "#007bff" : "#f8f9fa",
-            color: showSearch ? "white" : "#333",
-            border: "1px solid #dee2e6",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontSize: "14px",
-          }}
+          className={`${styles["search-toggle"]} ${showSearch ? styles.active : ""}`}
         >
           {showSearch ? "Hide Search" : "Search Scripture"}
         </button>
       </div>
 
       {showSearch && (
-        <SearchPanel
-          org={organization}
-          lang={languageId}
-          abbr={reference.bookId ? reference.bookId.toUpperCase() : ""}
-          usfm={usfmContent}
-          onResultClick={handleVerseClick}
-        />
+        <div className={styles["search-panel"]}>
+          <SearchPanel
+            org={organization}
+            lang={languageId}
+            abbr={reference.bookId ? reference.bookId.toUpperCase() : ""}
+            usfm={usfmContent}
+            onResultClick={handleVerseClick}
+          />
+        </div>
       )}
 
       <USFMRenderer
