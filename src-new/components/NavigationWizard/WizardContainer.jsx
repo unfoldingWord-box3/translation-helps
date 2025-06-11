@@ -15,6 +15,7 @@ import { ChapterVerseStep } from "./steps/ChapterVerseStep";
 import { useWizardState } from "./hooks/useWizardState";
 import { useNavigationHistory } from "./hooks/useNavigationHistory";
 import { useKeyboardNavigation } from "./hooks/useKeyboardNavigation";
+import styles from "./NavigationWizard.module.css";
 
 const WIZARD_STEPS = {
   ORGANIZATION: 0,
@@ -258,26 +259,11 @@ export function WizardContainer({ onComplete, isDesktop = false, initialStep = n
     }
   };
 
-  const containerStyles = {
-    display: "flex",
-    flexDirection: "column",
-    height: isDesktop ? "auto" : "100vh",
-    backgroundColor: "#f8f9fa",
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-  };
-
-  const contentStyles = {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    transition: isTransitioning ? "opacity 0.15s ease-in-out" : "none",
-    opacity: isTransitioning ? 0.7 : 1,
-    overflow: "auto",
-    minHeight: 0, // Allow flex shrinking
-  };
-
   return (
-    <div className='navigation-wizard' data-testid='navigation-wizard' style={containerStyles}>
+    <div
+      className={`${styles.wizardContainer} ${isDesktop ? styles.desktop : ""}`}
+      data-testid='navigation-wizard'
+    >
       <StepIndicator
         currentStep={currentStep}
         stepNames={STEP_NAMES}
@@ -286,7 +272,13 @@ export function WizardContainer({ onComplete, isDesktop = false, initialStep = n
         isDesktop={isDesktop}
       />
 
-      <div style={contentStyles}>{renderCurrentStep()}</div>
+      <div
+        className={`${styles.wizardContent} ${isDesktop ? styles.desktop : ""} ${
+          isTransitioning ? styles.transitioning : ""
+        }`}
+      >
+        {renderCurrentStep()}
+      </div>
     </div>
   );
 }

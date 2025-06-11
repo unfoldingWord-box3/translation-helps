@@ -1,0 +1,472 @@
+/* SelectionCard.module.css */
+/* Selection card component with proper layout and hover states */
+
+/* Main card container */
+.selectionCard {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-white);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  width: 100%;
+  min-height: 72px;
+  box-sizing: border-box;
+}
+
+.selectionCard.desktop {
+  padding: var(--spacing-5);
+  gap: var(--spacing-4);
+  min-height: 88px;
+}
+
+/* Card states */
+.selectionCard:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-light);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.selectionCard:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.selectionCard.selected {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.selectionCard.selected:hover {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary-dark);
+}
+
+.selectionCard.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Icon container */
+.iconContainer {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius);
+  background-color: var(--color-lighter);
+  color: var(--color-muted);
+  overflow: hidden;
+  position: relative;
+}
+
+.iconContainer.desktop {
+  width: 48px;
+  height: 48px;
+}
+
+/* Icon image */
+.iconImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+}
+
+/* Fallback icon */
+.fallbackIcon {
+  font-size: var(--font-size-lg);
+  color: var(--color-muted);
+}
+
+.fallbackIcon.desktop {
+  font-size: var(--font-size-xl);
+}
+
+/* Content area */
+.content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--spacing-1);
+}
+
+.content.desktop {
+  gap: var(--spacing-2);
+}
+
+/* Title */
+.title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-darker);
+  margin: 0;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.title.desktop {
+  font-size: var(--font-size-lg);
+}
+
+/* Description */
+.description {
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
+  margin: 0;
+  line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.description.desktop {
+  font-size: var(--font-size-base);
+  -webkit-line-clamp: 3;
+}
+
+/* Expand description on hover for better readability */
+.selectionCard:hover .description {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  display: block;
+}
+
+/* Badge/label */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-1) var(--spacing-2);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  border-radius: var(--border-radius-sm);
+  margin-top: var(--spacing-1);
+  width: fit-content;
+}
+
+.badge.desktop {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-2);
+}
+
+.badge.secondary {
+  background-color: var(--color-secondary);
+}
+
+.badge.success {
+  background-color: var(--color-success);
+}
+
+.badge.warning {
+  background-color: var(--color-warning);
+  color: var(--color-darker);
+}
+
+.badge.danger {
+  background-color: var(--color-danger);
+}
+
+/* Selection indicator */
+.selectionIndicator {
+  position: absolute;
+  top: var(--spacing-2);
+  right: var(--spacing-2);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  background-color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  opacity: 0;
+}
+
+.selectionIndicator.desktop {
+  top: var(--spacing-3);
+  right: var(--spacing-3);
+  width: 24px;
+  height: 24px;
+}
+
+.selectionCard:hover .selectionIndicator {
+  opacity: 1;
+  border-color: var(--color-primary);
+}
+
+.selectionCard.selected .selectionIndicator {
+  opacity: 1;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.selectionIndicator .checkIcon {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.selectionIndicator.desktop .checkIcon {
+  font-size: 14px;
+}
+
+/* Metadata row */
+.metadata {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-2);
+  flex-wrap: wrap;
+}
+
+.metadata.desktop {
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-3);
+}
+
+.metadataItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: var(--font-size-xs);
+  color: var(--color-muted);
+}
+
+.metadataItem.desktop {
+  font-size: var(--font-size-sm);
+  gap: var(--spacing-2);
+}
+
+.metadataIcon {
+  font-size: var(--font-size-xs);
+}
+
+.metadataIcon.desktop {
+  font-size: var(--font-size-sm);
+}
+
+/* Loading state */
+.selectionCard.loading {
+  pointer-events: none;
+}
+
+.loadingContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--color-muted);
+}
+
+.loadingSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-lighter);
+  border-top: 2px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loadingSpinner.desktop {
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Actions area */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-3);
+}
+
+.actions.desktop {
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-4);
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-1) var(--spacing-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  background-color: var(--color-white);
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.actionButton.desktop {
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  gap: var(--spacing-2);
+}
+
+.actionButton:hover {
+  background-color: var(--color-light);
+  color: var(--color-dark);
+  border-color: var(--color-muted);
+}
+
+.actionButton.primary {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+.actionButton.primary:hover {
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .selectionCard {
+    padding: var(--spacing-3);
+    gap: var(--spacing-2);
+    min-height: 64px;
+  }
+
+  .iconContainer {
+    width: 32px;
+    height: 32px;
+  }
+
+  .title {
+    font-size: var(--font-size-sm);
+  }
+
+  .description {
+    font-size: var(--font-size-xs);
+    -webkit-line-clamp: 1;
+  }
+
+  .selectionCard:hover .description {
+    -webkit-line-clamp: 2;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 2px var(--spacing-1);
+  }
+
+  .selectionIndicator {
+    width: 16px;
+    height: 16px;
+    top: var(--spacing-1);
+    right: var(--spacing-1);
+  }
+
+  .selectionIndicator .checkIcon {
+    font-size: 10px;
+  }
+
+  .metadata {
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-1);
+  }
+
+  .metadataItem {
+    font-size: 10px;
+  }
+
+  .actions {
+    gap: var(--spacing-1);
+    margin-top: var(--spacing-2);
+  }
+
+  .actionButton {
+    padding: var(--spacing-1);
+    font-size: 10px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .selectionCard {
+    border-width: 2px;
+  }
+
+  .selectionCard:hover,
+  .selectionCard.selected {
+    border-width: 3px;
+  }
+
+  .selectionIndicator {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .selectionCard,
+  .selectionIndicator,
+  .actionButton,
+  .loadingSpinner {
+    transition: none;
+    animation: none;
+  }
+
+  .selectionCard:hover {
+    transform: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .selectionCard {
+    break-inside: avoid;
+    border: 1px solid #000;
+    box-shadow: none;
+  }
+
+  .selectionIndicator,
+  .actions {
+    display: none;
+  }
+}
+
+/* Keyboard navigation styles */
+.selectionCard:focus {
+  z-index: 1;
+}
+
+/* Ensure proper text rendering */
+.title,
+.description {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

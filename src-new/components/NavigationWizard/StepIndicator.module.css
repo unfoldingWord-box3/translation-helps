@@ -1,0 +1,270 @@
+/* StepIndicator.module.css */
+/* Step progress indicator styles */
+
+/* Main step indicator container */
+.stepIndicator {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-3) var(--spacing-4);
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  min-height: 60px;
+}
+
+.stepIndicator.desktop {
+  padding: var(--spacing-4) var(--spacing-6);
+  min-height: 72px;
+}
+
+/* Progress container - holds all steps and connectors */
+.progressContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  flex: 1;
+  min-width: 0;
+}
+
+.progressContainer.desktop {
+  gap: var(--spacing-4);
+}
+
+/* Individual step */
+.step {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  flex: 0 0 auto;
+  min-width: 0;
+  cursor: default;
+  border-radius: var(--border-radius);
+  padding: var(--spacing-1);
+  transition: all var(--transition-fast);
+}
+
+.step.desktop {
+  gap: var(--spacing-3);
+  padding: var(--spacing-2);
+}
+
+.step.clickable {
+  cursor: pointer;
+}
+
+.step.clickable:hover {
+  background-color: var(--color-light);
+}
+
+.step.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Step dot/circle */
+.stepDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.stepDot.desktop {
+  width: 36px;
+  height: 36px;
+  font-size: var(--font-size-sm);
+}
+
+/* Step dot states */
+.stepDot.inactive {
+  background-color: var(--color-lighter);
+  color: var(--color-muted);
+}
+
+.stepDot.active {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary-dark);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.stepDot.completed {
+  background-color: var(--color-success);
+  color: var(--color-white);
+  border-color: var(--color-success);
+}
+
+.stepDot.clickable:hover {
+  transform: scale(1.05);
+}
+
+.stepDot.clickable.inactive:hover {
+  background-color: var(--color-border);
+  border-color: var(--color-primary);
+}
+
+/* Step label */
+.stepLabel {
+  font-size: var(--font-size-xs);
+  font-weight: 400;
+  color: var(--color-muted);
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.stepLabel.desktop {
+  font-size: var(--font-size-sm);
+  display: block;
+}
+
+/* Hide labels on mobile to save space */
+@media (max-width: 768px) {
+  .stepLabel:not(.desktop) {
+    display: none;
+  }
+}
+
+/* Step label states */
+.stepLabel.active {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.stepLabel.completed {
+  color: var(--color-success);
+  font-weight: 500;
+}
+
+.stepLabel.clickable:hover {
+  color: var(--color-primary);
+}
+
+/* Step connectors */
+.stepConnector {
+  height: 2px;
+  background-color: var(--color-lighter);
+  transition: background-color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.stepConnector.desktop {
+  flex: 1;
+  min-width: 24px;
+}
+
+.stepConnector.mobile {
+  width: 16px;
+}
+
+.stepConnector.completed {
+  background-color: var(--color-success);
+}
+
+/* Current step name for mobile */
+.currentStepName {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  flex: 0 0 auto;
+  margin-left: auto;
+  white-space: nowrap;
+  padding-left: var(--spacing-3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .stepIndicator {
+    padding: var(--spacing-2) var(--spacing-3);
+    min-height: 56px;
+  }
+
+  .progressContainer {
+    gap: var(--spacing-2);
+  }
+
+  .step {
+    gap: var(--spacing-1);
+    padding: var(--spacing-1);
+  }
+
+  .stepDot {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  .currentStepName {
+    font-size: var(--font-size-xs);
+    padding-left: var(--spacing-2);
+  }
+}
+
+/* Focus states for accessibility */
+.step.clickable:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .stepDot {
+    border-width: 3px;
+  }
+
+  .stepConnector {
+    height: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .stepDot,
+  .stepLabel,
+  .stepConnector,
+  .step {
+    transition: none;
+  }
+
+  .stepDot.clickable:hover {
+    transform: none;
+  }
+}
+
+/* Scrollbar styling for horizontal scroll */
+.stepIndicator::-webkit-scrollbar {
+  height: 4px;
+}
+
+.stepIndicator::-webkit-scrollbar-track {
+  background: var(--color-light);
+}
+
+.stepIndicator::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: var(--border-radius);
+}
+
+.stepIndicator::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-muted);
+}
+
+/* Role-based styling for accessibility */
+.stepIndicator[role="tablist"] .step {
+  role: tab;
+}
+
+.step[aria-selected="true"] .stepDot {
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+}

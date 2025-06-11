@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from "react";
-import { useNavigationHistory } from "../hooks/useNavigationHistory";
+import styles from "../NavigationWizard.module.css";
 
 export function ChapterVerseStep({
   onNext,
@@ -16,7 +16,6 @@ export function ChapterVerseStep({
 }) {
   const [selectedChapter, setSelectedChapter] = useState(wizardData.chapter || 1);
   const [selectedVerse, setSelectedVerse] = useState(wizardData.verse || 1);
-  const { getRecentSelections } = useNavigationHistory();
 
   // Get chapter count from BIBLE_BOOKS data (simplified for demo)
   const getChapterCount = (bookId) => {
@@ -82,80 +81,6 @@ export function ChapterVerseStep({
     }
   };
 
-  const recentChapters = getRecentSelections()
-    .filter(
-      (selection) =>
-        selection.organization === wizardData.organization &&
-        selection.languageId === wizardData.languageId &&
-        selection.resourceId === wizardData.resourceId &&
-        selection.bookId === wizardData.bookId
-    )
-    .slice(0, 5);
-
-  const renderNumberGrid = (count, selected, onSelect, label) => {
-    const numbers = Array.from({ length: count }, (_, i) => i + 1);
-    const maxCols = isDesktop ? 10 : 5;
-
-    return (
-      <div style={{ marginBottom: "24px" }}>
-        <h3
-          style={{
-            fontSize: isDesktop ? "18px" : "16px",
-            fontWeight: "600",
-            color: "#495057",
-            margin: "0 0 16px 0",
-          }}
-        >
-          {label}
-        </h3>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: `repeat(${Math.min(count, maxCols)}, 1fr)`,
-            gap: isDesktop ? "8px" : "6px",
-            maxHeight: isDesktop ? "200px" : "150px",
-            overflowY: "auto",
-            padding: "4px",
-          }}
-        >
-          {numbers.map((num) => (
-            <button
-              key={num}
-              onClick={() => onSelect(num)}
-              style={{
-                padding: isDesktop ? "8px" : "6px",
-                border: `2px solid ${selected === num ? "#007bff" : "#e1e5e9"}`,
-                borderRadius: "6px",
-                backgroundColor: selected === num ? "#007bff" : "#ffffff",
-                color: selected === num ? "#ffffff" : "#495057",
-                cursor: "pointer",
-                fontSize: isDesktop ? "14px" : "12px",
-                fontWeight: "600",
-                transition: "all 0.2s ease",
-                minHeight: isDesktop ? "36px" : "32px",
-              }}
-              onMouseEnter={(e) => {
-                if (selected !== num) {
-                  e.target.style.borderColor = "#007bff";
-                  e.target.style.backgroundColor = "#f8fcff";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (selected !== num) {
-                  e.target.style.borderColor = "#e1e5e9";
-                  e.target.style.backgroundColor = "#ffffff";
-                }
-              }}
-              data-testid={`${label.toLowerCase()}-${num}`}
-            >
-              {num}
-            </button>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
   const bookDisplayName = useMemo(() => {
     const bookNames = {
       gen: "Genesis",
@@ -173,178 +98,81 @@ export function ChapterVerseStep({
     return bookNames[wizardData.bookId] || wizardData.bookId?.toUpperCase();
   }, [wizardData.bookId]);
 
-  return (
-    <div
-      style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        padding: isDesktop ? "32px" : "16px",
-        maxWidth: isDesktop ? "800px" : "100%",
-        margin: "0 auto",
-      }}
-    >
-      <div style={{ marginBottom: "24px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-          <button
-            onClick={onPrevious}
-            style={{
-              background: "none",
-              border: "none",
-              fontSize: "20px",
-              cursor: "pointer",
-              padding: "4px",
-              color: "#007bff",
-            }}
-            data-testid='back-button'
-          >
-            ←
-          </button>
-          <h2
-            style={{
-              fontSize: isDesktop ? "24px" : "20px",
-              fontWeight: "600",
-              color: "#212529",
-              margin: 0,
-            }}
-          >
-            Choose Chapter & Verse
-          </h2>
+  const renderNumberGrid = (count, selected, onSelect, label) => {
+    const numbers = Array.from({ length: count }, (_, i) => i + 1);
+
+    return (
+      <div className={`${styles.numberGridSection} ${isDesktop ? styles.desktop : ""}`}>
+        <h3 className={`${styles.numberGridTitle} ${isDesktop ? styles.desktop : ""}`}>{label}</h3>
+        <div className={`${styles.numberGrid} ${isDesktop ? styles.desktop : ""}`}>
+          {numbers.map((num) => (
+            <button
+              key={num}
+              onClick={() => onSelect(num)}
+              className={`${styles.numberButton} ${selected === num ? styles.selected : ""} ${
+                isDesktop ? styles.desktop : ""
+              }`}
+              data-testid={`${label.toLowerCase()}-${num}`}
+            >
+              {num}
+            </button>
+          ))}
         </div>
-        <p
-          style={{
-            fontSize: "16px",
-            color: "#6c757d",
-            margin: 0,
-            paddingLeft: "32px",
-          }}
-        >
+      </div>
+    );
+  };
+
+  return (
+    <div className={`${styles.stepContainer} ${isDesktop ? styles.desktop : ""}`}>
+      {/* Step header */}
+      <div className={`${styles.stepHeader} ${isDesktop ? styles.desktop : ""}`}>
+        <h2 className={`${styles.stepTitle} ${isDesktop ? styles.desktop : ""}`}>
+          Choose Chapter & Verse
+        </h2>
+        <p className={`${styles.stepDescription} ${isDesktop ? styles.desktop : ""}`}>
           Select the chapter and verse in <strong>{bookDisplayName}</strong> you want to study.
         </p>
       </div>
 
-      {/* Recent Selections */}
-      {recentChapters.length > 0 && (
-        <div style={{ marginBottom: "32px" }}>
-          <h3
-            style={{
-              fontSize: isDesktop ? "18px" : "16px",
-              fontWeight: "600",
-              color: "#495057",
-              margin: "0 0 16px 0",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
-          >
-            <span>⏱️</span>
-            Recent References
-          </h3>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: isDesktop ? "repeat(auto-fit, minmax(200px, 1fr))" : "1fr",
-              gap: isDesktop ? "12px" : "8px",
-            }}
-          >
-            {recentChapters.map((recent, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  handleChapterSelect(recent.chapter);
-                  handleVerseSelect(recent.verse || 1);
-                }}
-                style={{
-                  padding: "12px",
-                  border: "2px solid #e1e5e9",
-                  borderRadius: "8px",
-                  backgroundColor: "#ffffff",
-                  cursor: "pointer",
-                  textAlign: "left",
-                  transition: "all 0.2s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.borderColor = "#007bff";
-                  e.target.style.backgroundColor = "#f8fcff";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.borderColor = "#e1e5e9";
-                  e.target.style.backgroundColor = "#ffffff";
-                }}
-              >
-                <div style={{ fontWeight: "600", marginBottom: "4px" }}>
-                  {bookDisplayName} {recent.chapter}:{recent.verse || 1}
-                </div>
-                <div style={{ fontSize: "12px", color: "#6c757d" }}>Recently accessed</div>
-              </button>
-            ))}
+      {/* Content area */}
+      <div className={`${styles.stepContent} ${isDesktop ? styles.desktop : ""}`}>
+        {/* Chapter Selection */}
+        {renderNumberGrid(chapterCount, selectedChapter, handleChapterSelect, "Chapter")}
+
+        {/* Verse Selection */}
+        {renderNumberGrid(verseCount, selectedVerse, handleVerseSelect, "Verse")}
+
+        {/* Summary */}
+        <div className={`${styles.summarySection} ${isDesktop ? styles.desktop : ""}`}>
+          <div className={`${styles.summaryTitle} ${isDesktop ? styles.desktop : ""}`}>
+            Selected Reference
+          </div>
+          <div className={`${styles.summaryReference} ${isDesktop ? styles.desktop : ""}`}>
+            {bookDisplayName} {selectedChapter}:{selectedVerse}
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Chapter Selection */}
-      {renderNumberGrid(chapterCount, selectedChapter, handleChapterSelect, "Chapter")}
-
-      {/* Verse Selection */}
-      {renderNumberGrid(verseCount, selectedVerse, handleVerseSelect, "Verse")}
-
-      {/* Summary and Complete Button */}
-      <div
-        style={{
-          marginTop: "32px",
-          padding: isDesktop ? "24px" : "16px",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "12px",
-          border: "2px solid #e1e5e9",
-        }}
-      >
-        <div
-          style={{
-            fontSize: isDesktop ? "18px" : "16px",
-            fontWeight: "600",
-            color: "#212529",
-            marginBottom: "8px",
-            textAlign: "center",
-          }}
-        >
-          Selected Reference
-        </div>
-        <div
-          style={{
-            fontSize: isDesktop ? "24px" : "20px",
-            fontWeight: "700",
-            color: "#007bff",
-            textAlign: "center",
-            marginBottom: "16px",
-          }}
-        >
-          {bookDisplayName} {selectedChapter}:{selectedVerse}
-        </div>
+      {/* Navigation */}
+      <div className={`${styles.stepNavigation} ${isDesktop ? styles.desktop : ""}`}>
         <button
+          type='button'
+          className={`${styles.navigationButton} ${styles.secondary} ${
+            isDesktop ? styles.desktop : ""
+          }`}
+          onClick={onPrevious}
+        >
+          Back
+        </button>
+        <button
+          type='button'
+          className={`${styles.navigationButton} ${styles.primary} ${styles.complete} ${
+            isDesktop ? styles.desktop : ""
+          }`}
           onClick={handleComplete}
-          style={{
-            width: "100%",
-            padding: isDesktop ? "16px 24px" : "12px 16px",
-            backgroundColor: "#28a745",
-            color: "#ffffff",
-            border: "none",
-            borderRadius: "8px",
-            fontSize: isDesktop ? "16px" : "14px",
-            fontWeight: "600",
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = "#218838";
-            e.target.style.transform = "translateY(-1px)";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = "#28a745";
-            e.target.style.transform = "translateY(0)";
-          }}
           data-testid='complete-button'
         >
-          ✅ Complete Selection
+          Complete Selection
         </button>
       </div>
     </div>

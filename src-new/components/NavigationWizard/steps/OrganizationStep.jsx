@@ -3,139 +3,85 @@
  * First step of the wizard: Organization selection
  */
 
-import React, { useState } from "react";
+import React from "react";
 import { useOrganizations } from "../../../hooks/useOrganizations";
-import { SearchableGrid } from "../components/SearchableGrid";
-import { RecentSelections } from "../components/RecentSelections";
-import { useNavigationHistory } from "../hooks/useNavigationHistory";
+import { SearchableGrid } from "../SearchableGrid";
+import styles from "../NavigationWizard.module.css";
 
 export function OrganizationStep({ onNext, onStepChange, wizardData, isDesktop }) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const { organizations, loading } = useOrganizations();
-  const { getRecentOrganizations } = useNavigationHistory();
+  const { organizations, loading, error } = useOrganizations();
 
-  const handleOrganizationSelect = (organizationId) => {
-    onStepChange(1, { organization: organizationId });
+  const handleOrganizationSelect = (organization) => {
+    onStepChange(1, { organization: organization.id });
   };
 
-  const filteredOrganizations = organizations.filter(
-    (org) =>
-      (org.full_name && org.full_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (org.login && org.login.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (org.description && org.description.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  // Transform organizations data for SearchableGrid
+  const organizationItems =
+    organizations?.map((org) => ({
+      id: org.login,
+      name: org.full_name || org.login,
+      title: org.full_name || org.login,
+      description: org.description || getOrganizationDescription(org.login),
+      subtitle: org.description || getOrganizationDescription(org.login),
+      avatar: org.avatar_url,
+      icon: getOrganizationIcon(org.login),
+      badge: org.repo_count > 0 ? `${org.repo_count} repos` : null,
+      metadata: {
+        website: org.website,
+        location: org.location,
+        visibility: org.visibility,
+        repoCount: org.repo_count,
+      },
+    })) || [];
 
-  const recentOrganizations = getRecentOrganizations();
-
-  const organizationOptions = filteredOrganizations.map((org) => ({
-    id: org.login,
-    title: org.full_name || org.login,
-    subtitle: org.description || `Organization: ${org.full_name || org.login}`,
-    icon: org.avatar_url,
-    fallbackIcon: getOrganizationIcon(org.login),
-    badge: org.repo_count > 0 ? `${org.repo_count} repos` : null,
-    metadata: {
-      website: org.website,
-      location: org.location,
-      visibility: org.visibility,
-    },
-  }));
-
-  if (loading) {
-    return (
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          padding: "24px",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ fontSize: "18px", color: "#6c757d", marginBottom: "16px" }}>
-          Loading organizations...
-        </div>
-        <div
-          style={{
-            width: "40px",
-            height: "40px",
-            border: "3px solid #e9ecef",
-            borderTop: "3px solid #007bff",
-            borderRadius: "50%",
-            animation: "spin 1s linear infinite",
-          }}
-        />
-        <style>
-          {`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}
-        </style>
-      </div>
-    );
-  }
+  // Find selected organization
+  const selectedOrganization = organizationItems.find((org) => org.id === wizardData.organization);
 
   return (
-    <div
-      style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        padding: isDesktop ? "32px" : "16px",
-        maxWidth: isDesktop ? "800px" : "100%",
-        margin: "0 auto",
-      }}
-    >
-      <div style={{ marginBottom: "24px" }}>
-        <h2
-          style={{
-            fontSize: isDesktop ? "24px" : "20px",
-            fontWeight: "600",
-            color: "#212529",
-            margin: "0 0 8px 0",
-          }}
-        >
+    <div className={`${styles.stepContainer} ${isDesktop ? styles.desktop : ""}`}>
+      {/* Step header */}
+      <div className={`${styles.stepHeader} ${isDesktop ? styles.desktop : ""}`}>
+        <h2 className={`${styles.stepTitle} ${isDesktop ? styles.desktop : ""}`}>
           Choose Organization
         </h2>
-        <p
-          style={{
-            fontSize: "16px",
-            color: "#6c757d",
-            margin: 0,
-          }}
-        >
+        <p className={`${styles.stepDescription} ${isDesktop ? styles.desktop : ""}`}>
           Select the organization that provides the Bible translation resources you want to access.
         </p>
       </div>
 
-      {recentOrganizations.length > 0 && (
-        <RecentSelections
-          title='Recent Organizations'
-          items={recentOrganizations.map((org) => ({
-            id: org.id,
-            title: org.id,
-            subtitle: "Recently accessed",
-            icon: getOrganizationIcon(org.id),
-          }))}
-          onSelect={handleOrganizationSelect}
+      {/* Content area */}
+      <div className={`${styles.stepContent} ${isDesktop ? styles.desktop : ""}`}>
+        <SearchableGrid
+          items={organizationItems}
+          selectedItem={selectedOrganization}
+          onItemSelect={handleOrganizationSelect}
+          searchPlaceholder='Search organizations...'
+          emptyMessage='No organizations found'
+          emptyIcon='🏢'
           isDesktop={isDesktop}
+          isLoading={loading}
+          error={error}
+          getItemKey={(item) => item.id}
+          getItemTitle={(item) => item.title}
+          getItemSubtitle={(item) => item.description}
+          getItemIcon={(item) => item.icon}
+          getItemAvatar={(item) => item.avatar}
         />
-      )}
+      </div>
 
-      <SearchableGrid
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        searchPlaceholder='Search organizations...'
-        items={organizationOptions}
-        onSelect={handleOrganizationSelect}
-        selectedId={wizardData.organization}
-        isDesktop={isDesktop}
-        emptyMessage='No organizations found.'
-        columns={isDesktop ? 2 : 1}
-      />
+      {/* Navigation */}
+      <div className={`${styles.stepNavigation} ${isDesktop ? styles.desktop : ""}`}>
+        <button
+          type='button'
+          className={`${styles.navigationButton} ${styles.primary} ${
+            isDesktop ? styles.desktop : ""
+          }`}
+          onClick={onNext}
+          disabled={!wizardData.organization}
+        >
+          Continue
+        </button>
+      </div>
     </div>
   );
 }

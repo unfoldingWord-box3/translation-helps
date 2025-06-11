@@ -4,10 +4,9 @@
  */
 
 import React, { useState, useMemo, useEffect } from "react";
-import { SearchableGrid } from "../components/SearchableGrid";
-import { RecentSelections } from "../components/RecentSelections";
-import { useNavigationHistory } from "../hooks/useNavigationHistory";
+import { SearchableGrid } from "../SearchableGrid";
 import { fetchResourceManifest } from "../../../services/manifestService";
+import styles from "../NavigationWizard.module.css";
 
 // Bible book data with testament categorization
 const BIBLE_BOOKS = {
@@ -89,12 +88,10 @@ function getAllBooks() {
 }
 
 export function BookStep({ onNext, onPrevious, onStepChange, wizardData, isDesktop }) {
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedTestament, setSelectedTestament] = useState("all");
   const [availableBooks, setAvailableBooks] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { getRecentBooks } = useNavigationHistory();
 
   // Fetch available books from manifest
   useEffect(() => {
@@ -143,7 +140,6 @@ export function BookStep({ onNext, onPrevious, onStepChange, wizardData, isDeskt
         if (isMounted) {
           setError(err.message);
           console.warn("Failed to load manifest books:", err);
-          // No fallback - only show books that are actually available in the manifest
           setAvailableBooks([]);
         }
       } finally {
@@ -160,8 +156,8 @@ export function BookStep({ onNext, onPrevious, onStepChange, wizardData, isDeskt
     };
   }, [wizardData.organization, wizardData.languageId, wizardData.resourceId]);
 
-  const handleBookSelect = (bookId) => {
-    onStepChange(4, { bookId });
+  const handleBookSelect = (book) => {
+    onStepChange(4, { bookId: book.id });
   };
 
   // Only use books from the manifest - no fallback to hardcoded books
@@ -184,42 +180,30 @@ export function BookStep({ onNext, onPrevious, onStepChange, wizardData, isDeskt
     }
   }, [currentBooks, isUsingDynamicBooks]);
 
-  const filteredBooks = useMemo(() => {
-    let books = currentBooks;
+  // Transform books data for SearchableGrid based on testament filter
+  let booksToShow = currentBooks;
+  if (selectedTestament === "old") {
+    booksToShow = oldTestamentBooks;
+  } else if (selectedTestament === "new") {
+    booksToShow = newTestamentBooks;
+  }
 
-    // Filter by testament
-    if (selectedTestament === "old") {
-      books = oldTestamentBooks;
-    } else if (selectedTestament === "new") {
-      books = newTestamentBooks;
-    }
-
-    // Filter by search term
-    if (searchTerm) {
-      books = books.filter(
-        (book) =>
-          book.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          book.id.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    return books;
-  }, [searchTerm, selectedTestament, currentBooks, oldTestamentBooks, newTestamentBooks]);
-
-  const recentBooks = getRecentBooks().filter(
-    (book) =>
-      book.organization === wizardData.organization &&
-      book.languageId === wizardData.languageId &&
-      book.resourceId === wizardData.resourceId
-  );
-
-  const bookOptions = filteredBooks.map((book) => ({
+  const bookItems = booksToShow.map((book) => ({
     id: book.id,
+    name: book.name,
     title: book.name,
+    description: `${book.chapters} chapter${book.chapters !== 1 ? "s" : ""}`,
     subtitle: `${book.chapters} chapter${book.chapters !== 1 ? "s" : ""}`,
     icon: getBookIcon(book.id),
     badge: getTestamentBadge(book.id),
+    metadata: {
+      chapters: book.chapters,
+      testament: getTestamentBadge(book.id),
+    },
   }));
+
+  // Find selected book
+  const selectedBook = bookItems.find((book) => book.id === wizardData.bookId);
 
   const testamentTabs = [
     { id: "all", label: "All Books", icon: "📖", count: currentBooks.length },
@@ -227,126 +211,33 @@ export function BookStep({ onNext, onPrevious, onStepChange, wizardData, isDeskt
     { id: "new", label: "New Testament", icon: "✝️", count: newTestamentBooks.length },
   ];
 
-  const tabStyles = (isActive) => ({
-    padding: isDesktop ? "12px 20px" : "8px 12px",
-    border: "none",
-    borderRadius: "8px",
-    backgroundColor: isActive ? "#007bff" : "#f8f9fa",
-    color: isActive ? "#ffffff" : "#495057",
-    cursor: "pointer",
-    fontSize: isDesktop ? "14px" : "12px",
-    fontWeight: "600",
-    transition: "all 0.2s ease",
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-    flex: isDesktop ? "0 0 auto" : "1",
-    minWidth: 0,
-  });
-
   return (
-    <div
-      style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        padding: isDesktop ? "32px" : "16px",
-        maxWidth: isDesktop ? "800px" : "100%",
-        margin: "0 auto",
-      }}
-    >
-      <div style={{ marginBottom: "24px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-          <button
-            onClick={onPrevious}
-            style={{
-              background: "none",
-              border: "none",
-              fontSize: "20px",
-              cursor: "pointer",
-              padding: "4px",
-              color: "#007bff",
-            }}
-            data-testid='back-button'
-          >
-            ←
-          </button>
-          <h2
-            style={{
-              fontSize: isDesktop ? "24px" : "20px",
-              fontWeight: "600",
-              color: "#212529",
-              margin: 0,
-            }}
-          >
-            Choose Book
-          </h2>
-        </div>
-        <p
-          style={{
-            fontSize: "16px",
-            color: "#6c757d",
-            margin: 0,
-            paddingLeft: "32px",
-          }}
-        >
+    <div className={`${styles.stepContainer} ${isDesktop ? styles.desktop : ""}`}>
+      {/* Step header */}
+      <div className={`${styles.stepHeader} ${isDesktop ? styles.desktop : ""}`}>
+        <h2 className={`${styles.stepTitle} ${isDesktop ? styles.desktop : ""}`}>Choose Book</h2>
+        <p className={`${styles.stepDescription} ${isDesktop ? styles.desktop : ""}`}>
           Select the Bible book you want to study.
         </p>
       </div>
 
-      {recentBooks.length > 0 && (
-        <RecentSelections
-          title='Recent Books'
-          items={recentBooks.map((book) => ({
-            id: book.id,
-            title: getBookDisplayName(book.id),
-            subtitle: "Recently accessed",
-            icon: getBookIcon(book.id),
-          }))}
-          onSelect={handleBookSelect}
-          isDesktop={isDesktop}
-        />
-      )}
-
       {/* Testament Tabs */}
-      <div
-        style={{
-          display: "flex",
-          gap: isDesktop ? "12px" : "8px",
-          marginBottom: "24px",
-          padding: "4px",
-          backgroundColor: "#f1f3f4",
-          borderRadius: "12px",
-        }}
-      >
+      <div className={`${styles.tabContainer} ${isDesktop ? styles.desktop : ""}`}>
         {testamentTabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setSelectedTestament(tab.id)}
-            style={tabStyles(selectedTestament === tab.id)}
+            className={`${styles.tab} ${selectedTestament === tab.id ? styles.active : ""} ${
+              isDesktop ? styles.desktop : ""
+            }`}
             data-testid={`testament-tab-${tab.id}`}
           >
-            <span>{tab.icon}</span>
-            <span
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
+            <span className={styles.tabIcon}>{tab.icon}</span>
+            <span className={styles.tabLabel}>
               {isDesktop ? tab.label : tab.label.split(" ")[0]}
             </span>
             <span
-              style={{
-                backgroundColor: selectedTestament === tab.id ? "rgba(255,255,255,0.2)" : "#dee2e6",
-                color: selectedTestament === tab.id ? "#ffffff" : "#6c757d",
-                padding: "2px 6px",
-                borderRadius: "10px",
-                fontSize: "11px",
-                fontWeight: "600",
-                minWidth: "20px",
-                textAlign: "center",
-              }}
+              className={`${styles.tabBadge} ${selectedTestament === tab.id ? styles.active : ""}`}
             >
               {tab.count}
             </span>
@@ -354,17 +245,48 @@ export function BookStep({ onNext, onPrevious, onStepChange, wizardData, isDeskt
         ))}
       </div>
 
-      <SearchableGrid
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        searchPlaceholder='Search books...'
-        items={bookOptions}
-        onSelect={handleBookSelect}
-        selectedId={wizardData.bookId}
-        isDesktop={isDesktop}
-        emptyMessage='No books found.'
-        columns={isDesktop ? 3 : 2}
-      />
+      {/* Content area */}
+      <div className={`${styles.stepContent} ${isDesktop ? styles.desktop : ""}`}>
+        <SearchableGrid
+          items={bookItems}
+          selectedItem={selectedBook}
+          onItemSelect={handleBookSelect}
+          searchPlaceholder='Search books...'
+          emptyMessage='No books found'
+          emptyIcon='📖'
+          isDesktop={isDesktop}
+          isLoading={loading}
+          error={error}
+          getItemKey={(item) => item.id}
+          getItemTitle={(item) => item.title}
+          getItemSubtitle={(item) => item.description}
+          getItemIcon={(item) => item.icon}
+          columns={isDesktop ? 3 : 2}
+        />
+      </div>
+
+      {/* Navigation */}
+      <div className={`${styles.stepNavigation} ${isDesktop ? styles.desktop : ""}`}>
+        <button
+          type='button'
+          className={`${styles.navigationButton} ${styles.secondary} ${
+            isDesktop ? styles.desktop : ""
+          }`}
+          onClick={onPrevious}
+        >
+          Back
+        </button>
+        <button
+          type='button'
+          className={`${styles.navigationButton} ${styles.primary} ${
+            isDesktop ? styles.desktop : ""
+          }`}
+          onClick={onNext}
+          disabled={!wizardData.bookId}
+        >
+          Continue
+        </button>
+      </div>
     </div>
   );
 }
@@ -459,10 +381,4 @@ function getTestamentBadge(bookId) {
     return "NT";
   }
   return null;
-}
-
-function getBookDisplayName(bookId) {
-  const allBooks = [...BIBLE_BOOKS.old, ...BIBLE_BOOKS.new];
-  const book = allBooks.find((b) => b.id === bookId);
-  return book ? book.name : bookId.toUpperCase();
 }

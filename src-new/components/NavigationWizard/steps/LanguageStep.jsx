@@ -3,190 +3,105 @@
  * Second step of the wizard: Language selection
  */
 
-import React, { useState } from "react";
+import React from "react";
 import { useLanguages } from "../../../hooks/useLanguages";
-import { SearchableGrid } from "../components/SearchableGrid";
-import { RecentSelections } from "../components/RecentSelections";
-import { useNavigationHistory } from "../hooks/useNavigationHistory";
+import { SearchableGrid } from "../SearchableGrid";
 import { getLanguageDisplay, hasMultipleFlags } from "../../../utils/languageMapping";
+import styles from "../NavigationWizard.module.css";
 
 export function LanguageStep({ onNext, onPrevious, onStepChange, wizardData, isDesktop }) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const { languages, loading } = useLanguages(wizardData.organization);
-  const { getRecentLanguages } = useNavigationHistory();
+  const { languages, loading, error } = useLanguages(wizardData.organization);
 
-  const handleLanguageSelect = (languageId) => {
-    onStepChange(2, { languageId });
+  const handleLanguageSelect = (language) => {
+    onStepChange(2, { languageId: language.id });
   };
 
-  const filteredLanguages = languages.filter(
-    (lang) =>
-      (lang.name && lang.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (lang.code && lang.code.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (lang.direction && lang.direction.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  // Transform languages data for SearchableGrid
+  const languageItems =
+    languages?.map((lang) => {
+      const languageDisplay = getLanguageDisplay(lang.code, lang.name, {
+        showAllFlags: hasMultipleFlags(lang.code),
+        showDirection: true,
+      });
 
-  const recentLanguages = getRecentLanguages().filter(
-    (lang) => lang.organization === wizardData.organization
-  );
+      return {
+        id: lang.code,
+        name: lang.name,
+        title: lang.name,
+        description: `${lang.code} • ${
+          languageDisplay.direction === "rtl" ? "Right-to-Left" : "Left-to-Right"
+        }`,
+        subtitle: `${lang.code} • ${
+          languageDisplay.direction === "rtl" ? "Right-to-Left" : "Left-to-Right"
+        }`,
+        icon: languageDisplay.flag,
+        badge: languageDisplay.isRTL ? "RTL" : null,
+        metadata: {
+          direction: languageDisplay.direction,
+          isRTL: languageDisplay.isRTL,
+          tooltip: languageDisplay.flagsTooltip,
+        },
+      };
+    }) || [];
 
-  const languageOptions = filteredLanguages.map((lang) => {
-    const languageDisplay = getLanguageDisplay(lang.code, lang.name, {
-      showAllFlags: hasMultipleFlags(lang.code),
-      showDirection: true,
-    });
-
-    return {
-      id: lang.code,
-      title: lang.name,
-      subtitle: `${lang.code} • ${
-        languageDisplay.direction === "rtl" ? "Right-to-Left" : "Left-to-Right"
-      }`,
-      icon: languageDisplay.flag,
-      badge: languageDisplay.isRTL ? "RTL" : null,
-      tooltip: languageDisplay.flagsTooltip,
-    };
-  });
-
-  if (loading) {
-    return (
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          padding: "24px",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ fontSize: "18px", color: "#6c757d", marginBottom: "16px" }}>
-          Loading languages for {wizardData.organization}...
-        </div>
-        <div
-          style={{
-            width: "40px",
-            height: "40px",
-            border: "3px solid #e9ecef",
-            borderTop: "3px solid #007bff",
-            borderRadius: "50%",
-            animation: "spin 1s linear infinite",
-          }}
-        />
-        <style>
-          {`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}
-        </style>
-      </div>
-    );
-  }
+  // Find selected language
+  const selectedLanguage = languageItems.find((lang) => lang.id === wizardData.languageId);
 
   return (
-    <div
-      style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        padding: isDesktop ? "32px" : "16px",
-        maxWidth: isDesktop ? "800px" : "100%",
-        margin: "0 auto",
-      }}
-    >
-      <div style={{ marginBottom: "24px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-          <button
-            onClick={onPrevious}
-            style={{
-              background: "none",
-              border: "none",
-              fontSize: "20px",
-              cursor: "pointer",
-              padding: "4px",
-              color: "#007bff",
-            }}
-            data-testid='back-button'
-          >
-            ←
-          </button>
-          <h2
-            style={{
-              fontSize: isDesktop ? "24px" : "20px",
-              fontWeight: "600",
-              color: "#212529",
-              margin: 0,
-            }}
-          >
-            Choose Language
-          </h2>
-        </div>
-        <p
-          style={{
-            fontSize: "16px",
-            color: "#6c757d",
-            margin: 0,
-            paddingLeft: "32px",
-          }}
-        >
+    <div className={`${styles.stepContainer} ${isDesktop ? styles.desktop : ""}`}>
+      {/* Step header */}
+      <div className={`${styles.stepHeader} ${isDesktop ? styles.desktop : ""}`}>
+        <h2 className={`${styles.stepTitle} ${isDesktop ? styles.desktop : ""}`}>
+          Choose Language
+        </h2>
+        <p className={`${styles.stepDescription} ${isDesktop ? styles.desktop : ""}`}>
           Select the language for Bible translation resources from{" "}
           <strong>{wizardData.organization}</strong>.
         </p>
       </div>
 
-      {recentLanguages.length > 0 && (
-        <RecentSelections
-          title='Recent Languages'
-          items={recentLanguages.map((lang) => {
-            const languageDisplay = getLanguageDisplay(
-              lang.id,
-              lang.name || getLanguageDisplayName(lang.id, languages)
-            );
-            return {
-              id: lang.id,
-              title: getLanguageDisplayName(lang.id, languages),
-              subtitle: "Recently accessed",
-              icon: languageDisplay.flag,
-            };
-          })}
-          onSelect={handleLanguageSelect}
+      {/* Content area */}
+      <div className={`${styles.stepContent} ${isDesktop ? styles.desktop : ""}`}>
+        <SearchableGrid
+          items={languageItems}
+          selectedItem={selectedLanguage}
+          onItemSelect={handleLanguageSelect}
+          searchPlaceholder='Search languages...'
+          emptyMessage='No languages found for this organization'
+          emptyIcon='🌐'
           isDesktop={isDesktop}
+          isLoading={loading}
+          error={error}
+          getItemKey={(item) => item.id}
+          getItemTitle={(item) => item.title}
+          getItemSubtitle={(item) => item.description}
+          getItemIcon={(item) => item.icon}
+          getItemAvatar={(item) => item.avatar}
         />
-      )}
+      </div>
 
-      <SearchableGrid
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        searchPlaceholder='Search languages...'
-        items={languageOptions}
-        onSelect={handleLanguageSelect}
-        selectedId={wizardData.languageId}
-        isDesktop={isDesktop}
-        emptyMessage='No languages found for this organization.'
-        columns={isDesktop ? 2 : 1}
-      />
+      {/* Navigation */}
+      <div className={`${styles.stepNavigation} ${isDesktop ? styles.desktop : ""}`}>
+        <button
+          type='button'
+          className={`${styles.navigationButton} ${styles.secondary} ${
+            isDesktop ? styles.desktop : ""
+          }`}
+          onClick={onPrevious}
+        >
+          Back
+        </button>
+        <button
+          type='button'
+          className={`${styles.navigationButton} ${styles.primary} ${
+            isDesktop ? styles.desktop : ""
+          }`}
+          onClick={onNext}
+          disabled={!wizardData.languageId}
+        >
+          Continue
+        </button>
+      </div>
     </div>
   );
-}
-
-function getLanguageDirection(direction) {
-  switch (direction) {
-    case "rtl":
-      return "Right-to-Left";
-    case "ltr":
-      return "Left-to-Right";
-    default:
-      return "Left-to-Right";
-  }
-}
-
-function getLanguageIcon(direction) {
-  return direction === "rtl" ? "🔄" : "🗣️";
-}
-
-function getLanguageDisplayName(languageId, languages) {
-  const language = languages.find((lang) => lang.code === languageId);
-  return language ? language.name : languageId;
 }
