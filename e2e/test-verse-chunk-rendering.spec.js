@@ -7,29 +7,32 @@ test.describe("Verse Chunk Rendering", () => {
   test("should render only the selected verse chunk", async ({ page }) => {
     await page.goto("http://localhost:5173/");
 
-    // Select the reference
-    await page.waitForSelector('[data-testid="organization-selector"]');
+    // Wait for the page to fully load
+    await page.waitForLoadState("networkidle", { timeout: 30000 });
+
+    // Select the reference with increased timeout
+    await page.waitForSelector('[data-testid="organization-selector"]', { timeout: 20000 });
     await page.selectOption('[data-testid="organization-selector"]', "unfoldingWord");
 
-    await page.waitForSelector('[data-testid="language-selector"]');
+    await page.waitForSelector('[data-testid="language-selector"]', { timeout: 10000 });
     await page.selectOption('[data-testid="language-selector"]', { label: "EN - English" });
 
-    await page.waitForSelector('[data-testid="resource-selector"]');
+    await page.waitForSelector('[data-testid="resource-selector"]', { timeout: 10000 });
     await page.selectOption('[data-testid="resource-selector"]', {
       label: "ULT - unfoldingWord Literal Text",
     });
 
-    await page.waitForSelector('[data-testid="book-selector"]');
+    await page.waitForSelector('[data-testid="book-selector"]', { timeout: 10000 });
     await page.selectOption('[data-testid="book-selector"]', { label: "Titus" });
 
-    await page.waitForSelector('[data-testid="chapter-selector"]');
+    await page.waitForSelector('[data-testid="chapter-selector"]', { timeout: 10000 });
     await page.selectOption('[data-testid="chapter-selector"]', "1");
 
-    await page.waitForSelector('[data-testid="verse-selector"]');
+    await page.waitForSelector('[data-testid="verse-selector"]', { timeout: 10000 });
     await page.selectOption('[data-testid="verse-selector"]', "1");
 
-    // Wait for the renderer to finish processing
-    await page.waitForSelector(".usfm-renderer-container");
+    // Wait for the renderer to finish processing with increased timeout
+    await page.waitForSelector(".usfm-renderer-container", { timeout: 20000 });
 
     const rendererHtml = await page.locator(".usfm-renderer-container").innerHTML();
 

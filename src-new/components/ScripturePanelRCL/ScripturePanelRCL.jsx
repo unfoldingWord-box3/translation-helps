@@ -147,17 +147,15 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
 
       // If book is already imported, we don't need to re-fetch the USFM content
       // The existing content can be used for all chapters in the same book
-      if (isBookAlreadyImported && usfmContent) {
-        console.log("📚 Book already imported and content available, skipping fetch");
+      if (isBookAlreadyImported) {
+        console.log("📚 Book already imported, skipping fetch");
         setError(null);
         setLoading(false);
         return;
       }
 
       // Clear previous content and errors when we need to load new content
-      if (!isBookAlreadyImported) {
-        setUsfmContent("");
-      }
+      setUsfmContent("");
       setError(null);
 
       // Use the selected resource from context (no fallback needed)

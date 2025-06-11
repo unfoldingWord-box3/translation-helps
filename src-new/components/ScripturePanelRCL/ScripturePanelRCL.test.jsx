@@ -16,7 +16,17 @@ import {
 vi.mock("../../services/scriptureService", () => createMockScriptureService());
 
 // Mock proskomma-react-hooks with timeout handling
-vi.mock("proskomma-react-hooks", () => createMockProskommaHooks());
+vi.mock("proskomma-react-hooks", () => {
+  const mockHooks = createMockProskommaHooks();
+  return {
+    ...mockHooks,
+    useQuery: vi.fn(() => ({
+      data: null,
+      loading: false,
+      error: null,
+    })),
+  };
+});
 
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
@@ -209,14 +219,12 @@ describe("ScripturePanelRCL", () => {
     let verseSpan;
     await waitFor(() => {
       verseSpan = document.querySelector(".verse");
-      if (!verseSpan) {
-        // Debug: print the current HTML
-        // eslint-disable-next-line no-console
-        console.log(document.body.innerHTML);
-      }
       expect(verseSpan).toBeInTheDocument();
     }, waitForOptions);
-    verseSpan.click();
+
+    await act(async () => {
+      verseSpan.click();
+    });
 
     expect(mockOnVerseClick).toHaveBeenCalledWith(1, 1);
   });
@@ -238,7 +246,7 @@ describe("ScripturePanelRCL", () => {
     expect(screen.getByText("Loading scripture...")).toBeInTheDocument();
   });
 
-  it.skip("extracts chapter USFM correctly", async () => {
+  it("extracts chapter USFM correctly", async () => {
     const multiChapterUSFM = `\id GEN
 \c 1
 \v 1 Chapter 1 verse 1
@@ -250,12 +258,11 @@ describe("ScripturePanelRCL", () => {
     renderWithContext();
 
     await waitFor(() => {
-      expect(screen.getByTestId("usfm-editor")).toBeInTheDocument();
-    });
+      expect(screen.getByTestId("usfm-renderer")).toBeInTheDocument();
+    }, waitForOptions);
 
     // Verify that only chapter 1 content is rendered
-    const editorContent = screen.getByTestId("usfm-editor").textContent;
-    expect(editorContent).toContain("Chapter 1 verse 1");
-    expect(editorContent).not.toContain("Chapter 2 verse 1");
+    expect(screen.getByText("Chapter 1 verse 1")).toBeInTheDocument();
+    expect(screen.queryByText("Chapter 2 verse 1")).not.toBeInTheDocument();
   });
 });
