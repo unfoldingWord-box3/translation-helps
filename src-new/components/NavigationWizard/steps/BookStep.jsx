@@ -98,8 +98,24 @@ export function BookStep({ onNext, onPrevious, onStepChange, wizardData, isDeskt
     let isMounted = true;
 
     const loadAvailableBooks = async () => {
+      // Validate required parameters before attempting to fetch
       if (!wizardData.organization || !wizardData.languageId || !wizardData.resourceId) {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+          // Set helpful error message when resourceId is missing
+          if (!wizardData.resourceId && wizardData.organization && wizardData.languageId) {
+            setError(
+              "Please select a Bible resource from the previous step to view available books."
+            );
+          } else if (!wizardData.organization) {
+            setError("Please select an organization from the first step.");
+          } else if (!wizardData.languageId) {
+            setError("Please select a language from the previous step.");
+          } else {
+            setError(null);
+          }
+          setAvailableBooks([]);
+        }
         return;
       }
 
@@ -135,11 +151,27 @@ export function BookStep({ onNext, onPrevious, onStepChange, wizardData, isDeskt
             .sort((a, b) => a.sort - b.sort);
 
           setAvailableBooks(manifestBooks);
+        } else if (isMounted) {
+          setError("No books found in the selected resource manifest.");
+          setAvailableBooks([]);
         }
       } catch (err) {
         if (isMounted) {
-          setError(err.message);
           console.warn("Failed to load manifest books:", err);
+
+          // Provide more specific error messages
+          if (err.message.includes("404")) {
+            setError(
+              `The selected Bible resource (${wizardData.resourceId}) was not found for ${wizardData.organization}/${wizardData.languageId}. Please go back and select a different resource.`
+            );
+          } else if (err.message.includes("Failed to fetch")) {
+            setError(
+              "Unable to load book list. Please check your internet connection and try again."
+            );
+          } else {
+            setError(`Failed to load books: ${err.message}`);
+          }
+
           setAvailableBooks([]);
         }
       } finally {

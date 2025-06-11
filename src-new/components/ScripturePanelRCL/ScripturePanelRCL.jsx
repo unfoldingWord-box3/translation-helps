@@ -21,6 +21,7 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showSearch, setShowSearch] = useState(false);
+  const [importingBooks, setImportingBooks] = useState(new Set());
   const { organization, languageId, resourceId, updateReference } = useContext(ReferenceContext);
   const { manifests, isLoading: manifestsLoading } = useContext(ManifestsContext);
 
@@ -33,13 +34,32 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
     verbose: false,
   });
 
-  // Check if the current book is already imported
+  // Create a unique key for the current book/resource combination
+  const bookResourceKey = useMemo(() => {
+    if (!organization || !languageId || !reference?.bookId || !resourceId) return null;
+
+    let cleanResourceId = resourceId;
+    if (resourceId && languageId && resourceId.startsWith(`${languageId}_`)) {
+      cleanResourceId = resourceId.substring(languageId.length + 1);
+    }
+
+    return `${organization}/${languageId}_${cleanResourceId}/${reference.bookId}`;
+  }, [organization, languageId, reference?.bookId, resourceId]);
+
+  // Check if the current book is already imported OR currently being imported
   const isBookAlreadyImported = useMemo(() => {
-    if (!organization || !languageId || !reference?.bookId || !catalogHook.catalog) {
+    if (!organization || !languageId || !reference?.bookId || !resourceId || !catalogHook.catalog) {
       return false;
     }
 
-    const docSetId = `${organization}/${languageId}_${reference.bookId}`;
+    // Strip language prefix from resourceId for docSet ID construction
+    let cleanResourceId = resourceId;
+    if (resourceId && languageId && resourceId.startsWith(`${languageId}_`)) {
+      cleanResourceId = resourceId.substring(languageId.length + 1);
+    }
+
+    // Use clean resourceId in docSet ID
+    const docSetId = `${organization}/${languageId}_${cleanResourceId}`;
     const docSets = catalogHook.catalog.docSets || [];
 
     // Check if this docSet exists and has documents
@@ -48,17 +68,31 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
 
     console.log("📚 Checking if book is already imported:", {
       docSetId,
+      cleanResourceId,
       existingDocSet: !!existingDocSet,
       hasDocuments,
       availableDocSets: docSets.map((ds) => ds.id),
+      isCurrentlyImporting: bookResourceKey ? importingBooks.has(bookResourceKey) : false,
     });
 
     return hasDocuments;
-  }, [organization, languageId, reference?.bookId, catalogHook.catalog]);
+  }, [
+    organization,
+    languageId,
+    reference?.bookId,
+    resourceId,
+    catalogHook.catalog,
+    bookResourceKey,
+    importingBooks,
+  ]);
 
-  // Create document configuration only when USFM content is available AND book is not already imported
+  // Check if import is currently in progress for this book
+  const isCurrentlyImporting = bookResourceKey ? importingBooks.has(bookResourceKey) : false;
+
+  // Create document configuration only when USFM content is available AND book is not already imported AND not currently importing
   const document = useMemo(() => {
-    if (!usfmContent || !organization || !languageId || !reference?.bookId) return null;
+    if (!usfmContent || !organization || !languageId || !reference?.bookId || !resourceId)
+      return null;
 
     // Don't create document config if book is already imported
     if (isBookAlreadyImported) {
@@ -66,15 +100,49 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
       return null;
     }
 
-    console.log("📚 Creating new document config for import");
+    // Don't create document config if import is already in progress
+    if (isCurrentlyImporting) {
+      console.log("📚 Book import already in progress, skipping document creation");
+      return null;
+    }
+
+    // Strip language prefix from resourceId for abbr
+    let cleanResourceId = resourceId;
+    if (resourceId && languageId && resourceId.startsWith(`${languageId}_`)) {
+      cleanResourceId = resourceId.substring(languageId.length + 1);
+    }
+
+    console.log("📚 Creating new document config for import", {
+      originalResourceId: resourceId,
+      cleanResourceId,
+      organization,
+      languageId,
+      bookCode: reference.bookId,
+      expectedDocSetId: `${organization}/${languageId}_${cleanResourceId}`,
+    });
+
+    // Mark this book as being imported
+    if (bookResourceKey) {
+      setImportingBooks((prev) => new Set([...prev, bookResourceKey]));
+    }
+
     return [
       {
-        selectors: { org: organization, lang: languageId, abbr: reference.bookId },
+        selectors: { org: organization, lang: languageId, abbr: cleanResourceId },
         data: usfmContent,
         bookCode: reference.bookId,
       },
     ];
-  }, [usfmContent, organization, languageId, reference?.bookId, isBookAlreadyImported]);
+  }, [
+    usfmContent,
+    organization,
+    languageId,
+    reference?.bookId,
+    resourceId,
+    isBookAlreadyImported,
+    isCurrentlyImporting,
+    bookResourceKey,
+  ]);
 
   // Import document into proskomma when document is ready
   const importHook = useImport({
@@ -82,6 +150,26 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
     documents: document || [], // Ensure we always pass an array
     verbose: false,
   });
+
+  // Clean up importing state when import completes or fails
+  useEffect(() => {
+    if (bookResourceKey && importingBooks.has(bookResourceKey)) {
+      if (importHook.done && !importHook.importing) {
+        console.log("📚 Import completed for:", bookResourceKey);
+        setImportingBooks((prev) => {
+          const next = new Set(prev);
+          next.delete(bookResourceKey);
+          return next;
+        });
+
+        // Log any import errors
+        if (importHook.errors && importHook.errors.length > 0) {
+          console.error("📚 Import errors:", importHook.errors);
+          setError(`Error importing scripture: ${importHook.errors[0]}`);
+        }
+      }
+    }
+  }, [bookResourceKey, importHook.done, importHook.importing, importHook.errors, importingBooks]);
 
   // Debug: Log render
   console.log("[ScripturePanelRCL] Rendering with:", {
@@ -141,8 +229,8 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
       }
       setError(null);
 
-      // Use the selected resource or fallback to 'ult'
-      const selectedResourceId = resourceId || "ult";
+      // Use the selected resource from context (no fallback needed)
+      const selectedResourceId = resourceId;
 
       // Strip language prefix from resourceId for manifest lookup
       // e.g., "en_ult" -> "ult" to match MultiManifestsContext keys
@@ -267,10 +355,9 @@ export default function ScripturePanelRCL({ reference, onVerseClick }) {
   }
 
   // Strip language prefix from resourceId for manifest lookup
-  const selectedResourceId = resourceId || "ult";
-  let manifestKey = selectedResourceId;
-  if (selectedResourceId && languageId && selectedResourceId.startsWith(`${languageId}_`)) {
-    manifestKey = selectedResourceId.substring(languageId.length + 1);
+  let manifestKey = resourceId;
+  if (resourceId && languageId && resourceId.startsWith(`${languageId}_`)) {
+    manifestKey = resourceId.substring(languageId.length + 1);
   }
   const selectedManifest = manifests[manifestKey];
 

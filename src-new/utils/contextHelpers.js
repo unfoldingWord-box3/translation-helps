@@ -27,6 +27,7 @@ export function updateQueryFromContext(context) {
 
   // Strip language prefix from resourceId for RC URI construction
   // e.g., "en_ult" -> "ult" when languageId is "en"
+  // Handle null/undefined resourceId gracefully
   let cleanResourceId = resourceId;
   if (resourceId && languageId && resourceId.startsWith(`${languageId}_`)) {
     cleanResourceId = resourceId.substring(languageId.length + 1);
@@ -37,7 +38,10 @@ export function updateQueryFromContext(context) {
   const _chapter = chapter ? `/${chapter}` : "";
   const _verse = verse ? `/${verse}` : "";
 
-  const rc = `&rc=${_languageId}${_resourceId}${_bookId}${_chapter}${_verse}`;
+  // Only include rc parameter if we have meaningful content
+  const rcContent = `${_languageId}${_resourceId}${_bookId}${_chapter}${_verse}`;
+  const rc = rcContent && rcContent !== "/" ? `&rc=${rcContent}` : "";
+
   const path = window.location.pathname;
   const query = `${path}?${_organization}${rc}`;
 
@@ -65,14 +69,20 @@ export function contextFromQuery() {
 
   // Reconstruct full resourceId with language prefix to match catalog API
   // e.g., languageId="en" + resourceIdFromUrl="ult" -> resourceId="en_ult"
-  const resourceId =
-    resourceIdFromUrl && languageId ? `${languageId}_${resourceIdFromUrl}` : resourceIdFromUrl;
+  // Handle cases where resourceIdFromUrl might be missing
+  let resourceId = null;
+  if (resourceIdFromUrl && languageId) {
+    resourceId = `${languageId}_${resourceIdFromUrl}`;
+  } else if (resourceIdFromUrl) {
+    // If we have resourceIdFromUrl but no languageId, use it as-is
+    resourceId = resourceIdFromUrl;
+  }
 
   return {
     hasUrlParams: !!hasUrlParams,
     organization: ownerParam || null, // NO defaults - return exactly what's in URL
     languageId: languageId || null, // NO defaults - return exactly what's in URL
-    resourceId: resourceId || null,
+    resourceId: resourceId,
     reference: {
       bookId: bookId || null,
       chapter: chapter || null,

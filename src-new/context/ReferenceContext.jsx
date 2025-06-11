@@ -10,7 +10,7 @@ import { updateQueryFromContext, contextFromQuery } from "../utils/contextHelper
 export const ReferenceContext = createContext({
   organization: "unfoldingWord",
   languageId: "en",
-  resourceId: null,
+  resourceId: "en_ult",
   reference: DEFAULT_REFERENCE,
   setOrganization: () => {},
   setLanguageId: () => {},
@@ -48,7 +48,7 @@ export function ReferenceProvider({ children }) {
         // Case 1: Fresh open with no URI parameters - use defaults ONLY
         setOrganization("unfoldingWord");
         setLanguageId("en");
-        setResourceId(null);
+        setResourceId("en_ult");
         setReference(DEFAULT_REFERENCE);
       }
 
